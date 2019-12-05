@@ -4,8 +4,12 @@
   "description": "An application that brings variety of businesses and their customers, together to improve their appointment process",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "start": "nodemon src/index",
     "eslint": "eslint ."
+=======
+    "test": "echo \"Error: no test specified\" && exit 1"
+>>>>>>> 34ab9ef0d89c5f90551dbfed43ae810eba909470
   },
   "repository": {
     "type": "git",
@@ -19,11 +23,15 @@
   "homepage": "https://github.com/serbestemre/personal-appointment-assistant#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+<<<<<<< HEAD
     "dotenv": "^8.2.0",
+=======
+>>>>>>> 34ab9ef0d89c5f90551dbfed43ae810eba909470
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.13",
     "validator": "^12.1.0"
+<<<<<<< HEAD
   },
   "devDependencies": {
     "eslint": "^6.1.0",
@@ -31,5 +39,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
     "prettier": "^1.19.1"
+=======
+>>>>>>> 34ab9ef0d89c5f90551dbfed43ae810eba909470
   }
 }
