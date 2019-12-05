@@ -1,0 +1,35 @@
+{
+  "name": "personal-appointment-assistant",
+  "version": "1.0.0",
+  "description": "An application that brings variety of businesses and their customers, together to improve their appointment process",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index",
+    "eslint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/serbestemre/personal-appointment-assistant.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/serbestemre/personal-appointment-assistant/issues"
+  },
+  "homepage": "https://github.com/serbestemre/personal-appointment-assistant#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.13",
+    "validator": "^12.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "prettier": "^1.19.1"
+  }
+}
