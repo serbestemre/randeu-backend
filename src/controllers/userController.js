@@ -29,3 +29,12 @@ exports.viewProfile = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+exports.deleteMyAccount = async (req, res) => {
+  try {
+    await req.user.remove();
+    res.send(req.user);
+  } catch (error) {
+    res.status(500).send();
+  }
+};
