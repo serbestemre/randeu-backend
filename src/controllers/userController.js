@@ -21,3 +21,11 @@ exports.getUsers = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+exports.viewProfile = async (req, res) => {
+  try {
+    res.send(req.user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
