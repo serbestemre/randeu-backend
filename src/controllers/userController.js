@@ -38,3 +38,15 @@ exports.deleteMyAccount = async (req, res) => {
     res.status(500).send();
   }
 };
+
+exports.logout = async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter(
+      token => token.token !== req.token
+    );
+    await req.user.save();
+    res.send("logout is done successfully");
+  } catch (error) {
+    res.status(500).send();
+  }
+};
