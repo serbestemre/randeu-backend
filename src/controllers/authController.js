@@ -48,6 +48,11 @@ exports.googleOAuth = async (req, res, next) => {
   res.status(200).json({ token });
 };
 
+exports.facebookOAuth = async (req, res, next) => {
+  // Generate token
+  console.log('GOT HERE!');
+};
+
 exports.secret = async (req, res, next) => {
   console.log('I managed to get here!');
   res.json({ secret: 'resource' });
