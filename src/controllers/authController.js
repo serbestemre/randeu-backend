@@ -1,14 +1,24 @@
 const User = require('../models/User');
 
-exports.signup = async (req, res) => {
-  const user = new User(req.body);
-
+exports.register = async (req, res) => {
   try {
-    await user.save();
-    const token = await user.generateAuthToken();
-    res.status(201).send({ user, token });
-  } catch (e) {
-    res.status(400).send(e);
+    const { email, password } = req.body;
+
+    // check if there any user with the same email
+    const foundUser = await User.findOne({ 'local.email': email });
+    if (foundUser)
+      return res.status(403).json({ error: 'Email is already in use' });
+
+    const newUser = new User({
+      method: 'local',
+      local: req.body
+    });
+
+    await newUser.save();
+    const token = await newUser.generateAuthToken();
+    res.status(201).send({ newUser, token });
+  } catch (error) {
+    res.status(400).send(error);
   }
 };
 

@@ -1,16 +1,4 @@
-const User = require("../models/User");
-
-exports.signup = async (req, res) => {
-  const user = new User(req.body);
-
-  try {
-    await user.save();
-    const token = await user.generateAuthToken();
-    res.status(201).send({ user, token });
-  } catch (e) {
-    res.status(400).send(e);
-  }
-};
+const User = require('../models/User');
 
 exports.getUsers = async (req, res) => {
   try {
@@ -45,7 +33,7 @@ exports.logout = async (req, res) => {
       token => token.token !== req.token
     );
     await req.user.save();
-    res.send("logout is done successfully");
+    res.send('logout is done successfully');
   } catch (error) {
     res.status(500).send();
   }

@@ -5,43 +5,63 @@ const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    method: {
       type: String,
-      required: true,
-      trim: true
+      enum: ['local', 'google', 'facebook'],
+      required: true
     },
-    surname: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    email: {
-      type: String,
-      unique: true,
-      required: true,
-      trim: true,
-      lowercase: true,
-      validate(value) {
-        if (!validator.isEmail(value)) throw new Error('Email is invalid');
-      }
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: 6,
-      trim: true
-    },
-    birthday: {
-      type: Date
-    },
-    tokens: [
-      {
-        token: {
-          type: String,
-          required: true
+    local: {
+      name: {
+        type: String,
+        trim: true
+      },
+      surname: {
+        type: String,
+        trim: true
+      },
+      email: {
+        type: String,
+        trim: true,
+        lowercase: true,
+        validate(value) {
+          if (!validator.isEmail(value)) throw new Error('Email is invalid');
         }
+      },
+      password: {
+        type: String,
+        minlength: 6,
+        trim: true
+      },
+      birthday: {
+        type: Date
+      },
+      tokens: [
+        {
+          token: {
+            type: String,
+            required: true
+          }
+        }
+      ]
+    },
+    google: {
+      id: {
+        type: String
+      },
+      email: {
+        type: String,
+        lowercase: true
       }
-    ]
+    },
+    facebook: {
+      id: {
+        type: String
+      },
+      email: {
+        type: String,
+        lowercase: true
+      }
+    }
   },
   {
     timestamps: true
@@ -67,7 +87,7 @@ userSchema.methods.generateAuthToken = async function() {
     process.env.JWT_SECRET_KEY
   );
 
-  user.tokens = user.tokens.concat({ token });
+  user.local.tokens = user.local.tokens.concat({ token });
   await user.save();
 
   return token;
@@ -79,7 +99,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
   if (!user) throw new Error('Unable to login user');
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, user.local.password);
 
   if (!isMatch) throw new Error('Unable to login');
 
@@ -89,12 +109,16 @@ userSchema.statics.findByCredentials = async (email, password) => {
 // Hash the plain text password before saving
 // eslint-disable-next-line func-names
 userSchema.pre('save', async function(next) {
-  const user = this;
-
-  if (user.isModified('password'))
-    user.password = await bcrypt.hash(user.password, 8);
-
-  next();
+  try {
+    if (this.method !== 'local') next();
+    // Generate a password hash(salt + hash)
+    const passwordHash = await bcrypt.hash(this.local.password, 8);
+    // Re-assign hashed version over original, plain text password
+    this.local.password = passwordHash;
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 const User = mongoose.model('User', userSchema);
