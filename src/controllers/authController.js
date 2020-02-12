@@ -1,5 +1,8 @@
+const { validationResult } = require("express-validator");
 const JWT = require("jsonwebtoken");
 const User = require("../models/User");
+
+const AuthError = require("../errors/AuthError");
 
 const signToken = user => {
   return JWT.sign(
@@ -13,14 +16,15 @@ const signToken = user => {
   );
 };
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   try {
     const { email } = req.body;
 
     // check if there any user with the same email
     const foundUser = await User.findOne({ "local.email": email });
-    if (foundUser)
-      return res.status(403).json({ error: "Email is already in use" });
+    if (foundUser) {
+      return AuthError.userAlreadyExists();
+    }
 
     const newUser = new User({
       method: "local",
@@ -32,7 +36,11 @@ exports.register = async (req, res) => {
 
     res.status(201).send({ newUser, token });
   } catch (error) {
-    res.status(400).send(error);
+    if (!error.statusCode) {
+      console.log("Server hatası");
+      error.statusCode = 500;
+    }
+    next(error);
   }
 };
 
