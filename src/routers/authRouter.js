@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const authController = require("../controllers/authController");
+const { body } = require("express-validator");
 // eslint-disable-next-line no-unused-vars
 const auth = require("../middleware/auth");
 
