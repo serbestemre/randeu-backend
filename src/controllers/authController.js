@@ -21,10 +21,11 @@ exports.register = async (req, res, next) => {
     const { email } = req.body;
 
     // check if there any user with the same email
-    const foundUser = await User.findOne({ "local.email": email });
-    if (foundUser) {
-      return AuthError.userAlreadyExists();
-    }
+    const foundLocalUser = await User.findOne({ "local.email": email });
+    const foundGoogleUser = await User.findOne({
+      "google.email": email
+    });
+    if (foundLocalUser || foundGoogleUser) return AuthError.userAlreadyExists();
 
     const newUser = new User({
       method: "local",
