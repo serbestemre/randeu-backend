@@ -1,16 +1,18 @@
-const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
-const LocalStrategy = require('passport-local').Strategy;
-const { ExtractJwt } = require('passport-jwt');
-const GooglePlusTokenStrategy = require('passport-google-plus-token');
-const FacebookTokenStrategy = require('passport-facebook-token');
-const User = require('../models/User');
+const passport = require("passport");
+const JwtStrategy = require("passport-jwt").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
+const { ExtractJwt } = require("passport-jwt");
+const GooglePlusTokenStrategy = require("passport-google-plus-token");
+const FacebookTokenStrategy = require("passport-facebook-token");
+const User = require("../models/User");
+
+const AuthError = require("../errors/AuthError");
 
 // JSON WEB TOKENS STRATEGY
 passport.use(
   new JwtStrategy(
     {
-      jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+      jwtFromRequest: ExtractJwt.fromHeader("authorization"),
       secretOrKey: process.env.JWT_SECRET_KEY
     },
     async (payload, done) => {
@@ -31,7 +33,7 @@ passport.use(
 );
 
 passport.use(
-  'facebookToken',
+  "facebookToken",
   new FacebookTokenStrategy(
     {
       clientID: process.env.appID,
@@ -39,9 +41,9 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log('profile', profile);
-        console.log('accessToken', accessToken);
-        console.log('refreshToken', refreshToken);
+        console.log("profile", profile);
+        console.log("accessToken", accessToken);
+        console.log("refreshToken", refreshToken);
       } catch (error) {
         done(error, false, error.message);
       }
@@ -53,13 +55,13 @@ passport.use(
 passport.use(
   new LocalStrategy(
     {
-      usernameField: 'email'
+      usernameField: "email"
     },
     async (email, password, done) => {
       try {
-        console.log('email', email);
+        console.log("email", email);
         // Find the user given the email
-        const user = await User.findOne({ 'local.email': email });
+        const user = await User.findOne({ "local.email": email });
 
         // IF not handle it
         if (!user) return done(null, false);
@@ -67,7 +69,7 @@ passport.use(
         // Check if the password is correct
         const isMatch = await user.isValidPassword(password);
 
-        console.log('isMatch', isMatch);
+        console.log("isMatch", isMatch);
 
         // If not handle it.
         if (!isMatch) return done(null, false);
@@ -101,7 +103,7 @@ passport.use(
 // };
 
 passport.use(
-  'googleToken',
+  "googleToken",
   new GooglePlusTokenStrategy(
     {
       clientID: process.env.clientID,
@@ -109,20 +111,22 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log('accessToken', accessToken);
-        console.log('refreshToken', refreshToken);
-        console.log('profile', profile);
-
         // Check whether this current user exists in our DB
-        const existingUser = await User.findOne({ 'google.id': profile.id });
-        if (existingUser) {
-          console.log('User already exists in our DB');
-          return done(null, existingUser);
+        const googleExistingUser = await User.findOne({
+          "google.id": profile.id
+        });
+        const localExistingUser = await User.findOne({
+          "local.email": profile.emails[0].value
+        });
+        if (googleExistingUser || localExistingUser) {
+          console.log("User already exists in our DB");
+
+          return done(AuthError.userAlreadyExists, null);
         }
-        console.log('User doenst exist, we are creating new one');
+        console.log("User doenst exist, we are creating new one");
         // If new account
         const newUser = new User({
-          method: 'google',
+          method: "google",
           google: {
             id: profile.id,
             email: profile.emails[0].value,

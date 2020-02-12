@@ -1,12 +1,12 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
     method: {
       type: String,
-      enum: ['local', 'google', 'facebook'],
+      enum: ["local", "google", "facebook"],
       required: true
     },
     local: {
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
         trim: true,
         lowercase: true,
         validate(value) {
-          if (!validator.isEmail(value)) throw new Error('Email is invalid');
+          if (!validator.isEmail(value)) throw new Error("Email is invalid");
         }
       },
       password: {
@@ -101,8 +101,8 @@ userSchema.methods.toJSON = function() {
 // eslint-disable-next-line func-names
 userSchema.methods.isValidPassword = async function(newPassword) {
   try {
-    console.log('this.local.password', this.local.password);
-    console.log('newPassword', newPassword);
+    console.log("this.local.password", this.local.password);
+    console.log("newPassword", newPassword);
     return await bcrypt.compare(newPassword, this.local.password);
   } catch (error) {
     throw new Error(error);
@@ -129,9 +129,9 @@ userSchema.methods.isValidPassword = async function(newPassword) {
 // Hash the plain text password before saving
 // eslint-disable-next-line func-names
 
-userSchema.pre('save', async function(next) {
+userSchema.pre("save", async function(next) {
   try {
-    if (this.method !== 'local') next();
+    if (this.method !== "local") next();
     // Generate a password hash(salt + hash)
     const passwordHash = await bcrypt.hash(this.local.password, 8);
     // Re-assign hashed version over original, plain text password
@@ -142,6 +142,6 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
