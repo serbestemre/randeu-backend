@@ -18,6 +18,13 @@ const signToken = user => {
 
 exports.register = async (req, res, next) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error("Validation failed");
+      error.statusCode = 422;
+      error.data = errors.array();
+      throw error;
+    }
     const { email } = req.body;
 
     // check if there any user with the same email

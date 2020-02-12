@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
@@ -11,25 +10,16 @@ const userSchema = new mongoose.Schema(
     },
     local: {
       name: {
-        type: String,
-        trim: true
+        type: String
       },
       surname: {
-        type: String,
-        trim: true
+        type: String
       },
       email: {
-        type: String,
-        trim: true,
-        lowercase: true,
-        validate(value) {
-          if (!validator.isEmail(value)) throw new Error("Email is invalid");
-        }
+        type: String
       },
       password: {
-        type: String,
-        minlength: 6,
-        trim: true
+        type: String
       },
       birthday: {
         type: Date
@@ -48,8 +38,7 @@ const userSchema = new mongoose.Schema(
         type: String
       },
       email: {
-        type: String,
-        lowercase: true
+        type: String
       },
       name: {
         type: String
@@ -63,8 +52,7 @@ const userSchema = new mongoose.Schema(
         type: String
       },
       email: {
-        type: String,
-        lowercase: true
+        type: String
       }
     }
   },
