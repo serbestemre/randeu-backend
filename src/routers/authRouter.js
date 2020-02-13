@@ -25,11 +25,16 @@ router.post(
       .trim()
       .isLength({ min: 5 })
       .withMessage("Şifre 6 karakter veya fazla olmalı"),
-    body("passwordCheck").custom((value, { req }) => {
-      if (value !== req.body.password)
-        throw new Error("Girilen şifreler birbiriyle eşleşmiyor");
-      return true;
-    }),
+    body("passwordCheck")
+      .not()
+      .isEmpty()
+      .withMessage("Şifre tekrar alanı boş bırakılamaz")
+      .custom((value, { req }) => {
+        if (value !== req.body.password)
+          throw new Error("Girilen şifreler birbiriyle eşleşmiyor");
+        return true;
+      }),
+
     body("name")
       .trim()
       .not()
