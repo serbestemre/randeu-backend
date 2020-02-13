@@ -52,12 +52,12 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
   const token = signToken(req.user);
   res.status(200).json({ token });
 };
 
-exports.googleOAuth = async (req, res, next) => {
+exports.googleOAuth = async (req, res) => {
   // Generate token
   console.log("req.user", req.user);
   const email = req.user.google.email;
@@ -65,12 +65,12 @@ exports.googleOAuth = async (req, res, next) => {
   res.status(200).json({ token, email });
 };
 
-exports.facebookOAuth = async (req, res, next) => {
+exports.facebookOAuth = async () => {
   // Generate token
   console.log("Facebook auth!");
 };
 
-exports.secret = async (req, res, next) => {
+exports.secret = async (req, res) => {
   console.log("Token accepted");
   res.json({ secret: "resource" });
 };
