@@ -37,9 +37,7 @@ const businessSchema = new Schema(
               type: Schema.Types.ObjectId,
               ref: "Service"
             },
-            price: {
-              type: Number
-            }
+            price: { type: Number }
           }
         ]
       }
@@ -70,9 +68,7 @@ const businessSchema = new Schema(
       default: false
     }
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Business", businessSchema);
