@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema(
       password: {
         type: String
       },
+      passwordCheck: {
+        type: String
+      },
       birthday: {
         type: Date
       },
