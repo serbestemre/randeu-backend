@@ -59,12 +59,12 @@ passport.use(
     },
     async (email, password, done) => {
       try {
-        console.log("email", email);
         // Find the user given the email
         const user = await User.findOne({ "local.email": email });
-
         // IF not handle it
         if (!user) return done(null, false);
+
+        console.log(password);
 
         // Check if the password is correct
         const isMatch = await user.isValidPassword(password);
@@ -121,7 +121,7 @@ passport.use(
         if (googleExistingUser || localExistingUser) {
           console.log("User already exists in our DB");
 
-          return done(AuthError.userAlreadyExists, null);
+          return done(AuthError.userAlreadyExists(), null);
         }
         console.log("User doenst exist, we are creating new one");
         // If new account

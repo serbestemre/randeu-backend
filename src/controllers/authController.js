@@ -60,16 +60,17 @@ exports.login = async (req, res, next) => {
 exports.googleOAuth = async (req, res, next) => {
   // Generate token
   console.log("req.user", req.user);
+  const email = req.user.google.email;
   const token = signToken(req.user);
-  res.status(200).json({ token });
+  res.status(200).json({ token, email });
 };
 
 exports.facebookOAuth = async (req, res, next) => {
   // Generate token
-  console.log("GOT HERE!");
+  console.log("Facebook auth!");
 };
 
 exports.secret = async (req, res, next) => {
-  console.log("I managed to get here!");
+  console.log("Token accepted");
   res.json({ secret: "resource" });
 };
