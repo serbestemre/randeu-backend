@@ -4,6 +4,8 @@ const authController = require("../controllers/authController");
 // eslint-disable-next-line no-unused-vars
 const auth = require("../middleware/auth");
 
+const validator = require("../helpers/validate");
+
 const router = new express.Router();
 
 const passportSigIn = passport.authenticate("local", { session: false });
@@ -14,7 +16,7 @@ const passportFacebook = passport.authenticate("facebookToken", {
 });
 
 router.post(
-  "/register", authController.register
+  "/register", validator, authController.register
 );
 router.post("/login", passportSigIn, authController.login);
 router.post("/oauth/google", passportGoogle, authController.googleOAuth);

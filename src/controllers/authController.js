@@ -1,3 +1,4 @@
+const ValidationError = require("mongoose").Error.ValidationError;
 const JWT = require('jsonwebtoken');
 const User = require('../models/User');
 const response = require('../helpers/response');
@@ -38,6 +39,10 @@ exports.register = async (req, res) => {
 
     return response.success(res, 201, { newUser, token });
   } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, {statusCode: 400});
+      return response.withError(res, error);
+    }
     return response.withError(res, CommonError.businessError());
   }
 };

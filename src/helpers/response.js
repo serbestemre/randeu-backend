@@ -8,7 +8,7 @@ response.success = (res, code = 200, data, message = "") => {
 };
 
 response.withError = (res, error) => {
-  const { statusCode, message, data } = error;
+  const { statusCode = 500, message, data } = error;
   return res.status(statusCode).json({
     message,
     data
