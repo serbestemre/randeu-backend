@@ -1,13 +1,13 @@
-const { validationResult } = require("express-validator");
-const JWT = require("jsonwebtoken");
-const User = require("../models/User");
-
-const AuthError = require("../errors/AuthError");
+const JWT = require('jsonwebtoken');
+const User = require('../models/User');
+const response = require('../helpers/response');
+const AuthError = require('../errors/AuthError');
+const CommonError = require('../errors/CommonError');
 
 const signToken = user => {
   return JWT.sign(
     {
-      iss: "PAA",
+      iss: 'PAA',
       sub: user.id,
       iat: new Date().getTime(), // current time
       exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
@@ -16,39 +16,29 @@ const signToken = user => {
   );
 };
 
-exports.register = async (req, res, next) => {
+exports.register = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const error = new Error("Validation failed");
-      error.statusCode = 422;
-      error.data = errors.array();
-      throw error;
-    }
     const { email } = req.body;
 
     // check if there any user with the same email
-    const foundLocalUser = await User.findOne({ "local.email": email });
+    const foundLocalUser = await User.findOne({ 'local.email': email });
     const foundGoogleUser = await User.findOne({
-      "google.email": email
+      'google.email': email
     });
-    if (foundLocalUser || foundGoogleUser) return AuthError.userAlreadyExists();
+
+    if (foundLocalUser || foundGoogleUser) return response.withError(res, AuthError.userAlreadyExists());
 
     const newUser = new User({
-      method: "local",
+      method: 'local',
       local: req.body
     });
 
     await newUser.save();
     const token = await signToken(newUser);
 
-    res.status(201).send({ newUser, token });
+    return response.success(res, 201, { newUser, token });
   } catch (error) {
-    if (!error.statusCode) {
-      console.log("Server hatası");
-      error.statusCode = 500;
-    }
-    next(error);
+    return response.withError(res, CommonError.businessError());
   }
 };
 
@@ -59,7 +49,7 @@ exports.login = async (req, res) => {
 
 exports.googleOAuth = async (req, res) => {
   // Generate token
-  console.log("req.user", req.user);
+  console.log('req.user', req.user);
   const email = req.user.google.email;
   const token = signToken(req.user);
   res.status(200).json({ token, email });
@@ -67,10 +57,10 @@ exports.googleOAuth = async (req, res) => {
 
 exports.facebookOAuth = async () => {
   // Generate token
-  console.log("Facebook auth!");
+  console.log('Facebook auth!');
 };
 
 exports.secret = async (req, res) => {
-  console.log("Token accepted");
-  res.json({ secret: "resource" });
+  console.log('Token accepted');
+  res.json({ secret: 'resource' });
 };

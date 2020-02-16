@@ -16,13 +16,6 @@ app.use("/user", userRouter);
 app.use("/admin", adminRouter);
 app.use("/business", businessRouter);
 
-app.use((error, req, res) => {
-  const statusCode = error.statusCode || 500;
-  const message = error.message;
-  const data = error.data;
-  res.status(statusCode).json({ message, data });
-});
-
 db.connectDb()
   .then(() => {
     app.listen(port, () => {

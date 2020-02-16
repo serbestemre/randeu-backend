@@ -1,6 +1,8 @@
-exports.userAlreadyExists = () => {
-  const error = new Error();
-  error.message = "Kullanıcı zaten kayıtlı";
-  error.statusCode = 403;
-  throw error;
-};
+const AuthError = {};
+
+AuthError.userAlreadyExists = () => ({
+  statusCode: 403,
+  message: "Kullanıcı zaten kayıtlı"
+});
+
+module.exports = AuthError;
