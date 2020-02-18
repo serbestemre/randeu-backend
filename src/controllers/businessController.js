@@ -6,7 +6,8 @@ exports.createBusiness = (req, res) => {
     address,
     sector,
     businessType,
-    businessOwner
+    businessOwner,
+    employeeList
   } = req.body;
   // const employee = req.body.employeeList[0].employee;
 
@@ -15,7 +16,8 @@ exports.createBusiness = (req, res) => {
     address,
     sector,
     businessType,
-    businessOwner
+    businessOwner,
+    employeeList
   });
 
   console.log("newBusiness Obj = ", newBusiness);

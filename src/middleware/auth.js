@@ -6,6 +6,7 @@ const GooglePlusTokenStrategy = require("passport-google-plus-token");
 const FacebookTokenStrategy = require("passport-facebook-token");
 const User = require("../models/User");
 
+const response = require("../helpers/response");
 const AuthError = require("../errors/AuthError");
 
 // JSON WEB TOKENS STRATEGY
@@ -20,12 +21,12 @@ passport.use(
         // Find the user specified in token
         const user = await User.findById(payload.sub);
 
-        // If user doesn't exists, handle it
+        // TODO return an error
         if (!user) return done(null, false);
 
-        // Otherwise, return the user
         done(null, user);
       } catch (error) {
+        // TODO return an Internal Server Error
         done(error, false);
       }
     }
@@ -41,10 +42,25 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log("profile", profile);
-        console.log("accessToken", accessToken);
-        console.log("refreshToken", refreshToken);
+        const { id } = profile;
+        const foundFacebookUser = await User.findOne({ "facebook.id": id });
+
+        // TODO return a proper response as json error or redirect the page
+        if (foundFacebookUser) done(AuthError.userAlreadyExists(), null);
+        const newUser = new User({
+          method: "facebook",
+          facebook: {
+            id: profile.id,
+            email: profile.emails[0].value,
+            fullName: profile.displayName
+          }
+        });
+
+        await newUser.save();
+
+        done(null, newUser);
       } catch (error) {
+        // response üzerinden JSON hata döndür
         done(error, false, error.message);
       }
     }
@@ -61,7 +77,8 @@ passport.use(
       try {
         // Find the user given the email
         const user = await User.findOne({ "local.email": email });
-        // IF not handle it
+
+        // TODO return an error rather than null
         if (!user) return done(null, false);
 
         console.log(password);
@@ -71,36 +88,17 @@ passport.use(
 
         console.log("isMatch", isMatch);
 
-        // If not handle it.
+        // TODO return an error rather than null
         if (!isMatch) return done(null, false);
 
-        // Otherwise, return the user
         done(null, user);
       } catch (error) {
+        // TODO return the Internal server error
         done(error, false);
       }
     }
   )
 );
-
-// const auth = async (req, res, next) => {
-//   try {
-//     const token = req.header('Authorization').replace('Bearer ', '');
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-//     const user = await User.findOne({
-//       _id: decoded._id,
-//       'local.tokens.token': token
-//     });
-
-//     if (!user) throw new Error();
-
-//     req.token = token;
-//     req.user = user;
-//     next();
-//   } catch (e) {
-//     res.status(401).send({ error: 'Please Authenticate' });
-//   }
-// };
 
 passport.use(
   "googleToken",
@@ -115,10 +113,8 @@ passport.use(
         const googleExistingUser = await User.findOne({
           "google.id": profile.id
         });
-        const localExistingUser = await User.findOne({
-          "local.email": profile.emails[0].value
-        });
-        if (googleExistingUser || localExistingUser) {
+
+        if (googleExistingUser) {
           console.log("User already exists in our DB");
 
           return done(AuthError.userAlreadyExists(), null);

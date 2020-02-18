@@ -14,11 +14,8 @@ const passportJWT = passport.authenticate("jwt", { session: false });
 const passportFacebook = passport.authenticate("facebookToken", {
   session: false
 });
-
-router.post(
-  "/register", validator, authController.register
-);
-router.post("/login", passportSigIn, authController.login);
+router.post("/register", validator, authController.register);
+router.post("/login", validator, passportSigIn, authController.login);
 router.post("/oauth/google", passportGoogle, authController.googleOAuth);
 router.post("/oauth/facebook", passportFacebook, authController.facebookOAuth);
 router.get("/secret", passportJWT, authController.secret);

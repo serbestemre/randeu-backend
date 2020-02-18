@@ -1,9 +1,10 @@
-const authSchema = require('./schemas/authSchema');
+const authSchema = require("./schemas/authSchema");
 
 module.exports = {
   ENDPOINTS: {
     register: authSchema.register,
-    'admin/createSector': ''
+    login: authSchema.login,
+    "admin/createSector": ""
   },
   ROLES: {
     USER: 1,

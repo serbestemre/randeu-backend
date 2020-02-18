@@ -10,10 +10,10 @@ const userSchema = new mongoose.Schema(
     },
     local: {
       fullName: {
-        type: String,
+        type: String
       },
       email: {
-        type: String,
+        type: String
       },
       password: {
         type: String
@@ -52,6 +52,9 @@ const userSchema = new mongoose.Schema(
         type: String
       },
       email: {
+        type: String
+      },
+      fullName: {
         type: String
       }
     }

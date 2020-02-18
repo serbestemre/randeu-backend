@@ -2,10 +2,10 @@ const CommonError = {};
 
 CommonError.businessError = () => ({
   statusCode: 500,
-  message: "Internal Error"
+  message: "Internal Server Error"
 });
 
-CommonError.validationError = (data) => ({
+CommonError.validationError = data => ({
   statusCode: 400,
   message: "Validation Error",
   data
