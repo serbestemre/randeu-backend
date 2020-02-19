@@ -6,6 +6,15 @@ module.exports = {
       .required()
       .empty()
   }),
+  updateSector: Joi.object({
+    updatedSectorId: Joi.string()
+      .required()
+      .empty(),
+    updatedSectorName: Joi.string()
+      .required()
+      .trim()
+      .empty()
+  }),
   createService: Joi.object({
     serviceName: Joi.string()
       .required()

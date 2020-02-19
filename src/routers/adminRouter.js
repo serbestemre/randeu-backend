@@ -7,6 +7,12 @@ const adminController = require('../controllers/adminController');
 
 router.post('/createSector', validator, adminController.createSector);
 
+// Get all sector list
+router.get('/sectorList', adminController.getSectors);
+
+// Update a sector according to the given ID in parameter
+router.put('/updateSector', validator, adminController.updateSector);
+
 router.post('/createBusinessType', adminController.createBusinessType);
 
 router.put(

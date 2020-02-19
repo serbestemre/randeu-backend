@@ -9,6 +9,7 @@ module.exports = {
     'admin/updateBusinessType': adminSchema.updateBusinessType,
     'admin/businessTypeList': adminSchema.getBusinessTypesBySector,
     'admin/createSector': adminSchema.createSector,
+    'admin/updateSector': adminSchema.updateSector,
     'admin/createService': adminSchema.createService
   },
   ROLES: {

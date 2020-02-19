@@ -58,6 +58,40 @@ exports.createSector = async (req, res) => {
   }
 };
 
+exports.getSectors = async (req, res) => {
+  try {
+    const sectors = await Sector.find();
+    Response.success(res, 200, sectors, 'Sektörler başarıyla listelendi');
+  } catch (error) {
+    Response.withError(res, CommonError.serverError);
+  }
+};
+
+exports.updateSector = async (req, res) => {
+  const { updatedSectorId, updatedSectorName } = req.body;
+  try {
+    const sector = await Sector.findById(updatedSectorId);
+    if (!sector) return Response.withError(res, AdminError.sectorNotFound());
+    if (sector.sectorName === updatedSectorName)
+      return Response.withError(res, AdminError.sectorAlreadyExist());
+
+    sector.sectorName = updatedSectorName;
+    const result = await sector.save();
+    Response.success(res, 201, result, 'Sektör başarıyla güncellendi');
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = 'Güncellenmek istenen sektör id hatalı';
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
 exports.createBusinessType = (req, res) => {
   const businessTypeName = req.body.businessTypeName;
   const sector = req.body.sectorID;

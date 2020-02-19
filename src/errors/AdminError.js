@@ -25,4 +25,9 @@ AdminError.sectorAlreadyExist = () => ({
   message: 'Sektör zaten kayıtlı'
 });
 
+AdminError.sectorNotFound = () => ({
+  statusCode: 404,
+  message: 'Sektör bulunamadı'
+});
+
 module.exports = AdminError;
