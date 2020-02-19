@@ -13,7 +13,13 @@ router.get('/sectorList', adminController.getSectors);
 // Update a sector according to the given ID in parameter
 router.put('/updateSector', validator, adminController.updateSector);
 
-router.post('/createBusinessType', adminController.createBusinessType);
+router.delete('/deleteSector', validator, adminController.deleteSector);
+
+router.post(
+  '/createBusinessType',
+  validator,
+  adminController.createBusinessType
+);
 
 router.put(
   '/updateBusinessType',

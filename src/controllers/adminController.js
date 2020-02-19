@@ -92,25 +92,47 @@ exports.updateSector = async (req, res) => {
   }
 };
 
-exports.createBusinessType = (req, res) => {
-  const businessTypeName = req.body.businessTypeName;
-  const sector = req.body.sectorID;
-  console.log('bağlancak sectorID:', sector);
-  const businessType = new BusinessType({
-    businessTypeName,
-    sector: req.body.sectorID
-  });
-  businessType
-    .save()
-    .then(() => {
-      Response.success(
-        res,
-        201,
-        'İşyeri tipi başarıyla oluşturuldu',
-        businessType
-      );
-    })
-    .catch(err => Response.withError(res, err));
+exports.deleteSector = async (req, res) => {
+  const { sectorId } = req.body;
+  try {
+    const foundSector = await Sector.findById(sectorId);
+    if (!foundSector)
+      return Response.withError(res, AdminError.sectorNotFound());
+
+    await Sector.deleteOne(foundSector);
+    Response.success(res, 200, { foundSector }, 'Sektör başarıyla silindi');
+  } catch (error) {
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
+exports.createBusinessType = async (req, res) => {
+  const { businessTypeName, sectorId } = req.body;
+  console.log('bağlancak sectorID:', sectorId);
+  try {
+    const sector = await Sector.findById(sectorId);
+    if (!sector) return Response.withError(res, AdminError.sectorNotFound());
+
+    const newBusinessType = new BusinessType({
+      businessTypeName,
+      sectorId
+    });
+
+    const result = await newBusinessType.save();
+    Response.success(res, 201, result, 'İşyeri tipi oluşturuldu');
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = 'Sektörler listelenemedi!';
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+  }
 };
 
 exports.getBusinessTypesBySector = async (req, res) => {

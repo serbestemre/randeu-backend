@@ -5,11 +5,13 @@ module.exports = {
   ENDPOINTS: {
     register: authSchema.register,
     login: authSchema.login,
+    'admin/createBusinessType': adminSchema.createBusinessType,
     'admin/deleteBusinessType': adminSchema.deleteBusinessType,
     'admin/updateBusinessType': adminSchema.updateBusinessType,
     'admin/businessTypeList': adminSchema.getBusinessTypesBySector,
     'admin/createSector': adminSchema.createSector,
     'admin/updateSector': adminSchema.updateSector,
+    'admin/deleteSector': adminSchema.deleteSector,
     'admin/createService': adminSchema.createService
   },
   ROLES: {

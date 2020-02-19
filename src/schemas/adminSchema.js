@@ -15,12 +15,25 @@ module.exports = {
       .trim()
       .empty()
   }),
+  deleteSector: Joi.object({
+    sectorId: Joi.string()
+      .required()
+      .empty()
+  }),
   createService: Joi.object({
     serviceName: Joi.string()
       .required()
       .trim()
       .empty(),
     businessTypeID: Joi.string()
+      .required()
+      .empty()
+  }),
+  createBusinessType: Joi.object({
+    sectorId: Joi.string()
+      .required()
+      .empty(),
+    businessTypeName: Joi.string()
       .required()
       .empty()
   }),
