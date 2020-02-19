@@ -14,7 +14,8 @@ module.exports = {
     "admin/updateSector": adminSchema.updateSector,
     "admin/deleteSector": adminSchema.deleteSector,
     "admin/createService": adminSchema.createService,
-    "business/createBusiness": businessSchema.createBusiness
+    "business/createBusiness": businessSchema.createBusiness,
+    "business/updateBusiness": businessSchema.updateBusiness
   },
   ROLES: {
     USER: 1,
