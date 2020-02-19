@@ -5,8 +5,3 @@ AuthError.userAlreadyExists = () => ({
 });
 
 module.exports = AuthError;
-AuthError.zatenVar = () => {
-  const error = new Error("Kullanıcı zaten var");
-  error.statusCode = 403;
-  throw error;
-};

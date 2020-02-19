@@ -1,6 +1,6 @@
 const CommonError = {};
 
-CommonError.businessError = () => ({
+CommonError.serverError = () => ({
   statusCode: 500,
   message: "Internal Server Error"
 });

@@ -7,6 +7,8 @@ const { ENDPOINTS } = require("../constants");
 module.exports = async function validate(req, res, next) {
   const schema = ENDPOINTS[req.originalUrl.slice(1)];
 
+  console.log(req.originalUrl.slice(1));
+
   try {
     const value = await schema.validateAsync(req.body);
     console.log(value);

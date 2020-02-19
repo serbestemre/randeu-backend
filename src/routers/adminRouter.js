@@ -1,11 +1,19 @@
 const express = require("express");
-
-const router = express.Router();
+const validator = require("../helpers/validate");
+const router = express.Router({ mergeParams: true });
 
 const adminController = require("../controllers/adminController");
 
 router.post("/createSector", adminController.createSector);
+
 router.post("/createBusinessType", adminController.createBusinessType);
+
+router.delete(
+  "/deleteBusinessType",
+  validator,
+  adminController.deleteBusinessType
+);
+
 router.post("/createService", adminController.createService);
 
 module.exports = router;
