@@ -1,31 +1,32 @@
-const express = require("express");
-const validator = require("../helpers/validate");
+const express = require('express');
+const validator = require('../helpers/validate');
+
 const router = express.Router({ mergeParams: true });
 
-const adminController = require("../controllers/adminController");
+const adminController = require('../controllers/adminController');
 
-router.post("/createSector", adminController.createSector);
+router.post('/createSector', validator, adminController.createSector);
 
-router.post("/createBusinessType", adminController.createBusinessType);
+router.post('/createBusinessType', adminController.createBusinessType);
 
 router.put(
-  "/updateBusinessType",
+  '/updateBusinessType',
   validator,
   adminController.updateBusinessType
 );
 
 router.delete(
-  "/deleteBusinessType",
+  '/deleteBusinessType',
   validator,
   adminController.deleteBusinessType
 );
 
 router.get(
-  "/businessTypeList",
+  '/businessTypeList',
   validator,
   adminController.getBusinessTypesBySector
 );
 
-router.post("/createService", adminController.createService);
+router.post('/createService', validator, adminController.createService);
 
 module.exports = router;

@@ -1,6 +1,20 @@
-const Joi = require("@hapi/joi");
+const Joi = require('@hapi/joi');
 
 module.exports = {
+  createSector: Joi.object({
+    sectorName: Joi.string()
+      .required()
+      .empty()
+  }),
+  createService: Joi.object({
+    serviceName: Joi.string()
+      .required()
+      .trim()
+      .empty(),
+    businessTypeID: Joi.string()
+      .required()
+      .empty()
+  }),
   deleteBusinessType: Joi.object({
     businessTypeId: Joi.string().required()
   }),

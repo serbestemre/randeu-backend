@@ -1,55 +1,67 @@
-const ValidationError = require("mongoose").Error.ValidationError;
-const CastError = require("mongoose").Error.CastError;
+const ValidationError = require('mongoose').Error.ValidationError;
+const CastError = require('mongoose').Error.CastError;
 
-const Sector = require("../models/Sector");
-const BusinessType = require("../models/BusinessType");
-const Service = require("../models/Service");
-const Response = require("../helpers/response");
-const AdminError = require("../errors/AdminError");
-const CommonError = require("../errors/CommonError");
+const Sector = require('../models/Sector');
+const BusinessType = require('../models/BusinessType');
+const Service = require('../models/Service');
+const Response = require('../helpers/response');
+const AdminError = require('../errors/AdminError');
+const CommonError = require('../errors/CommonError');
 
-exports.createService = (req, res) => {
+exports.createService = async (req, res) => {
   const serviceName = req.body.serviceName;
   const businessTypeID = req.body.businessTypeID;
 
-  console.log("service name => ", serviceName);
+  console.log('service name => ', serviceName);
+  try {
+    const service = await Service.findOne({ serviceName });
+    if (service)
+      return Response.withError(res, AdminError.serviceAlreadyExist());
 
-  const service = new Service({
-    serviceName,
-    businessType: businessTypeID
-  });
+    const newService = new Service({
+      serviceName,
+      businessTypeID
+    });
 
-  service
-    .save()
-    .then(() => {
-      res.status(201).json({
-        message: "Servis oluşturuldu",
-        service
-      });
-    })
-    .catch(err => Response.withError(res, err));
+    const result = await newService.save();
+    Response.success(res, 201, result, 'Servis oluşturuldu!');
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = 'İşyeri tipleri listelenemedi!';
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+  }
 };
 
-exports.createSector = (req, res) => {
+exports.createSector = async (req, res) => {
   const sectorName = req.body.sectorName;
-  const sector = new Sector({
-    sectorName
-  });
-  sector
-    .save()
-    .then(() => {
-      res.status(201).json({
-        message: "Sektör başarıyla oluşturuldu",
-        sector
-      });
-    })
-    .catch(err => console.log(err));
+  try {
+    const sector = await Sector.findOne({ sectorName });
+    if (sector) return Response.withError(res, AdminError.sectorAlreadyExist());
+    const newSector = new Sector({
+      sectorName
+    });
+    const result = await newSector.save();
+    Response.success(res, 201, result, 'Sektör oluşturuldu!');
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError);
+  }
 };
 
 exports.createBusinessType = (req, res) => {
   const businessTypeName = req.body.businessTypeName;
   const sector = req.body.sectorID;
-  console.log("bağlancak sectorID:", sector);
+  console.log('bağlancak sectorID:', sector);
   const businessType = new BusinessType({
     businessTypeName,
     sector: req.body.sectorID
@@ -60,7 +72,7 @@ exports.createBusinessType = (req, res) => {
       Response.success(
         res,
         201,
-        "İşyeri tipi başarıyla oluşturuldu",
+        'İşyeri tipi başarıyla oluşturuldu',
         businessType
       );
     })
@@ -79,7 +91,7 @@ exports.getBusinessTypesBySector = async (req, res) => {
       res,
       200,
       { businessTypeList },
-      "İş tipi listesi başarıyla oluşturuldu"
+      'İş tipi listesi başarıyla oluşturuldu'
     );
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -87,7 +99,7 @@ exports.getBusinessTypesBySector = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message = "İş tipleri listelenemedi çünkü sektör id değeri hatalı";
+      error.message = 'İş tipleri listelenemedi çünkü sektör id değeri hatalı';
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -119,7 +131,7 @@ exports.updateBusinessType = async (req, res) => {
       res,
       200,
       { businessType },
-      "İş tipi başarıyla Güncellendi"
+      'İş tipi başarıyla Güncellendi'
     );
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -127,7 +139,7 @@ exports.updateBusinessType = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message = "Güncellenmek istenen iş tipinin id değeri hatalı";
+      error.message = 'Güncellenmek istenen iş tipinin id değeri hatalı';
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -138,7 +150,7 @@ exports.updateBusinessType = async (req, res) => {
 
 exports.deleteBusinessType = async (req, res) => {
   const { businessTypeId } = req.body;
-  console.log("businesstype id => ", businessTypeId);
+  console.log('businesstype id => ', businessTypeId);
   try {
     const foundBusinessType = await BusinessType.findById(businessTypeId);
     if (!foundBusinessType)
@@ -149,7 +161,7 @@ exports.deleteBusinessType = async (req, res) => {
       res,
       200,
       { foundBusinessType },
-      "İş tipi başarıyla silindi"
+      'İş tipi başarıyla silindi'
     );
   } catch (error) {
     console.log(error);
