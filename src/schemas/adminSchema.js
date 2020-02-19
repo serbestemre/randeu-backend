@@ -15,5 +15,10 @@ module.exports = {
     uptadedValueSector: Joi.string()
       .required()
       .empty()
+  }),
+  getBusinessTypesBySector: Joi.object({
+    sectorId: Joi.string()
+      .required()
+      .empty()
   })
 };

@@ -8,6 +8,28 @@ const Response = require("../helpers/response");
 const AdminError = require("../errors/AdminError");
 const CommonError = require("../errors/CommonError");
 
+exports.createService = (req, res) => {
+  const serviceName = req.body.serviceName;
+  const businessTypeID = req.body.businessTypeID;
+
+  console.log("service name => ", serviceName);
+
+  const service = new Service({
+    serviceName,
+    businessType: businessTypeID
+  });
+
+  service
+    .save()
+    .then(() => {
+      res.status(201).json({
+        message: "Servis oluşturuldu",
+        service
+      });
+    })
+    .catch(err => Response.withError(res, err));
+};
+
 exports.createSector = (req, res) => {
   const sectorName = req.body.sectorName;
   const sector = new Sector({
@@ -45,26 +67,33 @@ exports.createBusinessType = (req, res) => {
     .catch(err => Response.withError(res, err));
 };
 
-exports.createService = (req, res) => {
-  const serviceName = req.body.serviceName;
-  const businessTypeID = req.body.businessTypeID;
+exports.getBusinessTypesBySector = async (req, res) => {
+  const { sectorId } = req.body;
 
-  console.log("service name => ", serviceName);
+  try {
+    const businessTypeList = await BusinessType.find({ sector: sectorId });
+    if (!businessTypeList)
+      return Response.withError(res, AdminError.noBusinessTypeByGivenSector());
 
-  const service = new Service({
-    serviceName,
-    businessType: businessTypeID
-  });
-
-  service
-    .save()
-    .then(() => {
-      res.status(201).json({
-        message: "Servis oluşturuldu",
-        service
-      });
-    })
-    .catch(err => Response.withError(res, err));
+    Response.success(
+      res,
+      200,
+      { businessTypeList },
+      "İş tipi listesi başarıyla oluşturuldu"
+    );
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = "İş tipleri listelenemedi çünkü sektör id değeri hatalı";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
 };
 
 exports.updateBusinessType = async (req, res) => {

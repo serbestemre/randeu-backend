@@ -7,6 +7,7 @@ module.exports = {
     login: authSchema.login,
     "admin/deleteBusinessType": adminSchema.deleteBusinessType,
     "admin/updateBusinessType": adminSchema.updateBusinessType,
+    "admin/businessTypeList": adminSchema.getBusinessTypesBySector,
     "admin/createSector": ""
   },
   ROLES: {

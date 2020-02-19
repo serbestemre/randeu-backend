@@ -20,6 +20,12 @@ router.delete(
   adminController.deleteBusinessType
 );
 
+router.get(
+  "/businessTypeList",
+  validator,
+  adminController.getBusinessTypesBySector
+);
+
 router.post("/createService", adminController.createService);
 
 module.exports = router;
