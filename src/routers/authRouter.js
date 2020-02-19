@@ -1,9 +1,10 @@
 const express = require("express");
 const passport = require("passport");
-const { body } = require("express-validator");
 const authController = require("../controllers/authController");
 // eslint-disable-next-line no-unused-vars
 const auth = require("../middleware/auth");
+
+const validator = require("../helpers/validate");
 
 const router = new express.Router();
 
@@ -13,35 +14,8 @@ const passportJWT = passport.authenticate("jwt", { session: false });
 const passportFacebook = passport.authenticate("facebookToken", {
   session: false
 });
-
-router.post(
-  "/register",
-  [
-    body("email")
-      .isEmail()
-      .withMessage("Lütfen geçerli email giriniz")
-      .normalizeEmail(),
-    body("password")
-      .trim()
-      .isLength({ min: 5 })
-      .withMessage("Şifre 6 karakter veya fazla olmalı"),
-    body("passwordCheck").custom((value, { req }) => {
-      if (value !== req.body.password)
-        throw new Error("Girilen şifreler birbiriyle eşleşmiyor");
-      return true;
-    }),
-    body("name")
-      .trim()
-      .not()
-      .isEmpty(),
-    body("surname")
-      .trim()
-      .not()
-      .isEmpty()
-  ],
-  authController.register
-);
-router.post("/login", passportSigIn, authController.login);
+router.post("/register", validator, authController.register);
+router.post("/login", validator, passportSigIn, authController.login);
 router.post("/oauth/google", passportGoogle, authController.googleOAuth);
 router.post("/oauth/facebook", passportFacebook, authController.facebookOAuth);
 router.get("/secret", passportJWT, authController.secret);

@@ -9,10 +9,7 @@ const userSchema = new mongoose.Schema(
       required: true
     },
     local: {
-      name: {
-        type: String
-      },
-      surname: {
+      fullName: {
         type: String
       },
       email: {
@@ -55,6 +52,9 @@ const userSchema = new mongoose.Schema(
         type: String
       },
       email: {
+        type: String
+      },
+      fullName: {
         type: String
       }
     }
