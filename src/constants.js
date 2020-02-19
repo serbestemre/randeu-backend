@@ -6,6 +6,7 @@ module.exports = {
     register: authSchema.register,
     login: authSchema.login,
     "admin/deleteBusinessType": adminSchema.deleteBusinessType,
+    "admin/updateBusinessType": adminSchema.updateBusinessType,
     "admin/createSector": ""
   },
   ROLES: {

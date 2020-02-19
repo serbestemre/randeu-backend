@@ -1,3 +1,6 @@
+const ValidationError = require("mongoose").Error.ValidationError;
+const CastError = require("mongoose").Error.CastError;
+
 const Sector = require("../models/Sector");
 const BusinessType = require("../models/BusinessType");
 const Service = require("../models/Service");
@@ -62,6 +65,46 @@ exports.createService = (req, res) => {
       });
     })
     .catch(err => Response.withError(res, err));
+};
+
+exports.updateBusinessType = async (req, res) => {
+  const {
+    updatingBusinessTypeId,
+    uptadedValueBusinessTypeName,
+    uptadedValueSector
+  } = req.body;
+  try {
+    const businessType = await BusinessType.findById(updatingBusinessTypeId);
+
+    if (!businessType)
+      return Response.withError(res, AdminError.businessTypeCouldnotFound());
+
+    if (businessType.businessTypeName === uptadedValueBusinessTypeName)
+      return Response.withError(res, AdminError.businessAlreadyExist());
+
+    businessType.businessTypeName = uptadedValueBusinessTypeName;
+    businessType.sector = uptadedValueSector;
+
+    await businessType.save();
+    Response.success(
+      res,
+      200,
+      { businessType },
+      "İş tipi başarıyla Güncellendi"
+    );
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = "Güncellenmek istenen iş tipinin id değeri hatalı";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
 };
 
 exports.deleteBusinessType = async (req, res) => {

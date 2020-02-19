@@ -8,6 +8,12 @@ router.post("/createSector", adminController.createSector);
 
 router.post("/createBusinessType", adminController.createBusinessType);
 
+router.put(
+  "/updateBusinessType",
+  validator,
+  adminController.updateBusinessType
+);
+
 router.delete(
   "/deleteBusinessType",
   validator,
