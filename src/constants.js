@@ -6,16 +6,22 @@ module.exports = {
   ENDPOINTS: {
     register: authSchema.register,
     login: authSchema.login,
+    "admin/createSector": adminSchema.createSector,
+    "admin/updateSector": adminSchema.updateSector,
+    "admin/deleteSector": adminSchema.deleteSector,
     "admin/createBusinessType": adminSchema.createBusinessType,
     "admin/updateBusinessType": adminSchema.updateBusinessType,
     "admin/deleteBusinessType": adminSchema.deleteBusinessType,
     "admin/businessTypeList": adminSchema.getBusinessTypesBySector,
-    "admin/createSector": adminSchema.createSector,
-    "admin/updateSector": adminSchema.updateSector,
-    "admin/deleteSector": adminSchema.deleteSector,
     "admin/createService": adminSchema.createService,
     "business/createBusiness": businessSchema.createBusiness,
-    "business/updateBusiness": businessSchema.updateBusiness
+    "business/updateBusiness": businessSchema.updateBusiness,
+    "business/deleteBusiness": businessSchema.deleteBusiness,
+    "business/hireEmployee": businessSchema.hireEmployee,
+    "business/dischargeEmployee": businessSchema.dischargeEmployee,
+    "business/employee/assignService": businessSchema.assignService,
+    "business/employee/editService": businessSchema.editService,
+    "business/employee/removeService": businessSchema.removeService
   },
   ROLES: {
     USER: 1,
