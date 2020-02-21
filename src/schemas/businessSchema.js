@@ -38,6 +38,8 @@ module.exports = {
       .required()
       .normalize()
   }),
+  addServices: Joi.object({}),
+  deleteServices: Joi.object({}),
   hireEmployee: Joi.object({}),
   dischargeEmployee: Joi.object({}),
   assignService: Joi.object({}),

@@ -29,7 +29,14 @@ const businessSchema = new Schema(
       {
         employee: {
           type: Schema.Types.ObjectId,
-          ref: "User"
+          ref: "User",
+          services: [
+            {
+              id: { type: Schema.Types.ObjectId },
+              duration: { type: Number, required: true },
+              price: { tpye: Number, required: true }
+            }
+          ]
         },
         serviceList: [
           {
