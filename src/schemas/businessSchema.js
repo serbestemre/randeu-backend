@@ -16,8 +16,7 @@ module.exports = {
       .empty(),
     businessOwner: Joi.string()
       .required()
-      .empty(),
-    employeeList: Joi.array()
+      .empty()
   }),
   updateBusiness: Joi.object({
     updatingBusiness: Joi.string()

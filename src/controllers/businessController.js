@@ -16,8 +16,7 @@ exports.createBusiness = async (req, res) => {
       address,
       sector,
       businessType,
-      businessOwner,
-      employeeList
+      businessOwner
     } = req.body;
     // const employee = req.body.employeeList[0].employee;
 
@@ -34,8 +33,7 @@ exports.createBusiness = async (req, res) => {
       address,
       sector,
       businessType,
-      businessOwner,
-      employeeList
+      businessOwner
     });
 
     // Find the businessOwner from users collection and grant his role as BusinessOwner
@@ -63,8 +61,7 @@ exports.updateBusiness = async (req, res) => {
     updatedAddress,
     updatedSector,
     updatedBusinessType,
-    updatedBusinessOwner,
-    updatedEmployeeList
+    updatedBusinessOwner
   } = req.body;
 
   const { userId } = req.body;
@@ -92,7 +89,6 @@ exports.updateBusiness = async (req, res) => {
     business.sector = updatedSector;
     business.businessType = updatedBusinessType;
     business.businessOwner = updatedBusinessOwner;
-    business.employeeList = updatedEmployeeList;
 
     const result = await business.save();
 
