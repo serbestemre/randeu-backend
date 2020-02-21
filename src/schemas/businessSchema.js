@@ -32,7 +32,12 @@ module.exports = {
       .required()
       .empty()
   }),
-  deleteBusiness: Joi.object({}),
+  deleteBusiness: Joi.object({
+    businessId: Joi.string()
+      .empty()
+      .required()
+      .normalize()
+  }),
   hireEmployee: Joi.object({}),
   dischargeEmployee: Joi.object({}),
   assignService: Joi.object({}),

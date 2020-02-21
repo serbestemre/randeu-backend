@@ -106,3 +106,29 @@ exports.updateBusiness = async (req, res) => {
     Response.withError(res, CommonError.serverError());
   }
 };
+
+exports.deleteBusiness = async (req, res) => {
+  const businessId = req.body.businessId;
+  try {
+    const business = await Business.findById(businessId);
+    console.log(business);
+
+    if (!business)
+      return Response.withError(res, BusinessError.businessCouldnotFound());
+
+    await Business.deleteOne(business);
+    Response.success(res, 200, business, "İş yeri başarılya silindi.");
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = "Silinmek istenen iş yeri id değeri hatalı";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+};

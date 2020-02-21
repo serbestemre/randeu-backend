@@ -7,5 +7,6 @@ const router = new express.Router();
 
 router.post("/createBusiness", validator, businessController.createBusiness);
 router.put("/updateBusiness", validator, businessController.updateBusiness);
+router.delete("/deleteBusiness", validator, businessController.deleteBusiness);
 
 module.exports = router;
