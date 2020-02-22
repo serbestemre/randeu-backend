@@ -25,7 +25,7 @@ module.exports = {
       .required()
       .trim()
       .empty(),
-    businessTypeID: Joi.string()
+    businessType: Joi.string()
       .required()
       .empty()
   }),

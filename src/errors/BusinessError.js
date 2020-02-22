@@ -26,4 +26,14 @@ BusinessError.notAllowedUser = () => ({
     "İş yeri bilgilerini güncellemek için gerekli yetkilere sahip olmayan kullanıcı."
 });
 
+BusinessError.BusinessTypesNotMatch = () => ({
+  statusCode: 400,
+  message: "İş yeri tipiyle servisin tanımlı olduğu iş yeri tipi eşleşmiyor."
+});
+
+BusinessError.ServiceAlreadyExist = () => ({
+  statusCode: 403,
+  message: "Bu servis zaten tanımlı."
+});
+
 module.exports = BusinessError;

@@ -27,7 +27,6 @@ module.exports = {
     updatedSector: Joi.string().empty(),
     updatedBusinessType: Joi.string().empty(),
     updatedBusinessOwner: Joi.string().empty(),
-    updatedEmployeeList: Joi.array(),
     userId: Joi.string()
       .required()
       .empty()
@@ -38,8 +37,19 @@ module.exports = {
       .required()
       .normalize()
   }),
-  addServices: Joi.object({}),
-  deleteServices: Joi.object({}),
+  addService: Joi.object({
+    serviceId: Joi.string()
+      .empty()
+      .required(),
+    business: Joi.string()
+      .empty()
+      .required()
+  }),
+  deleteService: Joi.object({
+    serviceId: Joi.string()
+      .empty()
+      .required()
+  }),
   hireEmployee: Joi.object({}),
   dischargeEmployee: Joi.object({}),
   assignService: Joi.object({}),

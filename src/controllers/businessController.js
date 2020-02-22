@@ -1,13 +1,16 @@
 const ValidationError = require("mongoose").Error.ValidationError;
 const CastError = require("mongoose").Error.CastError;
+const mongoose = require("mongoose");
 
 const User = require("../models/User");
 const Business = require("../models/Business");
+const Service = require("../models/Service");
 const Sector = require("../models/Sector");
 const BusinessType = require("../models/BusinessType");
 const Response = require("../helpers/response");
 const CommonError = require("../errors/CommonError");
 const BusinessError = require("../errors/BusinessError");
+const AdminError = require("../errors/AdminError");
 
 exports.createBusiness = async (req, res) => {
   try {
@@ -130,5 +133,43 @@ exports.deleteBusiness = async (req, res) => {
     }
     console.log(error);
     Response.withError(res, CommonError.serverError());
+  }
+};
+
+exports.addService = async (req, res) => {
+  const { serviceId, business } = req.body;
+  try {
+    const foundService = await Service.findById(serviceId);
+    const foundBusiness = await Business.findById(business);
+    const businessTypeId = mongoose.Types.ObjectId(foundBusiness.businessType);
+    const serviceBusinessType = mongoose.Types.ObjectId(
+      foundService.businessType
+    );
+    console.log(businessTypeId);
+
+    if (!foundService)
+      return Response.withError(res, AdminError.serviceNotFound());
+
+    if (!serviceBusinessType.equals(businessTypeId))
+      return Response.withError(res, BusinessError.BusinessTypesNotMatch());
+
+    // TODO: Check wheter given service already exist in the business' serviceList or not
+    // Override includes methods of Business class?
+
+    foundBusiness.serviceList.push(foundService);
+    foundBusiness.save();
+    Response.success(res, 200, foundService, "Servis başarıyla tanımlandı.");
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = "İş yeri oluşturulamadı!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+    console.log(error);
   }
 };
