@@ -41,6 +41,8 @@ router.get(
 
 router.post("/createService", validator, adminController.createService);
 
+router.get("/serviceList", validator, adminController.getServiceListByBusiness);
+
 router.put("/updateService", validator, adminController.updateService);
 
 router.delete("/deleteService", validator, adminController.deleteService);

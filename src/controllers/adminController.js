@@ -38,6 +38,30 @@ exports.createService = async (req, res) => {
   }
 };
 
+exports.getServiceListByBusiness = async (req, res) => {
+  const { businessType } = req.body;
+  try {
+    const serviceList = await Service.find({ businessType });
+    if (!serviceList)
+      return Response.withError(res, AdminError.noServiceListByGivenBusiness);
+
+    Response.success(res, 200, { serviceList }, "Servis listesi yüklendi");
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      // eslint-disable-next-line operator-linebreak
+      error.message =
+        "Servis listesi yüklenemedi çünkü iş tipi id değeri hatalı";
+      Object.asssign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
 exports.updateService = async (req, res) => {
   const { foundServiceId, updatedServiceName, updatedBusinessType } = req.body;
   try {

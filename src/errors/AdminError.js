@@ -10,6 +10,11 @@ AdminError.noBusinessTypeByGivenSector = () => ({
   message: "Aranan sektöre göre iş yeri tipi bulamadı"
 });
 
+AdminError.noServiceListByGivenBusiness = () => ({
+  statusCode: 404,
+  message: "Aranan iş tipine göre servis bulunamadı"
+});
+
 AdminError.businessAlreadyExist = () => ({
   statusCode: 403,
   message: "İş tipi zaten kayıtlı"
