@@ -29,6 +29,18 @@ module.exports = {
       .required()
       .empty()
   }),
+  updateService: Joi.object({
+    foundServiceId: Joi.string()
+      .required()
+      .empty(),
+    updatedServiceName: Joi.string()
+      .required()
+      .trim()
+      .empty(),
+    updatedBusinessType: Joi.string()
+      .required()
+      .empty()
+  }),
   createBusinessType: Joi.object({
     sectorId: Joi.string()
       .required()

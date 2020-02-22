@@ -38,6 +38,32 @@ exports.createService = async (req, res) => {
   }
 };
 
+exports.updateService = async (req, res) => {
+  const { foundServiceId, updatedServiceName, updatedBusinessType } = req.body;
+  try {
+    const service = await Service.findById(foundServiceId);
+    if (!service) return Response.withError(res, AdminError.serviceNotFound());
+    if (service.serviceName === updatedServiceName)
+      return Response.withError(res, AdminError.serviceAlreadyExist());
+
+    service.serviceName = updatedServiceName;
+    service.businessType = updatedBusinessType;
+    const result = await service.save();
+    Response.success(res, 201, result, "Service başarıyla güncellendi");
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = "Güncellenmek istenen service id hatalı";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
 exports.createSector = async (req, res) => {
   const sectorName = req.body.sectorName;
   try {

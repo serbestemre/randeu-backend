@@ -1,44 +1,46 @@
-const express = require('express');
-const validator = require('../helpers/validate');
+const express = require("express");
+const validator = require("../helpers/validate");
 
 const router = express.Router({ mergeParams: true });
 
-const adminController = require('../controllers/adminController');
+const adminController = require("../controllers/adminController");
 
-router.post('/createSector', validator, adminController.createSector);
+router.post("/createSector", validator, adminController.createSector);
 
 // Get all sector list
-router.get('/sectorList', adminController.getSectors);
+router.get("/sectorList", adminController.getSectors);
 
 // Update a sector according to the given ID in parameter
-router.put('/updateSector', validator, adminController.updateSector);
+router.put("/updateSector", validator, adminController.updateSector);
 
-router.delete('/deleteSector', validator, adminController.deleteSector);
+router.delete("/deleteSector", validator, adminController.deleteSector);
 
 router.post(
-  '/createBusinessType',
+  "/createBusinessType",
   validator,
   adminController.createBusinessType
 );
 
 router.put(
-  '/updateBusinessType',
+  "/updateBusinessType",
   validator,
   adminController.updateBusinessType
 );
 
 router.delete(
-  '/deleteBusinessType',
+  "/deleteBusinessType",
   validator,
   adminController.deleteBusinessType
 );
 
 router.get(
-  '/businessTypeList',
+  "/businessTypeList",
   validator,
   adminController.getBusinessTypesBySector
 );
 
-router.post('/createService', validator, adminController.createService);
+router.post("/createService", validator, adminController.createService);
+
+router.put("/updateService", validator, adminController.updateService);
 
 module.exports = router;

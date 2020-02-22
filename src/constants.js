@@ -14,6 +14,7 @@ module.exports = {
     "admin/deleteBusinessType": adminSchema.deleteBusinessType,
     "admin/businessTypeList": adminSchema.getBusinessTypesBySector,
     "admin/createService": adminSchema.createService,
+    "admin/updateService": adminSchema.updateService,
     "business/createBusiness": businessSchema.createBusiness,
     "business/updateBusiness": businessSchema.updateBusiness,
     "business/deleteBusiness": businessSchema.deleteBusiness,
