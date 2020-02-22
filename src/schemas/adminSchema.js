@@ -41,6 +41,12 @@ module.exports = {
       .required()
       .empty()
   }),
+  deleteService: Joi.object({
+    serviceId: Joi.string()
+      .required()
+      .trim()
+      .empty()
+  }),
   createBusinessType: Joi.object({
     sectorId: Joi.string()
       .required()

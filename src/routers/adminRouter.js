@@ -43,4 +43,6 @@ router.post("/createService", validator, adminController.createService);
 
 router.put("/updateService", validator, adminController.updateService);
 
+router.delete("/deleteService", validator, adminController.deleteService);
+
 module.exports = router;

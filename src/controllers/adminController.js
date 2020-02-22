@@ -64,6 +64,20 @@ exports.updateService = async (req, res) => {
   }
 };
 
+exports.deleteService = async (req, res) => {
+  const { serviceId } = req.body;
+  try {
+    const foundService = await Service.findById(serviceId);
+    if (!foundService)
+      return Response.withError(res, AdminError.serviceNotFound());
+
+    await Service.deleteOne(foundService);
+    Response.success(res, 200, { foundService }, "Servis başarıyla silindi");
+  } catch (error) {
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
 exports.createSector = async (req, res) => {
   const sectorName = req.body.sectorName;
   try {
