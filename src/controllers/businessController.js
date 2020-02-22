@@ -145,7 +145,6 @@ exports.addService = async (req, res) => {
     const serviceBusinessType = mongoose.Types.ObjectId(
       foundService.businessType
     );
-    console.log(businessTypeId);
 
     if (!foundService)
       return Response.withError(res, AdminError.serviceNotFound());
@@ -153,8 +152,12 @@ exports.addService = async (req, res) => {
     if (!serviceBusinessType.equals(businessTypeId))
       return Response.withError(res, BusinessError.BusinessTypesNotMatch());
 
-    // TODO: Check wheter given service already exist in the business' serviceList or not
-    // Override includes methods of Business class?
+    if (
+      foundBusiness.serviceList.some(
+        service => service._id.toString() === foundService._id.toString()
+      )
+    )
+      return Response.withError(res, BusinessError.ServiceAlreadyExist());
 
     foundBusiness.serviceList.push(foundService);
     foundBusiness.save();
