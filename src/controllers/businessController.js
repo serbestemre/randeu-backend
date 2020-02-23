@@ -2,6 +2,7 @@ const ValidationError = require("mongoose").Error.ValidationError;
 const CastError = require("mongoose").Error.CastError;
 const mongoose = require("mongoose");
 
+const Constants = require("../constants");
 const User = require("../models/User");
 const Business = require("../models/Business");
 const Service = require("../models/Service");
@@ -9,6 +10,7 @@ const Sector = require("../models/Sector");
 const BusinessType = require("../models/BusinessType");
 const Response = require("../helpers/response");
 const CommonError = require("../errors/CommonError");
+const AuthError = require("../errors/AuthError");
 const BusinessError = require("../errors/BusinessError");
 const AdminError = require("../errors/AdminError");
 
@@ -137,17 +139,18 @@ exports.deleteBusiness = async (req, res) => {
 };
 
 exports.addService = async (req, res) => {
-  const { serviceId, business } = req.body;
+  const { serviceId, businessId } = req.body;
   try {
     const foundService = await Service.findById(serviceId);
-    const foundBusiness = await Business.findById(business);
+    const foundBusiness = await Business.findById(businessId);
+
+    if (!foundService)
+      return Response.withError(res, AdminError.serviceNotFound());
+
     const businessTypeId = mongoose.Types.ObjectId(foundBusiness.businessType);
     const serviceBusinessType = mongoose.Types.ObjectId(
       foundService.businessType
     );
-
-    if (!foundService)
-      return Response.withError(res, AdminError.serviceNotFound());
 
     if (!serviceBusinessType.equals(businessTypeId))
       return Response.withError(res, BusinessError.BusinessTypesNotMatch());
@@ -169,6 +172,192 @@ exports.addService = async (req, res) => {
     }
     if (error instanceof CastError) {
       error.message = "İş yeri oluşturulamadı!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+    console.log(error);
+  }
+};
+
+exports.deleteService = async (req, res) => {
+  const { serviceId, businessId } = req.body;
+  try {
+    const foundBusiness = await Business.findById(businessId);
+
+    if (
+      !foundBusiness.serviceList.some(
+        service => service._id.toString() === serviceId
+      )
+    )
+      return Response.withError(res, AdminError.serviceNotFound());
+
+    foundBusiness.serviceList.remove(serviceId);
+    foundBusiness.save();
+    Response.success(res, 200, serviceId, "Servis başarıyla silindi.");
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = "İş yeri oluşturulamadı!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+    console.log(error);
+  }
+};
+
+exports.hireEmployee = async (req, res) => {
+  const { userId, businessId } = req.body;
+  try {
+    const business = await Business.findById(businessId);
+    const user = await User.findById(userId);
+
+    if (!business)
+      return Response.withError(res, BusinessError.businessCouldnotFound());
+
+    if (!user) return Response.withError(res, AuthError.UserNotFound());
+
+    if (
+      business.employeeList.some(
+        employee => employee._id.toString() === user._id.toString()
+      )
+    )
+      return Response.withError(res, BusinessError.employeeAlreadyExist());
+
+    if (!user.roles.includes(Constants.ROLES.EMPLOYEE)) {
+      // console.log(role, " !== ", Constants.ROLES.EMPLOYEE);
+      user.roles.push(Constants.ROLES.EMPLOYEE);
+      user.save();
+    }
+
+    business.employeeList.push(user);
+    business.save();
+    Response.success(
+      res,
+      200,
+      { user, business },
+      "Çalışan, iş yerine başarıyla tanımlandı."
+    );
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = "İş yeri oluşturulamadı!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+    console.log(error);
+  }
+};
+
+exports.dischargeEmployee = async (req, res) => {
+  const { userId, businessId } = req.body;
+  try {
+    const business = await Business.findById(businessId);
+    const user = await User.findById(userId);
+
+    if (!business)
+      return Response.withError(res, BusinessError.businessCouldnotFound());
+
+    if (!user) return Response.withError(res, AuthError.UserNotFound());
+
+    if (
+      !business.employeeList.some(
+        employee => employee._id.toString() === user._id.toString()
+      )
+    )
+      return Response.withError(res, BusinessError.employeeNotFound());
+
+    business.employeeList.remove(user);
+    business.save();
+    // Çalışan tek bir iş yerinde mi çalışabilir?
+    // Burda vereceğimiz karara göre çalışan bir iş yerinden çıktığında rolü sil
+    user.roles.remove(Constants.ROLES.EMPLOYEE);
+    user.save();
+
+    Response.success(
+      res,
+      200,
+      { user, business },
+      "Çalışan belirtilen iş yerinin çalışan listesinden çıkartıldı."
+    );
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = "İş yeri oluşturulamadı!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+    console.log(error);
+  }
+};
+
+exports.assignService = async (req, res) => {
+  const { serviceId, employeeId, businessId } = req.body;
+
+  try {
+    const business = await Business.findById(businessId);
+
+    if (!business)
+      return Response.withError(res, BusinessError.businessCouldnotFound());
+
+    let foundEmployee;
+
+    console.log(
+      "Servisin tanımlanmak istendiği çalışan bu iş yerinde çalışıyor mu?"
+    );
+    if (
+      business.employeeList.some(employee => {
+        if (employee._id.toString() === employeeId) foundEmployee = employee;
+        console.log("Foundemployee: ", foundEmployee);
+      })
+    )
+      return Response.withError(res, BusinessError.employeeNotFound());
+
+    let providedService;
+    console.log(
+      "tanımlanmak istenen servise iş yerinin servis listesinde var mı?"
+    );
+    if (business.serviceList.find(function(service) {
+      if(service._id ===)
+    }))
+      return Response.withError(res, BusinessError.serviceNotProvided());
+
+    console.log("servis daha önceden belirtilen kişiye tanımlanmış mı?");
+
+    if (
+      foundEmployee.providingServices.some(
+        service => service._id.toString() === providedService._id.toString()
+      )
+    )
+      return Response.withError(res, BusinessError.ServiceAlreadyExist());
+
+    foundEmployee.providingServices.push(providedService);
+    business.save();
+    Response.success(
+      res,
+      200,
+      foundEmployee,
+      "Servis, çalışana başarıyla tanımlandı."
+    );
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message = "Çalışan için bir servis tanımlanamadı!";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }

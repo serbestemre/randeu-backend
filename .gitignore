@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 *lock.json
 
+
 # Runtime data
 pids
 *.pid
@@ -65,3 +66,5 @@ typings/
 config/
 
 
+.idea/
+.VSCodeCounter/

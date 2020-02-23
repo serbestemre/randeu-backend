@@ -36,4 +36,18 @@ BusinessError.ServiceAlreadyExist = () => ({
   message: "Bu servis zaten tanımlı."
 });
 
+BusinessError.employeeAlreadyExist = () => ({
+  statusCode: 403,
+  message: "Bu çalışan zaten tanımlı."
+});
+BusinessError.employeeNotFound = () => ({
+  statusCode: 404,
+  message: "Aranan çalışan bu iş yerinde bulunamadı!"
+});
+BusinessError.serviceNotProvided = () => ({
+  statusCode: 400,
+  message:
+    "Tanımlanmak istenen iş tipi bu iş yerinin servis listesine tanımlanmamış!"
+});
+
 module.exports = BusinessError;

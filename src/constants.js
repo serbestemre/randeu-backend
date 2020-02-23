@@ -20,6 +20,8 @@ module.exports = {
     "business/createBusiness": businessSchema.createBusiness,
     "business/updateBusiness": businessSchema.updateBusiness,
     "business/deleteBusiness": businessSchema.deleteBusiness,
+    "business/addService": businessSchema.addService,
+    "business/deleteService": businessSchema.deleteService,
     "business/hireEmployee": businessSchema.hireEmployee,
     "business/dischargeEmployee": businessSchema.dischargeEmployee,
     "business/employee/assignService": businessSchema.assignService,

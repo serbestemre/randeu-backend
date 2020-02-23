@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
       enum: ["local", "google", "facebook"],
       required: true
     },
+    roles: [],
     local: {
       fullName: {
         type: String

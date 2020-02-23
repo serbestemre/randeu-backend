@@ -41,18 +41,48 @@ module.exports = {
     serviceId: Joi.string()
       .empty()
       .required(),
-    business: Joi.string()
+    businessId: Joi.string()
       .empty()
       .required()
   }),
   deleteService: Joi.object({
     serviceId: Joi.string()
       .empty()
+      .required(),
+    businessId: Joi.string()
+      .empty()
       .required()
   }),
-  hireEmployee: Joi.object({}),
-  dischargeEmployee: Joi.object({}),
-  assignService: Joi.object({}),
+  hireEmployee: Joi.object({
+    userId: Joi.string()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .empty()
+      .required()
+  }),
+  dischargeEmployee: Joi.object({
+    userId: Joi.string()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .empty()
+      .required()
+  }),
+  assignService: Joi.object({
+    employeeId: Joi.string()
+      .trim()
+      .empty()
+      .required(),
+    serviceId: Joi.string()
+      .trim()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .trim()
+      .empty()
+      .required()
+  }),
   editService: Joi.object({}),
   removeService: Joi.object({})
 };
