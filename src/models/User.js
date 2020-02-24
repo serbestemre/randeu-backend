@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Constants = require("../constants");
 
 const userSchema = new mongoose.Schema(
   {
@@ -8,7 +9,12 @@ const userSchema = new mongoose.Schema(
       enum: ["local", "google", "facebook"],
       required: true
     },
-    roles: [],
+    roles: [
+      {
+        type: Number,
+        enum: [...Object.values(Constants.ROLES)]
+      }
+    ],
     local: {
       fullName: {
         type: String

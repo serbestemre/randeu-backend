@@ -11,6 +11,7 @@ const signToken = user =>
       iss: "Randeu",
       sub: user.id,
       iat: new Date().getTime(), // current time
+      roles: user.roles,
       exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
     },
     process.env.JWT_SECRET_KEY
@@ -31,7 +32,8 @@ exports.register = async (req, res) => {
 
     const newUser = new User({
       method: "local",
-      local: req.body
+      local: req.body,
+      roles: [1]
     });
 
     await newUser.save();

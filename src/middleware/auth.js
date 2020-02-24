@@ -55,7 +55,7 @@ passport.use(
             fullName: profile.displayName
           }
         });
-
+        Object.assign(newUser, { roles: [1] });
         await newUser.save();
 
         done(null, newUser);
@@ -130,7 +130,7 @@ passport.use(
             surname: profile.name.familyName
           }
         });
-
+        Object.assign(newUser, { roles: [1] });
         await newUser.save();
         done(null, newUser);
       } catch (error) {

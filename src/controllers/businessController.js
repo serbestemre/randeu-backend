@@ -329,12 +329,12 @@ exports.assignService = async (req, res) => {
     console.log(
       "tanımlanmak istenen servise iş yerinin servis listesinde var mı?"
     );
-    if (business.serviceList.find(function(service) {
-      if(service._id ===)
-    }))
-      return Response.withError(res, BusinessError.serviceNotProvided());
+    // if (business.serviceList.find(function(service) {
+    //   if(service._id === )
+    // }))
+    //   return Response.withError(res, BusinessError.serviceNotProvided());
 
-    console.log("servis daha önceden belirtilen kişiye tanımlanmış mı?");
+    // console.log("servis daha önceden belirtilen kişiye tanımlanmış mı?");
 
     if (
       foundEmployee.providingServices.some(

@@ -2,10 +2,10 @@ const Joi = require("@hapi/joi");
 
 const commonError = require("../errors/CommonError");
 const response = require("../helpers/response");
-const { ENDPOINTS } = require("../constants");
+const { ENDPOINTS_SCHEMAS } = require("../constants");
 
 module.exports = async function validate(req, res, next) {
-  const schema = ENDPOINTS[req.originalUrl.slice(1)];
+  const { schema } = ENDPOINTS_SCHEMAS[req.originalUrl.slice(1)];
 
   console.log(req.originalUrl.slice(1));
 
