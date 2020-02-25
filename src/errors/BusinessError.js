@@ -50,4 +50,9 @@ BusinessError.serviceNotProvided = () => ({
     "Tanımlanmak istenen iş tipi bu iş yerinin servis listesine tanımlanmamış!"
 });
 
+BusinessError.serviceAlreadyProviding = () => ({
+  statusCode: 403,
+  message: "İş tipi zaten bu çalışan için daha önceden tanımlanmış!"
+});
+
 module.exports = BusinessError;

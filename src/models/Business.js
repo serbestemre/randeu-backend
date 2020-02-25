@@ -30,9 +30,11 @@ const businessSchema = new Schema(
         employee: { type: Schema.Types.ObjectId, ref: "User" },
         providingServices: [
           {
-            service: { type: Schema.Types.ObjectId, ref: "Service" },
-            price: { type: Number },
-            duration: { type: Number }
+            service: {
+              _id: { type: Schema.Types.ObjectId, ref: "Service" },
+              price: { type: Number },
+              duration: { type: Number }
+            }
           }
         ]
       }
