@@ -32,8 +32,8 @@ const businessSchema = new Schema(
           {
             service: {
               _id: { type: Schema.Types.ObjectId, ref: "Service" },
-              price: { type: Number },
-              duration: { type: Number }
+              price: { type: String },
+              duration: { type: String }
             }
           }
         ]

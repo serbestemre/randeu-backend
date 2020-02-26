@@ -69,7 +69,7 @@ module.exports = {
       .empty()
       .required()
   }),
-  assignService: Joi.object({
+  assignOrEditService: Joi.object({
     employeeId: Joi.string()
       .trim()
       .empty()
@@ -82,9 +82,21 @@ module.exports = {
       .trim()
       .empty()
       .required(),
-    price: Joi.number().required(),
-    duration: Joi.number().required()
+    price: Joi.string().required(),
+    duration: Joi.string().required()
   }),
-  editService: Joi.object({}),
-  removeService: Joi.object({})
+  removeService: Joi.object({
+    employeeId: Joi.string()
+      .trim()
+      .empty()
+      .required(),
+    serviceId: Joi.string()
+      .trim()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .trim()
+      .empty()
+      .required()
+  })
 };

@@ -86,11 +86,11 @@ constants.ENDPOINTS_SCHEMAS = {
     authorization: [constants.ROLES.BUSINESS_OWNER]
   },
   "business/employee/assignService": {
-    schema: businessSchema.assignService,
+    schema: businessSchema.assignOrEditService,
     authorization: [constants.ROLES.BUSINESS_OWNER]
   },
   "business/employee/editService": {
-    schema: businessSchema.editService,
+    schema: businessSchema.assignOrEditService,
     authorization: [constants.ROLES.BUSINESS_OWNER]
   },
   "business/employee/removeService": {

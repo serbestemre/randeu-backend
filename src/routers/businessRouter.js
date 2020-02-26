@@ -33,4 +33,11 @@ router.post(
   businessController.assignService
 );
 
+// router.put("/employee/editService", validator, businessController.editService);
+router.delete(
+  "/employee/removeService",
+  validator,
+  businessController.removeService
+);
+
 module.exports = router;

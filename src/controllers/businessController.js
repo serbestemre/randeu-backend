@@ -344,6 +344,8 @@ exports.assignService = async (req, res) => {
     )
       Response.withError(res, BusinessError.employeeNotFound());
 
+    console.log("indexof =>", business.employeeList.indexOf(foundEmployee));
+
     // Bu iş tipi belirtilen çalışan için daha önceden tanımlanmış mı?
     if (
       foundEmployee.providingServices.some(
@@ -351,13 +353,9 @@ exports.assignService = async (req, res) => {
       )
     )
       return Response.withError(res, BusinessError.serviceAlreadyProviding());
-    console.log(
-      "************************ newProvidignService ****************** ",
-      newProvidignService
-    );
 
-    Object.assign(newProvidignService, { price: `$price` });
-    Object.assign(newProvidignService, { duration: `$duration` });
+    Object.assign(newProvidignService, { price, duration });
+    // Object.assign(newProvidignService, { duration: `${duration}` });
     // newProvidignService.price = price;
     // newProvidignService.duration = duration;
 
@@ -377,6 +375,64 @@ exports.assignService = async (req, res) => {
     if (error instanceof CastError) {
       error.message =
         "Çalışan için bir servis tanımlanamadı! Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+    console.log(error);
+  }
+};
+
+exports.removeService = async (req, res) => {
+  const { businessId, employeeId, serviceId } = req.body;
+  try {
+    const business = await Business.findById(businessId);
+
+    if (!business)
+      return Response.withError(res, BusinessError.businessCouldnotFound());
+
+    let foundEmployee;
+    if (
+      !business.employeeList.some(employee => {
+        if (employee._id.toString() === employeeId.toString()) {
+          foundEmployee = employee;
+          return true;
+        }
+        return false;
+      })
+    )
+      return Response.withError(res, BusinessError.employeeNotFound());
+
+    let deletingService;
+    if (
+      !foundEmployee.providingServices.some(service => {
+        if (service._id.toString() === serviceId.toString()) {
+          console.log("serviceId => ", serviceId);
+          deletingService = service;
+          console.log("deletingservice => ", deletingService);
+          return true;
+        }
+        return false;
+      })
+    )
+      return Response.withError(res, BusinessError.serviceNotProvided());
+
+    foundEmployee.providingServices.pop(deletingService);
+    await business.save();
+    Response.success(
+      res,
+      200,
+      business,
+      "Servis tanımlanan çalışandan başarıyla silindi."
+    );
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message =
+        "Çalışanın servis listesinden silinmek istenen servis silinimedi! Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin.";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
