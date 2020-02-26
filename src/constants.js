@@ -11,8 +11,8 @@ const constants = {
   }
 };
 constants.ENDPOINTS_SCHEMAS = {
-  register: authSchema.register,
-  login: authSchema.login,
+  register: { schema: authSchema.register },
+  login: { schema: authSchema.login },
   "admin/createSector": {
     schema: adminSchema.createSector,
     authorization: [constants.ROLES.SUPER_USER]

@@ -7,8 +7,20 @@ const businessController = require("../controllers/businessController");
 
 const router = new express.Router();
 
-router.post("/createBusiness", validator, businessController.createBusiness);
-router.put("/updateBusiness", validator, businessController.updateBusiness);
+router.post(
+  "/createBusiness",
+  validator,
+  verifyToken,
+  roleCheck,
+  businessController.createBusiness
+);
+router.put(
+  "/updateBusiness",
+  validator,
+  verifyToken,
+  roleCheck,
+  businessController.updateBusiness
+);
 router.delete(
   "/deleteBusiness",
   validator,
@@ -24,12 +36,16 @@ router.post("/hireEmployee", validator, businessController.hireEmployee);
 router.delete(
   "/dischargeEmployee",
   validator,
+  verifyToken,
+  roleCheck,
   businessController.dischargeEmployee
 );
 
 router.post(
   "/employee/assignService",
   validator,
+  verifyToken,
+  roleCheck,
   businessController.assignService
 );
 
@@ -37,6 +53,8 @@ router.post(
 router.delete(
   "/employee/removeService",
   validator,
+  verifyToken,
+  roleCheck,
   businessController.removeService
 );
 
