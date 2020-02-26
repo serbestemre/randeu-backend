@@ -1,4 +1,6 @@
 const JWT = require("jsonwebtoken");
+const Response = require("../helpers/response");
+const CommonError = require("../errors/CommonError");
 
 exports.verifyToken = (req, res, next) => {
   try {
@@ -7,8 +9,6 @@ exports.verifyToken = (req, res, next) => {
     req.userData = decodedToken;
     next();
   } catch (error) {
-    return res.status(401).send({
-      message: "Sisteme giriş yapmadınız!"
-    });
+    return Response.withError(res, CommonError.notAuthorized());
   }
 };

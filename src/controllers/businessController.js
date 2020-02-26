@@ -19,17 +19,25 @@ exports.createBusiness = async (req, res) => {
     const {
       businessName,
       address,
-      sector,
-      businessType,
-      businessOwner
+      sectorId,
+      businessTypeId,
+      businessOwnerId
     } = req.body;
     // const employee = req.body.employeeList[0].employee;
 
-    const doesSectorExist = await Sector.findById(sector);
+    const businessOwner = await User.findById(businessOwnerId);
+
+    if (!businessOwner)
+      return Response.withError(
+        res,
+        BusinessError.businessOwnerCouldnotFound()
+      );
+
+    const doesSectorExist = await Sector.findById(sectorId);
     if (!doesSectorExist)
       return Response.withError(res, BusinessError.sectorCouldnotFound());
 
-    const doesBusinessTypeExist = await BusinessType.findById(businessType);
+    const doesBusinessTypeExist = await BusinessType.findById(businessTypeId);
     if (!doesBusinessTypeExist)
       return Response.withError(res, BusinessError.businessTypeCouldnotFound());
 

@@ -8,13 +8,13 @@ module.exports = {
     address: Joi.string()
       .required()
       .empty(),
-    sector: Joi.string()
+    sectorId: Joi.string()
       .required()
       .empty(),
-    businessType: Joi.string()
+    businessTypeId: Joi.string()
       .required()
       .empty(),
-    businessOwner: Joi.string()
+    businessOwnerId: Joi.string()
       .required()
       .empty()
   }),
