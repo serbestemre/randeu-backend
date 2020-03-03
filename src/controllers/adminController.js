@@ -138,7 +138,7 @@ exports.updateSector = async (req, res) => {
     if (sector.sectorName === updatedSectorName)
       return Response.withError(res, AdminError.sectorAlreadyExist());
 
-    sector.sectorName = updatedSectorName;
+    sector.sectorName = updatedSectorName.trim();
     const result = await sector.save();
     Response.success(res, 201, result, "Sektör başarıyla güncellendi");
   } catch (error) {

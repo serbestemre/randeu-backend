@@ -25,6 +25,10 @@ constants.ENDPOINTS_SCHEMAS = {
     schema: adminSchema.deleteSector,
     authorization: [constants.ROLES.SUPER_USER]
   },
+  "admin/sectorList": {
+    schema: adminSchema.sectorList,
+    authorization: [constants.ROLES.SUPER_USER]
+  },
   "admin/createBusinessType": {
     schema: adminSchema.createBusinessType,
     authorization: [constants.ROLES.SUPER_USER]
