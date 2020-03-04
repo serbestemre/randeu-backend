@@ -8,10 +8,10 @@ module.exports = {
     address: Joi.string()
       .required()
       .empty(),
-    sectorId: Joi.string()
+    sector: Joi.string()
       .required()
       .empty(),
-    businessTypeId: Joi.string()
+    businessType: Joi.string()
       .required()
       .empty(),
     businessOwnerId: Joi.string()

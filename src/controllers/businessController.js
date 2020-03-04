@@ -19,8 +19,8 @@ exports.createBusiness = async (req, res) => {
     const {
       businessName,
       address,
-      sectorId,
-      businessTypeId,
+      sector,
+      businessType,
       businessOwnerId
     } = req.body;
     // const employee = req.body.employeeList[0].employee;
@@ -33,11 +33,11 @@ exports.createBusiness = async (req, res) => {
         BusinessError.businessOwnerCouldnotFound()
       );
 
-    const doesSectorExist = await Sector.findById(sectorId);
+    const doesSectorExist = await Sector.findById(sector);
     if (!doesSectorExist)
       return Response.withError(res, BusinessError.sectorCouldnotFound());
 
-    const doesBusinessTypeExist = await BusinessType.findById(businessTypeId);
+    const doesBusinessTypeExist = await BusinessType.findById(businessType);
     if (!doesBusinessTypeExist)
       return Response.withError(res, BusinessError.businessTypeCouldnotFound());
 
@@ -49,8 +49,15 @@ exports.createBusiness = async (req, res) => {
       businessOwner
     });
 
-    // Find the businessOwner from users collection and grant his role as BusinessOwner
+    newBusiness.employeeList.push(businessOwner);
 
+    if (!businessOwner.roles.includes(Constants.ROLES.EMPLOYEE))
+      businessOwner.roles.push(Constants.ROLES.EMPLOYEE);
+    // Find the businessOwner from users collection and grant his role as BusinessOwner
+    if (!businessOwner.roles.includes(Constants.ROLES.BUSINESS_OWNER))
+      businessOwner.roles.push(Constants.ROLES.BUSINESS_OWNER);
+
+    await businessOwner.save();
     const result = await newBusiness.save();
     Response.success(res, 201, result, "Yeni iş yeri oluşturuldu.");
   } catch (error) {
@@ -63,6 +70,7 @@ exports.createBusiness = async (req, res) => {
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
+    console.log("create business error: ", error);
     Response.withError(res, CommonError.serverError());
   }
 };
