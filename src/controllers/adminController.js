@@ -103,9 +103,9 @@ exports.deleteService = async (req, res) => {
 };
 
 exports.createSector = async (req, res) => {
-  const sectorName = req.body.sectorName;
+  const sectorName = req.body.sectorName.trim();
   try {
-    const sector = await Sector.findOne({ sectorName });
+    const sector = await Sector.find({ sectorName: /^sectorName$/i });
     if (sector) return Response.withError(res, AdminError.sectorAlreadyExist());
     const newSector = new Sector({
       sectorName
