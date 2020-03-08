@@ -1,5 +1,6 @@
 const ValidationError = require("mongoose").Error.ValidationError;
 const JWT = require("jsonwebtoken");
+
 const User = require("../models/User");
 const response = require("../helpers/response");
 const AuthError = require("../errors/AuthError");
