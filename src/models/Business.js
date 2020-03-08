@@ -27,20 +27,24 @@ const businessSchema = new Schema(
     },
     employeeList: [
       {
-        employee: {
-          type: Schema.Types.ObjectId,
-          ref: "User"
-        },
-        serviceList: [
+        employee: { type: Schema.Types.ObjectId, ref: "User" },
+        providingServices: [
           {
             service: {
-              type: Schema.Types.ObjectId,
-              ref: "Service"
-            },
-            price: { type: Number },
-            duration: { type: Number }
+              _id: { type: Schema.Types.ObjectId, ref: "Service" },
+              price: { type: String },
+              duration: { type: String }
+            }
           }
         ]
+      }
+    ],
+    serviceList: [
+      {
+        service: {
+          type: Schema.Types.ObjectId,
+          ref: "Service"
+        }
       }
     ],
     comments: [

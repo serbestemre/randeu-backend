@@ -1,12 +1,12 @@
-exports.roleCheck = (req, res, next) => {
-  const schema = ENDPOINTS[req.originalUrl.slice(1)];
+const { ENDPOINTS_SCHEMAS } = require("../constants");
 
-  try {
-    const value = await schema.validateAsync(req.body);
-    console.log(value);
-    next();
-  } catch (err) {
-    console.log('Errrorr', err);
-    return response.withError(res, commonError.validationError(err));
-  }
+const Response = require("../helpers/response");
+const CommonError = require("../errors/CommonError");
+
+exports.roleCheck = (req, res, next) => {
+  const { authorization } = ENDPOINTS_SCHEMAS[req.originalUrl.slice(1)];
+  const { roles } = req.userData;
+
+  if (authorization.some(role => roles.includes(role))) next();
+  else Response.withError(res, CommonError.notAuthorized());
 };

@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+const Joi = require("@hapi/joi");
 
 module.exports = {
   createSector: Joi.object({
@@ -25,8 +25,32 @@ module.exports = {
       .required()
       .trim()
       .empty(),
-    businessTypeID: Joi.string()
+    businessType: Joi.string()
       .required()
+      .empty()
+  }),
+  serviceList: Joi.object({
+    businessType: Joi.string()
+      .required()
+      .trim()
+      .empty()
+  }),
+  updateService: Joi.object({
+    foundServiceId: Joi.string()
+      .required()
+      .empty(),
+    updatedServiceName: Joi.string()
+      .required()
+      .trim()
+      .empty(),
+    updatedBusinessType: Joi.string()
+      .required()
+      .empty()
+  }),
+  deleteService: Joi.object({
+    serviceId: Joi.string()
+      .required()
+      .trim()
       .empty()
   }),
   createBusinessType: Joi.object({

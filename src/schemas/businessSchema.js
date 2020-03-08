@@ -14,10 +14,9 @@ module.exports = {
     businessType: Joi.string()
       .required()
       .empty(),
-    businessOwner: Joi.string()
+    businessOwnerId: Joi.string()
       .required()
-      .empty(),
-    employeeList: Joi.array()
+      .empty()
   }),
   updateBusiness: Joi.object({
     updatingBusiness: Joi.string()
@@ -28,9 +27,76 @@ module.exports = {
     updatedSector: Joi.string().empty(),
     updatedBusinessType: Joi.string().empty(),
     updatedBusinessOwner: Joi.string().empty(),
-    updatedEmployeeList: Joi.array(),
     userId: Joi.string()
       .required()
       .empty()
+  }),
+  deleteBusiness: Joi.object({
+    businessId: Joi.string()
+      .empty()
+      .required()
+      .normalize()
+  }),
+  addService: Joi.object({
+    serviceId: Joi.string()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .empty()
+      .required()
+  }),
+  deleteService: Joi.object({
+    serviceId: Joi.string()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .empty()
+      .required()
+  }),
+  hireEmployee: Joi.object({
+    userId: Joi.string()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .empty()
+      .required()
+  }),
+  dischargeEmployee: Joi.object({
+    userId: Joi.string()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .empty()
+      .required()
+  }),
+  assignOrEditService: Joi.object({
+    employeeId: Joi.string()
+      .trim()
+      .empty()
+      .required(),
+    serviceId: Joi.string()
+      .trim()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .trim()
+      .empty()
+      .required(),
+    price: Joi.string().required(),
+    duration: Joi.string().required()
+  }),
+  removeService: Joi.object({
+    employeeId: Joi.string()
+      .trim()
+      .empty()
+      .required(),
+    serviceId: Joi.string()
+      .trim()
+      .empty()
+      .required(),
+    businessId: Joi.string()
+      .trim()
+      .empty()
+      .required()
   })
 };

@@ -43,19 +43,17 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const { id } = profile;
-        const foundFacebookUser = await User.findOne({ "facebook.id": id });
+        const foundFacebookUser = await User.findOne({ id });
 
         // TODO return a proper response as json error or redirect the page
         if (foundFacebookUser) done(AuthError.userAlreadyExists(), null);
         const newUser = new User({
           method: "facebook",
-          facebook: {
-            id: profile.id,
-            email: profile.emails[0].value,
-            fullName: profile.displayName
-          }
+          id: profile.id,
+          email: profile.emails[0].value,
+          fullName: profile.displayName
         });
-
+        Object.assign(newUser, { roles: [1] });
         await newUser.save();
 
         done(null, newUser);
@@ -76,7 +74,7 @@ passport.use(
     async (email, password, done) => {
       try {
         // Find the user given the email
-        const user = await User.findOne({ "local.email": email });
+        const user = await User.findOne({ email });
 
         // TODO return an error rather than null
         if (!user) return done(null, false);
@@ -111,7 +109,7 @@ passport.use(
       try {
         // Check whether this current user exists in our DB
         const googleExistingUser = await User.findOne({
-          "google.id": profile.id
+          id: profile.id
         });
 
         if (googleExistingUser) {
@@ -123,14 +121,11 @@ passport.use(
         // If new account
         const newUser = new User({
           method: "google",
-          google: {
-            id: profile.id,
-            email: profile.emails[0].value,
-            name: profile.name.givenName,
-            surname: profile.name.familyName
-          }
+          id: profile.id,
+          email: profile.emails[0].value,
+          fullName: `${profile.name.givenName} ${profile.name.familyName}`
         });
-
+        Object.assign(newUser, { roles: [1] });
         await newUser.save();
         done(null, newUser);
       } catch (error) {

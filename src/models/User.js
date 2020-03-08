@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Constants = require("../constants");
 
 const userSchema = new mongoose.Schema(
   {
@@ -8,56 +9,17 @@ const userSchema = new mongoose.Schema(
       enum: ["local", "google", "facebook"],
       required: true
     },
-    local: {
-      fullName: {
-        type: String
-      },
-      email: {
-        type: String
-      },
-      password: {
-        type: String
-      },
-      passwordCheck: {
-        type: String
-      },
-      birthday: {
-        type: Date
-      },
-      tokens: [
-        {
-          token: {
-            type: String,
-            required: true
-          }
-        }
-      ]
-    },
-    google: {
-      id: {
-        type: String
-      },
-      email: {
-        type: String
-      },
-      name: {
-        type: String
-      },
-      surname: {
-        type: String
+    roles: [
+      {
+        type: Number,
+        enum: [...Object.values(Constants.ROLES)]
       }
-    },
-    facebook: {
-      id: {
-        type: String
-      },
-      email: {
-        type: String
-      },
-      fullName: {
-        type: String
-      }
-    }
+    ],
+    fullName: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String },
+    birthday: { type: Date },
+    id: { type: String }
   },
   {
     timestamps: true
@@ -92,9 +54,9 @@ userSchema.methods.toJSON = function() {
 // eslint-disable-next-line func-names
 userSchema.methods.isValidPassword = async function(newPassword) {
   try {
-    console.log("this.local.password", this.local.password);
+    console.log("this.password", this.password);
     console.log("newPassword", newPassword);
-    return await bcrypt.compare(newPassword, this.local.password);
+    return await bcrypt.compare(newPassword, this.password);
   } catch (error) {
     throw new Error(error);
   }
@@ -124,9 +86,9 @@ userSchema.pre("save", async function(next) {
   try {
     if (this.method !== "local") next();
     // Generate a password hash(salt + hash)
-    const passwordHash = await bcrypt.hash(this.local.password, 8);
+    const passwordHash = await bcrypt.hash(this.password, 8);
     // Re-assign hashed version over original, plain text password
-    this.local.password = passwordHash;
+    this.password = passwordHash;
     next();
   } catch (error) {
     next(error);
