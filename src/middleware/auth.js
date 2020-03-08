@@ -49,11 +49,9 @@ passport.use(
         if (foundFacebookUser) done(AuthError.userAlreadyExists(), null);
         const newUser = new User({
           method: "facebook",
-          facebook: {
-            id: profile.id,
-            email: profile.emails[0].value,
-            fullName: profile.displayName
-          }
+          id: profile.id,
+          email: profile.emails[0].value,
+          fullName: profile.displayName
         });
         Object.assign(newUser, { roles: [1] });
         await newUser.save();
@@ -76,7 +74,7 @@ passport.use(
     async (email, password, done) => {
       try {
         // Find the user given the email
-        const user = await User.findOne({ "local.email": email });
+        const user = await User.findOne({ email });
 
         // TODO return an error rather than null
         if (!user) return done(null, false);
@@ -123,12 +121,9 @@ passport.use(
         // If new account
         const newUser = new User({
           method: "google",
-          google: {
-            id: profile.id,
-            email: profile.emails[0].value,
-            name: profile.name.givenName,
-            surname: profile.name.familyName
-          }
+          id: profile.id,
+          email: profile.emails[0].value,
+          fullName: `${profile.name.givenName} ${profile.name.familyName}`,
         });
         Object.assign(newUser, { roles: [1] });
         await newUser.save();

@@ -32,8 +32,8 @@ exports.register = async (req, res) => {
 
     const newUser = new User({
       method: "local",
-      local: req.body,
-      roles: [1]
+      roles: [1],
+      ...req.body,
     });
 
     await newUser.save();

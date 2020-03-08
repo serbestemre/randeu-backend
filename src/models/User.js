@@ -15,56 +15,11 @@ const userSchema = new mongoose.Schema(
         enum: [...Object.values(Constants.ROLES)]
       }
     ],
-    local: {
-      fullName: {
-        type: String
-      },
-      email: {
-        type: String
-      },
-      password: {
-        type: String
-      },
-      passwordCheck: {
-        type: String
-      },
-      birthday: {
-        type: Date
-      },
-      tokens: [
-        {
-          token: {
-            type: String,
-            required: true
-          }
-        }
-      ]
-    },
-    google: {
-      id: {
-        type: String
-      },
-      email: {
-        type: String
-      },
-      name: {
-        type: String
-      },
-      surname: {
-        type: String
-      }
-    },
-    facebook: {
-      id: {
-        type: String
-      },
-      email: {
-        type: String
-      },
-      fullName: {
-        type: String
-      }
-    }
+    fullName: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String },
+    birthday: { type: Date },
+    id: { type: String }
   },
   {
     timestamps: true
