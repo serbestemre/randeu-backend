@@ -1,8 +1,9 @@
 const CommonError = {};
 
-CommonError.serverError = () => ({
+CommonError.serverError = error => ({
   statusCode: 500,
-  message: "Internal Server Error"
+  message: "Internal Server Error",
+  errorMessage: error ? error.message : ""
 });
 
 CommonError.validationError = data => ({

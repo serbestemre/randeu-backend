@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
     const newUser = new User({
       method: "local",
       roles: [1],
-      ...req.body,
+      ...req.body
     });
 
     await newUser.save();
@@ -45,7 +45,8 @@ exports.register = async (req, res) => {
       Object.assign(error, { statusCode: 400 });
       return response.withError(res, error);
     }
-    return response.withError(res, CommonError.businessError());
+    console.log(error);
+    return response.withError(res, CommonError.serverError(error));
   }
 };
 
@@ -56,7 +57,7 @@ exports.login = async (req, res) => {
 
 exports.googleOAuth = async (req, res) => {
   console.log("Authenticated user via Google: ", req.user);
-  const email = req.user.google.email;
+  const email = req.user.email;
   const token = signToken(req.user);
   response.success(
     res,
@@ -67,10 +68,6 @@ exports.googleOAuth = async (req, res) => {
 };
 
 exports.facebookOAuth = async (req, res) => {
-  // Generate token
-  // const fullName = req.user.profile.displayName;
-  // console.log("*********************************fullname: ", fullName);
-
   console.log("facebookouath.controller!!!");
   const token = signToken(req.user);
 

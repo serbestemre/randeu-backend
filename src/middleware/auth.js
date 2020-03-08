@@ -43,7 +43,7 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const { id } = profile;
-        const foundFacebookUser = await User.findOne({ "facebook.id": id });
+        const foundFacebookUser = await User.findOne({ id });
 
         // TODO return a proper response as json error or redirect the page
         if (foundFacebookUser) done(AuthError.userAlreadyExists(), null);
@@ -109,7 +109,7 @@ passport.use(
       try {
         // Check whether this current user exists in our DB
         const googleExistingUser = await User.findOne({
-          "google.id": profile.id
+          id: profile.id
         });
 
         if (googleExistingUser) {
@@ -123,7 +123,7 @@ passport.use(
           method: "google",
           id: profile.id,
           email: profile.emails[0].value,
-          fullName: `${profile.name.givenName} ${profile.name.familyName}`,
+          fullName: `${profile.name.givenName} ${profile.name.familyName}`
         });
         Object.assign(newUser, { roles: [1] });
         await newUser.save();

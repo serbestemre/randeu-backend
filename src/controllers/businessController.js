@@ -57,7 +57,10 @@ exports.createBusiness = async (req, res) => {
     if (!businessOwner.roles.includes(Constants.ROLES.BUSINESS_OWNER))
       businessOwner.roles.push(Constants.ROLES.BUSINESS_OWNER);
 
-    await businessOwner.save();
+    await businessOwner.updateOne(
+      { _id: businessOwnerId },
+      { $set: { roles: businessOwner.roles } }
+    );
     const result = await newBusiness.save();
     Response.success(res, 201, result, "Yeni iş yeri oluşturuldu.");
   } catch (error) {

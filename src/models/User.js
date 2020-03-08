@@ -54,9 +54,9 @@ userSchema.methods.toJSON = function() {
 // eslint-disable-next-line func-names
 userSchema.methods.isValidPassword = async function(newPassword) {
   try {
-    console.log("this.local.password", this.local.password);
+    console.log("this.password", this.password);
     console.log("newPassword", newPassword);
-    return await bcrypt.compare(newPassword, this.local.password);
+    return await bcrypt.compare(newPassword, this.password);
   } catch (error) {
     throw new Error(error);
   }
@@ -86,9 +86,9 @@ userSchema.pre("save", async function(next) {
   try {
     if (this.method !== "local") next();
     // Generate a password hash(salt + hash)
-    const passwordHash = await bcrypt.hash(this.local.password, 8);
+    const passwordHash = await bcrypt.hash(this.password, 8);
     // Re-assign hashed version over original, plain text password
-    this.local.password = passwordHash;
+    this.password = passwordHash;
     next();
   } catch (error) {
     next(error);
