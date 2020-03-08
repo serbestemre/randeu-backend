@@ -7,13 +7,14 @@ const Service = require("../models/Service");
 const Response = require("../helpers/response");
 const AdminError = require("../errors/AdminError");
 const CommonError = require("../errors/CommonError");
+const ServiceDataAccess = require("../dataAccess/Service");
 
 exports.createService = async (req, res) => {
   const { serviceName, businessType } = req.body;
 
   console.log("service name => ", serviceName);
   try {
-    const service = await Service.findOne({ serviceName });
+    const service = await ServiceDataAccess.getServiceDB({serviceName});
     if (service)
       return Response.withError(res, AdminError.serviceAlreadyExist());
 
