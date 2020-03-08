@@ -8,13 +8,15 @@ const Response = require("../helpers/response");
 const AdminError = require("../errors/AdminError");
 const CommonError = require("../errors/CommonError");
 const ServiceDataAccess = require("../dataAccess/Service");
+const SectorDataAccess = require("../dataAccess/Sector");
+const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 
 exports.createService = async (req, res) => {
   const { serviceName, businessType } = req.body;
 
   console.log("service name => ", serviceName);
   try {
-    const service = await ServiceDataAccess.getServiceDB({serviceName});
+    const service = await ServiceDataAccess.getServiceDB({ serviceName });
     if (service)
       return Response.withError(res, AdminError.serviceAlreadyExist());
 
@@ -42,7 +44,7 @@ exports.createService = async (req, res) => {
 exports.getServiceListByBusiness = async (req, res) => {
   const { businessType } = req.body;
   try {
-    const serviceList = await Service.find({ businessType });
+    const serviceList = await ServiceDataAccess.getServiceListDB({ businessType });
     if (!serviceList)
       return Response.withError(res, AdminError.noServiceListByGivenBusiness);
 
@@ -66,7 +68,7 @@ exports.getServiceListByBusiness = async (req, res) => {
 exports.updateService = async (req, res) => {
   const { foundServiceId, updatedServiceName, updatedBusinessType } = req.body;
   try {
-    const service = await Service.findById(foundServiceId);
+    const service = await ServiceDataAccess.getServiceById({ foundServiceId });
     if (!service) return Response.withError(res, AdminError.serviceNotFound());
     if (service.serviceName === updatedServiceName)
       return Response.withError(res, AdminError.serviceAlreadyExist());
@@ -92,11 +94,12 @@ exports.updateService = async (req, res) => {
 exports.deleteService = async (req, res) => {
   const { serviceId } = req.body;
   try {
-    const foundService = await Service.findById(serviceId);
+    const foundService = await ServiceDataAccess.getServiceById({ serviceId });
     if (!foundService)
       return Response.withError(res, AdminError.serviceNotFound());
 
-    await Service.deleteOne(foundService);
+    await ServiceDataAccess.deleteService({ foundService });
+
     Response.success(res, 200, { foundService }, "Servis başarıyla silindi");
   } catch (error) {
     Response.withError(res, CommonError.serverError());
@@ -106,7 +109,7 @@ exports.deleteService = async (req, res) => {
 exports.createSector = async (req, res) => {
   const sectorName = req.body.sectorName.trim();
   try {
-    const sector = await Sector.findOne({ sectorName });
+    const sector = await SectorDataAccess.getSector({ sectorName });
     if (sector) return Response.withError(res, AdminError.sectorAlreadyExist());
     const newSector = new Sector({
       sectorName
@@ -124,7 +127,7 @@ exports.createSector = async (req, res) => {
 
 exports.getSectors = async (req, res) => {
   try {
-    const sectors = await Sector.find();
+    const sectors = await SectorDataAccess.getSectors();
     Response.success(res, 200, sectors, "Sektörler başarıyla listelendi");
   } catch (error) {
     Response.withError(res, CommonError.serverError);
@@ -134,7 +137,7 @@ exports.getSectors = async (req, res) => {
 exports.updateSector = async (req, res) => {
   const { updatedSectorId, updatedSectorName } = req.body;
   try {
-    const sector = await Sector.findById(updatedSectorId);
+    const sector = await SectorDataAccess.getSectorById({ updatedSectorId });
     if (!sector) return Response.withError(res, AdminError.sectorNotFound());
     if (sector.sectorName === updatedSectorName)
       return Response.withError(res, AdminError.sectorAlreadyExist());
@@ -159,11 +162,11 @@ exports.updateSector = async (req, res) => {
 exports.deleteSector = async (req, res) => {
   const { sectorId } = req.body;
   try {
-    const foundSector = await Sector.findById(sectorId);
+    const foundSector = await SectorDataAccess.getSectorById({ sectorId });
     if (!foundSector)
       return Response.withError(res, AdminError.sectorNotFound());
 
-    await Sector.deleteOne(foundSector);
+    await SectorDataAccess.deleteSector({ foundSector });
     Response.success(res, 200, { foundSector }, "Sektör başarıyla silindi");
   } catch (error) {
     console.log(error);
@@ -175,7 +178,7 @@ exports.createBusinessType = async (req, res) => {
   const { businessTypeName, sectorId } = req.body;
   console.log("bağlancak sectorID:", sectorId);
   try {
-    const sector = await Sector.findById(sectorId);
+    const sector = await SectorDataAccess.getSectorById({ sectorId });
     if (!sector) return Response.withError(res, AdminError.sectorNotFound());
 
     const newBusinessType = new BusinessType({
@@ -203,7 +206,7 @@ exports.getBusinessTypesBySector = async (req, res) => {
   const { sectorId } = req.body;
 
   try {
-    const businessTypeList = await BusinessType.find({ sector: sectorId });
+    const businessTypeList = await BusinessTypeDataAccess.getBusinessType({ sectorId });
     if (!businessTypeList)
       return Response.withError(res, AdminError.noBusinessTypeByGivenSector());
 
@@ -235,8 +238,8 @@ exports.updateBusinessType = async (req, res) => {
     uptadedValueSector
   } = req.body;
   try {
-    const businessType = await BusinessType.findById(updatingBusinessTypeId);
-
+    const businessType = await BusinessTypeDataAccess
+      .getBusinessTypeById({ updatingBusinessTypeId });
     if (!businessType)
       return Response.withError(res, AdminError.businessTypeCouldnotFound());
 
@@ -272,11 +275,14 @@ exports.deleteBusinessType = async (req, res) => {
   const { businessTypeId } = req.body;
   console.log("businesstype id => ", businessTypeId);
   try {
-    const foundBusinessType = await BusinessType.findById(businessTypeId);
+    const foundBusinessType = await BusinessTypeDataAccess
+      .getBusinessTypeById({ businessTypeId });
+
     if (!foundBusinessType)
       return Response.withError(res, AdminError.businessTypeCouldnotFound());
 
-    await BusinessType.deleteOne(foundBusinessType);
+    await BusinessTypeDataAccess
+      .deleteBusinessType({ foundBusinessType });
     Response.success(
       res,
       200,
