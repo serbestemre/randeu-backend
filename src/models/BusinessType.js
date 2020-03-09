@@ -11,6 +11,6 @@ const businessTypeSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Sector"
   }
-});
+}, { collation: { locale: "tr", strength: 1 } });
 
 module.exports = mongoose.model("BusinessType", businessTypeSchema);
