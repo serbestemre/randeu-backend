@@ -137,7 +137,7 @@ exports.getSectors = async (req, res) => {
 exports.updateSector = async (req, res) => {
   const { updatedSectorId, updatedSectorName } = req.body;
   try {
-    const sector = await SectorDataAccess.getSectorById({ updatedSectorId });
+    const sector = await SectorDataAccess.getSectorById(updatedSectorId);
     if (!sector) return Response.withError(res, AdminError.sectorNotFound());
     if (sector.sectorName === updatedSectorName)
       return Response.withError(res, AdminError.sectorAlreadyExist());
@@ -162,11 +162,11 @@ exports.updateSector = async (req, res) => {
 exports.deleteSector = async (req, res) => {
   const { sectorId } = req.body;
   try {
-    const foundSector = await SectorDataAccess.getSectorById({ sectorId });
+    const foundSector = await SectorDataAccess.getSectorById(sectorId);
     if (!foundSector)
       return Response.withError(res, AdminError.sectorNotFound());
 
-    await SectorDataAccess.deleteSector({ foundSector });
+    await SectorDataAccess.deleteSector(foundSector);
     Response.success(res, 200, { foundSector }, "Sektör başarıyla silindi");
   } catch (error) {
     console.log(error);
@@ -178,14 +178,13 @@ exports.createBusinessType = async (req, res) => {
   const { businessTypeName, sectorId } = req.body;
   console.log("bağlancak sectorID:", sectorId);
   try {
-    const sector = await SectorDataAccess.getSectorById({ sectorId });
+    const sector = await SectorDataAccess.getSectorById(sectorId);
     if (!sector) return Response.withError(res, AdminError.sectorNotFound());
 
     const newBusinessType = new BusinessType({
       businessTypeName,
       sectorId
     });
-
     const result = await newBusinessType.save();
     Response.success(res, 201, result, "İşyeri tipi oluşturuldu");
   } catch (error) {

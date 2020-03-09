@@ -4,6 +4,6 @@ exports.getSector = async query => Sector.findOne(query);
 
 exports.getSectors = async () => Sector.find();
 
-exports.getSectorById = async query => Sector.findById(query);
+exports.getSectorById = async sectorId => Sector.findById(sectorId);
 
-exports.deleteSector = async query => Sector.deleteOne(query);
+exports.deleteSector = async sectorId => Sector.deleteOne(sectorId);

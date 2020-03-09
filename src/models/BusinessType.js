@@ -7,7 +7,7 @@ const businessTypeSchema = new Schema({
     type: String,
     required: true
   },
-  sector: {
+  sectorId: {
     type: Schema.Types.ObjectId,
     ref: "Sector"
   }
