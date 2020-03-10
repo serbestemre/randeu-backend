@@ -137,9 +137,9 @@ exports.getSectors = async (req, res) => {
 };
 
 exports.updateSector = async (req, res) => {
-  const { updatedSectorId, updatedSectorName } = req.body;
+  const { searchedSector, updatedSectorName } = req.body;
   try {
-    const sector = await SectorDataAccess.findSectorByIdDB(updatedSectorId);
+    const sector = await SectorDataAccess.findSectorByIdDB(searchedSector);
     if (!sector) return Response.withError(res, AdminError.sectorNotFound());
     if (sector.sectorName === updatedSectorName)
       return Response.withError(res, AdminError.sectorAlreadyExist());
@@ -162,9 +162,9 @@ exports.updateSector = async (req, res) => {
 };
 
 exports.deleteSector = async (req, res) => {
-  const { sectorId } = req.body;
+  const { searchedSector } = req.body;
   try {
-    const foundSector = await SectorDataAccess.findSectorByIdDB(sectorId);
+    const foundSector = await SectorDataAccess.findSectorByIdDB(searchedSector);
     if (!foundSector)
       return Response.withError(res, AdminError.sectorNotFound());
 
@@ -182,7 +182,8 @@ exports.createBusinessType = async (req, res) => {
   // BusinessType model add collation as in Sector Model
   try {
     const foundSector = await SectorDataAccess.findSectorByIdDB(sector);
-    if (!foundSector) return Response.withError(res, AdminError.sectorNotFound());
+    if (!foundSector)
+      return Response.withError(res, AdminError.sectorNotFound());
 
     const newBusinessType = new BusinessType({
       businessTypeName,
@@ -205,13 +206,13 @@ exports.createBusinessType = async (req, res) => {
 };
 
 exports.getBusinessTypesBySector = async (req, res) => {
-  const { sectorId } = req.body;
-
+  const { sector } = req.body;
   try {
-    const businessTypeList = await BusinessTypeDataAccess.findBusinessTypeByIdDB(sectorId);
+    const businessTypeList = await BusinessTypeDataAccess.findBusinessTypeDB(
+      sector
+    );
     if (!businessTypeList)
       return Response.withError(res, AdminError.noBusinessTypeByGivenSector());
-
 
     Response.success(
       res,
@@ -236,24 +237,22 @@ exports.getBusinessTypesBySector = async (req, res) => {
 
 exports.updateBusinessType = async (req, res) => {
   const {
-    updatingBusinessTypeId,
-    uptadedValueBusinessTypeName,
-    uptadedValueSector
+    searchedBusinessType,
+    updatedBusinessTypeName,
+    updatedSector
   } = req.body;
   try {
     const businessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(
-      updatingBusinessTypeId
+      searchedBusinessType
     );
     if (!businessType)
       return Response.withError(res, AdminError.businessTypeCouldnotFound());
 
-
-    if (businessType.businessTypeName === uptadedValueBusinessTypeName)
+    if (businessType.businessTypeName === updatedBusinessTypeName)
       return Response.withError(res, AdminError.businessAlreadyExist());
 
-
-    businessType.businessTypeName = uptadedValueBusinessTypeName;
-    businessType.sector = uptadedValueSector;
+    businessType.businessTypeName = updatedBusinessTypeName;
+    businessType.sector = updatedSector;
 
     await businessType.save();
     Response.success(
@@ -278,18 +277,17 @@ exports.updateBusinessType = async (req, res) => {
 };
 
 exports.deleteBusinessType = async (req, res) => {
-  const { businessTypeId } = req.body;
-  console.log("businesstype id => ", businessTypeId);
+  const { searchedBusinessType } = req.body;
+  console.log("businesstype id => ", searchedBusinessType);
   try {
-    const foundBusinessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB({
-      businessTypeId
-    });
+    const foundBusinessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(
+      searchedBusinessType
+    );
 
     if (!foundBusinessType)
       return Response.withError(res, AdminError.businessTypeCouldnotFound());
 
-
-    await BusinessTypeDataAccess.deleteBusinessTypeDB({ foundBusinessType });
+    await BusinessTypeDataAccess.deleteBusinessTypeDB(foundBusinessType);
     Response.success(
       res,
       200,
