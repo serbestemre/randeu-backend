@@ -54,7 +54,7 @@ module.exports = {
       .empty()
   }),
   createBusinessType: Joi.object({
-    sectorId: Joi.string()
+    sector: Joi.string()
       .required()
       .empty(),
     businessTypeName: Joi.string()
