@@ -31,6 +31,12 @@ module.exports = {
       .required()
       .empty()
   }),
+  profile: Joi.object({
+    businessId: Joi.string()
+      .trim()
+      .empty()
+      .required()
+  }),
   deleteBusiness: Joi.object({
     businessId: Joi.string()
       .empty()

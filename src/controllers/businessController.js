@@ -132,6 +132,38 @@ exports.updateBusiness = async (req, res) => {
   }
 };
 
+exports.profile = async (req, res) => {
+  const { businessId } = req.body;
+
+  try {
+    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+
+    if (!business)
+      return Response.withError(res, BusinessError.businessCouldnotFound());
+
+    Response.success(
+      res,
+      200,
+      business,
+      "İş yeri profiline başarıyla ulaşıldı."
+    );
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    if (error instanceof CastError) {
+      error.message =
+        "Görüntülenmek istenen iş yeri id değeri hatalı. " +
+        "Lütfen iş yeri Id değerlerini doğru giriniz.";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
 exports.deleteBusiness = async (req, res) => {
   const businessId = req.body.businessId;
   try {

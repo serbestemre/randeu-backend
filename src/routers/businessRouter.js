@@ -14,6 +14,7 @@ router.post(
   roleCheck,
   businessController.createBusiness
 );
+
 router.put(
   "/updateBusiness",
   validator,
@@ -21,6 +22,15 @@ router.put(
   roleCheck,
   businessController.updateBusiness
 );
+
+router.get(
+  "/profile",
+  validator,
+  verifyToken,
+  roleCheck,
+  businessController.profile
+);
+
 router.delete(
   "/deleteBusiness",
   validator,
@@ -30,6 +40,7 @@ router.delete(
 );
 
 router.post("/addService", validator, businessController.addService);
+
 router.delete("/deleteService", validator, businessController.deleteService);
 
 router.post("/hireEmployee", validator, businessController.hireEmployee);
