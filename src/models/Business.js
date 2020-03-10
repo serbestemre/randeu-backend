@@ -27,7 +27,7 @@ const businessSchema = new Schema(
     },
     employeeList: [
       {
-        employee: { type: Schema.Types.ObjectId, ref: "User" },
+        _id: { type: Schema.Types.ObjectId, ref: "User" },
         providingServices: [
           {
             service: {

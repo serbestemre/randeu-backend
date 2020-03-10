@@ -21,7 +21,7 @@ const signToken = user =>
 exports.register = async (req, res) => {
   try {
     const { email } = req.body;
-
+    // TODO check password and passwordCheck inputs equalities.
     // check if there any user with the same email
     const foundLocalUser = await User.findOne({ "local.email": email });
     const foundGoogleUser = await User.findOne({
