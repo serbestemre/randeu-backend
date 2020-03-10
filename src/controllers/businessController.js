@@ -318,27 +318,27 @@ exports.hireEmployee = async (req, res) => {
 exports.dischargeEmployee = async (req, res) => {
   const { userId, businessId } = req.body;
   try {
-    const business = await Business.findById(businessId);
-    const user = await User.findById(userId);
+    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+    const user = await UserDataAccess.findUserById(userId);
 
     if (!business)
       return Response.withError(res, BusinessError.businessCouldnotFound());
 
     if (!user) return Response.withError(res, AuthError.UserNotFound());
 
-    if (
-      !business.employeeList.some(
-        employee => employee._id.toString() === user._id.toString()
-      )
-    )
+    const isEmployed = business.employeeList.find(
+      emp => emp._id.toString() === userId
+    );
+
+    if (!isEmployed)
       return Response.withError(res, BusinessError.employeeNotFound());
+
+    user.roles.remove(Constants.ROLES.EMPLOYEE);
 
     business.employeeList.remove(user);
     business.save();
-    // Çalışan tek bir iş yerinde mi çalışabilir?
-    // Burda vereceğimiz karara göre çalışan bir iş yerinden çıktığında rolü sil
-    user.roles.remove(Constants.ROLES.EMPLOYEE);
-    user.save();
+
+    await UserDataAccess.updateUserRoles(userId, user.roles);
 
     Response.success(
       res,
