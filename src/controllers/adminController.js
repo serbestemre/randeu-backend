@@ -182,7 +182,8 @@ exports.createBusinessType = async (req, res) => {
   // BusinessType model add collation as in Sector Model
   try {
     const foundSector = await SectorDataAccess.findSectorByIdDB(sector);
-    if (!foundSector) return Response.withError(res, AdminError.sectorNotFound());
+    if (!foundSector)
+      return Response.withError(res, AdminError.sectorNotFound());
 
     const newBusinessType = new BusinessType({
       businessTypeName,
@@ -205,13 +206,14 @@ exports.createBusinessType = async (req, res) => {
 };
 
 exports.getBusinessTypesBySector = async (req, res) => {
-  const { sectorId } = req.body;
+  const { sector } = req.body;
 
   try {
-    const businessTypeList = await BusinessTypeDataAccess.findBusinessTypeByIdDB(sectorId);
+    const businessTypeList = await BusinessTypeDataAccess.findBusinessTypeDB(
+      sector
+    );
     if (!businessTypeList)
       return Response.withError(res, AdminError.noBusinessTypeByGivenSector());
-
 
     Response.success(
       res,
@@ -247,10 +249,8 @@ exports.updateBusinessType = async (req, res) => {
     if (!businessType)
       return Response.withError(res, AdminError.businessTypeCouldnotFound());
 
-
     if (businessType.businessTypeName === uptadedValueBusinessTypeName)
       return Response.withError(res, AdminError.businessAlreadyExist());
-
 
     businessType.businessTypeName = uptadedValueBusinessTypeName;
     businessType.sector = uptadedValueSector;
@@ -281,13 +281,14 @@ exports.deleteBusinessType = async (req, res) => {
   const { businessTypeId } = req.body;
   console.log("businesstype id => ", businessTypeId);
   try {
-    const foundBusinessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB({
-      businessTypeId
-    });
+    const foundBusinessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(
+      {
+        businessTypeId
+      }
+    );
 
     if (!foundBusinessType)
       return Response.withError(res, AdminError.businessTypeCouldnotFound());
-
 
     await BusinessTypeDataAccess.deleteBusinessTypeDB({ foundBusinessType });
     Response.success(
