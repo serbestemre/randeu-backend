@@ -7,7 +7,7 @@ module.exports = {
       .empty()
   }),
   updateSector: Joi.object({
-    updatedSectorId: Joi.string()
+    searchedSector: Joi.string()
       .required()
       .empty(),
     updatedSectorName: Joi.string()
@@ -16,7 +16,7 @@ module.exports = {
       .empty()
   }),
   deleteSector: Joi.object({
-    sectorId: Joi.string()
+    searchedSector: Joi.string()
       .required()
       .empty()
   }),
@@ -62,17 +62,17 @@ module.exports = {
       .empty()
   }),
   deleteBusinessType: Joi.object({
-    businessTypeId: Joi.string().required()
+    searchedBusinessType: Joi.string().required()
   }),
   updateBusinessType: Joi.object({
-    updatingBusinessTypeId: Joi.string()
+    searchedBusinessType: Joi.string()
       .required()
       .empty(),
-    uptadedValueBusinessTypeName: Joi.string()
+    updatedBusinessTypeName: Joi.string()
       .max(50)
       .required()
       .empty(),
-    uptadedValueSector: Joi.string()
+    updatedSector: Joi.string()
       .required()
       .empty()
   }),
