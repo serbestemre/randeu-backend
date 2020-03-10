@@ -271,8 +271,8 @@ exports.deleteService = async (req, res) => {
 exports.hireEmployee = async (req, res) => {
   const { userId, businessId } = req.body;
   try {
-    const business = await Business.findById(businessId);
-    const user = await User.findById(userId);
+    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+    const user = await UserDataAccess.findUserById(userId);
 
     if (!business)
       return Response.withError(res, BusinessError.businessCouldnotFound());
