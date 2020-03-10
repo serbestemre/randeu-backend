@@ -44,7 +44,9 @@ exports.createService = async (req, res) => {
 exports.getServiceListByBusiness = async (req, res) => {
   const { businessType } = req.body;
   try {
-    const serviceList = await ServiceDataAccess.getServiceListDB({ businessType });
+    const serviceList = await ServiceDataAccess.getServiceListDB({
+      businessType
+    });
     if (!serviceList)
       return Response.withError(res, AdminError.noServiceListByGivenBusiness);
 
@@ -109,7 +111,7 @@ exports.deleteService = async (req, res) => {
 exports.createSector = async (req, res) => {
   const sectorName = req.body.sectorName.trim();
   try {
-    const sector = await SectorDataAccess.getSectorDB({ sectorName });
+    const sector = await SectorDataAccess.findSectorByNameDB({ sectorName });
     if (sector) return Response.withError(res, AdminError.sectorAlreadyExist());
     const newSector = new Sector({
       sectorName
@@ -127,7 +129,7 @@ exports.createSector = async (req, res) => {
 
 exports.getSectors = async (req, res) => {
   try {
-    const sectors = await SectorDataAccess.getSectorsDB();
+    const sectors = await SectorDataAccess.findSectorsDB();
     Response.success(res, 200, sectors, "Sektörler başarıyla listelendi");
   } catch (error) {
     Response.withError(res, CommonError.serverError);
@@ -137,7 +139,7 @@ exports.getSectors = async (req, res) => {
 exports.updateSector = async (req, res) => {
   const { updatedSectorId, updatedSectorName } = req.body;
   try {
-    const sector = await SectorDataAccess.getSectorByIdDB(updatedSectorId);
+    const sector = await SectorDataAccess.findSectorByIdDB(updatedSectorId);
     if (!sector) return Response.withError(res, AdminError.sectorNotFound());
     if (sector.sectorName === updatedSectorName)
       return Response.withError(res, AdminError.sectorAlreadyExist());
@@ -162,11 +164,11 @@ exports.updateSector = async (req, res) => {
 exports.deleteSector = async (req, res) => {
   const { sectorId } = req.body;
   try {
-    const foundSector = await SectorDataAccess.getSectorByIdDB(sectorId);
+    const foundSector = await SectorDataAccess.findSectorByIdDB(sectorId);
     if (!foundSector)
       return Response.withError(res, AdminError.sectorNotFound());
 
-    await SectorDataAccess.deleteSector(foundSector);
+    await SectorDataAccess.deleteSectorByIdDB(foundSector);
     Response.success(res, 200, { foundSector }, "Sektör başarıyla silindi");
   } catch (error) {
     console.log(error);
@@ -176,9 +178,10 @@ exports.deleteSector = async (req, res) => {
 
 exports.createBusinessType = async (req, res) => {
   const { businessTypeName, sectorId } = req.body;
-  console.log("bağlancak sectorID:", sectorId);
+  // TODO If there exist a businessType in DB, it will be checked (case-insensetive)
+  // BusinessType model add collation as in Sector Model
   try {
-    const sector = await SectorDataAccess.getSectorByIdDB(sectorId);
+    const sector = await SectorDataAccess.findSectorByIdDB(sectorId);
     if (!sector) return Response.withError(res, AdminError.sectorNotFound());
 
     const newBusinessType = new BusinessType({
@@ -205,9 +208,10 @@ exports.getBusinessTypesBySector = async (req, res) => {
   const { sectorId } = req.body;
 
   try {
-    const businessTypeList = await BusinessTypeDataAccess.getBusinessTypeDB({ sectorId });
+    const businessTypeList = await BusinessTypeDataAccess.findBusinessTypeByIdDB(sectorId);
     if (!businessTypeList)
       return Response.withError(res, AdminError.noBusinessTypeByGivenSector());
+
 
     Response.success(
       res,
@@ -237,13 +241,16 @@ exports.updateBusinessType = async (req, res) => {
     uptadedValueSector
   } = req.body;
   try {
-    const businessType = await BusinessTypeDataAccess
-      .getBusinessTypeById(updatingBusinessTypeId);
+    const businessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(
+      updatingBusinessTypeId
+    );
     if (!businessType)
       return Response.withError(res, AdminError.businessTypeCouldnotFound());
 
+
     if (businessType.businessTypeName === uptadedValueBusinessTypeName)
       return Response.withError(res, AdminError.businessAlreadyExist());
+
 
     businessType.businessTypeName = uptadedValueBusinessTypeName;
     businessType.sector = uptadedValueSector;
@@ -274,14 +281,15 @@ exports.deleteBusinessType = async (req, res) => {
   const { businessTypeId } = req.body;
   console.log("businesstype id => ", businessTypeId);
   try {
-    const foundBusinessType = await BusinessTypeDataAccess
-      .getBusinessTypeById({ businessTypeId });
+    const foundBusinessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB({
+      businessTypeId
+    });
 
     if (!foundBusinessType)
       return Response.withError(res, AdminError.businessTypeCouldnotFound());
 
-    await BusinessTypeDataAccess
-      .deleteBusinessType({ foundBusinessType });
+
+    await BusinessTypeDataAccess.deleteBusinessTypeDB({ foundBusinessType });
     Response.success(
       res,
       200,

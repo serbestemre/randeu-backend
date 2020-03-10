@@ -1,7 +1,7 @@
 const BusinessType = require("../models/BusinessType");
 
-exports.getBusinessTypeDB = async query => BusinessType.find(query);
+exports.findBusinessTypeDB = async query => BusinessType.find(query);
 
-exports.getBusinessTypeByIdDB = async businessTypeId => BusinessType.findById(businessTypeId);
+exports.findBusinessTypeByIdDB = async businessTypeId => BusinessType.findById(businessTypeId);
 
-exports.deleteBusinessTypeDB = async query => BusinessType.deleteOne(query);
+exports.deleteBusinessTypeDB = async businessType => BusinessType.deleteOne(businessType);

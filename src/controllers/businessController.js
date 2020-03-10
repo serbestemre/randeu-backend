@@ -148,8 +148,8 @@ exports.deleteBusiness = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Silinmek istenen iş yeri id değeri hatalı. Lütfen servis/iş yeri Id değerlerini doğru giriniz.";
+      error.message = "Silinmek istenen iş yeri id değeri hatalı. "
+        + "Lütfen servis/iş yeri Id değerlerini doğru giriniz.";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -191,8 +191,8 @@ exports.addService = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Tanımlanmak istenen servis bulunamadı! Lütfen Servis Id değerini doğru giriniz.";
+      error.message = "Tanımlanmak istenen servis bulunamadı! "
+        + "Lütfen Servis Id değerini doğru giriniz.";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -222,8 +222,8 @@ exports.deleteService = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Servis silinemedi. Lütfen silinmek istenen servis/iş yeri Id değerlerini doğru giriniz!";
+      error.message = "Servis silinemedi. Lütfen silinmek istenen servis/iş yeri"
+      + " Id değerlerini doğru giriniz!";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -270,8 +270,8 @@ exports.hireEmployee = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Çalışan, iş yerine başarıyla tanımlanamadı! Lütfen Çalışan/İş yeri Id değerlerini doğru giriniz.";
+      error.message = "Çalışan, iş yerine başarıyla tanımlanamadı!"
+        + "Lütfen Çalışan/İş yeri Id değerlerini doğru giriniz.";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -317,8 +317,8 @@ exports.dischargeEmployee = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Çalışan belirtilen iş yerinin çalışan listesinden çıkartılamadı! Lütfen Çalışan ve İş yeri Id değerlerini doğru giriniz!";
+      error.message = "Çalışan belirtilen iş yerinin çalışan listesinden çıkartılamadı!"
+        + "Lütfen Çalışan ve İş yeri Id değerlerini doğru giriniz!";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -328,7 +328,9 @@ exports.dischargeEmployee = async (req, res) => {
 };
 
 exports.assignService = async (req, res) => {
-  const { serviceId, employeeId, businessId, price, duration } = req.body;
+  const {
+    serviceId, employeeId, businessId, price, duration
+  } = req.body;
 
   try {
     const business = await Business.findById(businessId);
@@ -392,8 +394,8 @@ exports.assignService = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Çalışan için bir servis tanımlanamadı! Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin";
+      error.message = "Çalışan için bir servis tanımlanamadı!"
+        + " Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -450,8 +452,8 @@ exports.removeService = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Çalışanın servis listesinden silinmek istenen servis silinimedi! Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin.";
+      error.message = "Çalışanın servis listesinden silinmek istenen servis silinimedi!"
+        + " Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin.";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
