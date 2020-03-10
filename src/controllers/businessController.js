@@ -25,7 +25,6 @@ exports.createBusiness = async (req, res) => {
       businessType,
       businessOwnerId
     } = req.body;
-    // const employee = req.body.employeeList[0].employee;
 
     const businessOwner = await UserDataAccess.findUserById(businessOwnerId);
 
@@ -47,10 +46,10 @@ exports.createBusiness = async (req, res) => {
       businessName,
       address,
       sector,
-      businessType,
-      businessOwner
+      businessType
     });
 
+    newBusiness.businessOwnerList.push(businessOwner);
     newBusiness.employeeList.push(businessOwner);
 
     if (!businessOwner.roles.includes(Constants.ROLES.EMPLOYEE))
@@ -362,10 +361,7 @@ exports.assignService = async (req, res) => {
     if (!foundEmployee)
       return Response.withError(res, BusinessError.employeeNotFound());
 
-    console.log("indexof =>", business.employeeList.indexOf(foundEmployee));
-
     // Bu iş tipi belirtilen çalışan için daha önceden tanımlanmış mı?
-
     const isAlreadyProvided = foundEmployee.providingServices.find(
       providingService =>
         providingService._id.toString() === serviceId.toString()

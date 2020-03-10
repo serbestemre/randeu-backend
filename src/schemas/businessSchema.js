@@ -82,8 +82,8 @@ module.exports = {
       .trim()
       .empty()
       .required(),
-    price: Joi.string().required(),
-    duration: Joi.string().required()
+    price: Joi.number().required(),
+    duration: Joi.number().required()
   }),
   removeService: Joi.object({
     employeeId: Joi.string()

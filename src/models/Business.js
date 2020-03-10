@@ -20,18 +20,22 @@ const businessSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "BusinessType"
     },
-    businessOwner: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: "User"
-    },
+    businessOwnerList: [
+      {
+        businessOwner: {
+          type: Schema.Types.ObjectId,
+          ref: "User"
+        }
+      }
+    ],
     employeeList: [
       {
-        _id: { type: Schema.Types.ObjectId, ref: "User" },
+        employee: { type: Schema.Types.ObjectId, ref: "User" },
         providingServices: [
           {
             service: {
-              _id: { type: Schema.Types.ObjectId, ref: "Service" },
+              type: Schema.Types.ObjectId,
+              ref: "Service",
               price: { type: String },
               duration: { type: String }
             }
