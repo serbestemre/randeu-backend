@@ -177,12 +177,12 @@ exports.deleteSector = async (req, res) => {
 };
 
 exports.createBusinessType = async (req, res) => {
-  const { businessTypeName, sectorId } = req.body;
+  const { businessTypeName, sector } = req.body;
   // TODO If there exist a businessType in DB, it will be checked (case-insensetive)
   // BusinessType model add collation as in Sector Model
   try {
-    const sector = await SectorDataAccess.findSectorByIdDB(sectorId);
-    if (!sector) return Response.withError(res, AdminError.sectorNotFound());
+    const foundSector = await SectorDataAccess.findSectorByIdDB(sector);
+    if (!foundSector) return Response.withError(res, AdminError.sectorNotFound());
 
     const newBusinessType = new BusinessType({
       businessTypeName,
