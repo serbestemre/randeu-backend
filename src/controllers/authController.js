@@ -1,5 +1,6 @@
 const ValidationError = require("mongoose").Error.ValidationError;
 const JWT = require("jsonwebtoken");
+
 const User = require("../models/User");
 const response = require("../helpers/response");
 const AuthError = require("../errors/AuthError");
@@ -20,7 +21,7 @@ const signToken = user =>
 exports.register = async (req, res) => {
   try {
     const { email } = req.body;
-
+    // TODO check password and passwordCheck inputs equalities.
     // check if there any user with the same email
     const foundLocalUser = await User.findOne({ "local.email": email });
     const foundGoogleUser = await User.findOne({
