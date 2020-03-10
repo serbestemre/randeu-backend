@@ -279,19 +279,17 @@ exports.hireEmployee = async (req, res) => {
 
     if (!user) return Response.withError(res, AuthError.UserNotFound());
 
-    if (
-      business.employeeList.some(
-        employee => employee._id.toString() === user._id.toString()
-      )
-    )
+    const isEmployed = business.employeeList.find(
+      emp => emp._id.toString() === userId
+    );
+
+    if (isEmployed)
       return Response.withError(res, BusinessError.employeeAlreadyExist());
 
-    if (!user.roles.includes(Constants.ROLES.EMPLOYEE)) {
-      // console.log(role, " !== ", Constants.ROLES.EMPLOYEE);
+    if (!user.roles.includes(Constants.ROLES.EMPLOYEE))
       user.roles.push(Constants.ROLES.EMPLOYEE);
-      user.save();
-    }
 
+    UserDataAccess.updateUserRoles(userId, user.roles);
     business.employeeList.push(user);
     business.save();
     Response.success(
