@@ -239,17 +239,17 @@ exports.addService = async (req, res) => {
 exports.deleteService = async (req, res) => {
   const { serviceId, businessId } = req.body;
   try {
-    const foundBusiness = await Business.findById(businessId);
+    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
 
-    if (
-      !foundBusiness.serviceList.some(
-        service => service._id.toString() === serviceId
-      )
-    )
+    // Tanımlanmak istenen servis bu iş yerinin servis listesinde var mı?
+    const deletingService = business.serviceList.find(
+      serviceObj => serviceObj._id.toString() === serviceId.toString()
+    );
+    if (!deletingService)
       return Response.withError(res, AdminError.serviceNotFound());
 
-    foundBusiness.serviceList.remove(serviceId);
-    foundBusiness.save();
+    business.serviceList.remove(serviceId);
+    business.save();
     Response.success(res, 200, serviceId, "Servis başarıyla silindi.");
   } catch (error) {
     if (error instanceof ValidationError) {
