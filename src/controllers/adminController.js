@@ -68,7 +68,7 @@ exports.getServiceListByBusiness = async (req, res) => {
 exports.updateService = async (req, res) => {
   const { searchedService, updatedServiceName, updatedBusinessType } = req.body;
   try {
-    const service = await ServiceDataAccess.findServiceById(searchedService);
+    const service = await ServiceDataAccess.findServiceByIdDB(searchedService);
     if (!service) return Response.withError(res, AdminError.serviceNotFound());
     if (service.serviceName === updatedServiceName)
       return Response.withError(res, AdminError.serviceAlreadyExist());
@@ -94,11 +94,11 @@ exports.updateService = async (req, res) => {
 exports.deleteService = async (req, res) => {
   const { serviceId } = req.body;
   try {
-    const foundService = await ServiceDataAccess.findServiceById(serviceId);
+    const foundService = await ServiceDataAccess.findServiceByIdDB(serviceId);
     if (!foundService)
       return Response.withError(res, AdminError.serviceNotFound());
 
-    await ServiceDataAccess.deleteService(foundService);
+    await ServiceDataAccess.deleteServiceDB(foundService);
 
     Response.success(res, 200, { foundService }, "Servis başarıyla silindi");
   } catch (error) {
