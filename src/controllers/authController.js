@@ -5,6 +5,7 @@ const User = require("../models/User");
 const response = require("../helpers/response");
 const AuthError = require("../errors/AuthError");
 const CommonError = require("../errors/CommonError");
+const UserDataAccess = require("../dataAccess/User");
 
 const signToken = user =>
   JWT.sign(
@@ -21,14 +22,11 @@ const signToken = user =>
 exports.register = async (req, res) => {
   try {
     const { email } = req.body;
-
+    // TODO check password and passwordCheck inputs equalities.
     // check if there any user with the same email
-    const foundLocalUser = await User.findOne({ "local.email": email });
-    const foundGoogleUser = await User.findOne({
-      "google.email": email
-    });
+    const foundUser = await UserDataAccess.findUserByEmailDB(email);
 
-    if (foundLocalUser || foundGoogleUser)
+    if (foundUser)
       return response.withError(res, AuthError.userAlreadyExists());
 
     const newUser = new User({

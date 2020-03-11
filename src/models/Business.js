@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -14,27 +14,31 @@ const businessSchema = new Schema(
     },
     sector: {
       type: Schema.Types.ObjectId,
-      ref: "Sector"
+      ref: 'Sector'
     },
     businessType: {
       type: Schema.Types.ObjectId,
-      ref: "BusinessType"
+      ref: 'BusinessType'
     },
-    businessOwner: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: "User"
-    },
+    businessOwnerList: [
+      {
+        businessOwner: {
+          type: Schema.Types.ObjectId,
+          ref: 'User'
+        }
+      }
+    ],
     employeeList: [
       {
-        employee: { type: Schema.Types.ObjectId, ref: "User" },
+        employee: { type: Schema.Types.ObjectId, ref: 'User' },
         providingServices: [
           {
             service: {
-              _id: { type: Schema.Types.ObjectId, ref: "Service" },
-              price: { type: String },
-              duration: { type: String }
-            }
+              type: Schema.Types.ObjectId,
+              ref: 'Service'
+            },
+            price: { type: Number },
+            duration: { type: Number }
           }
         ]
       }
@@ -43,7 +47,7 @@ const businessSchema = new Schema(
       {
         service: {
           type: Schema.Types.ObjectId,
-          ref: "Service"
+          ref: 'Service'
         }
       }
     ],
@@ -51,7 +55,7 @@ const businessSchema = new Schema(
       {
         commentOwner: {
           type: Schema.Types.ObjectId,
-          ref: "User",
+          ref: 'User',
           required: true
         },
         commentText: {
@@ -76,4 +80,4 @@ const businessSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Business", businessSchema);
+module.exports = mongoose.model('Business', businessSchema);

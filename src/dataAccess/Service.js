@@ -1,9 +1,9 @@
 const Service = require("../models/Service");
 
-exports.getServiceDB = async query => Service.findOne(query);
+exports.findServiceDB = async serviceName => Service.findOne(serviceName);
 
-exports.getServiceListDB = async query => Service.find(query);
+exports.findServiceListByBusinessDB = async businessType => Service.find({ businessType });
 
-exports.getServiceById = async query => Service.findById(query);
+exports.findServiceByIdDB = async searchedService => Service.findById(searchedService);
 
-exports.deleteService = async query => Service.deleteOne(query);
+exports.deleteServiceDB = async foundService => Service.deleteOne(foundService);

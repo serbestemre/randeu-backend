@@ -1,9 +1,9 @@
 const Sector = require("../models/Sector");
 
-exports.getSector = async query => Sector.findOne(query);
+exports.findSectorByNameDB = async sectorName => Sector.findOne(sectorName);
 
-exports.getSectors = async () => Sector.find();
+exports.findSectorsDB = async () => Sector.find();
 
-exports.getSectorById = async query => Sector.findById(query);
+exports.findSectorByIdDB = async searchedSector => Sector.findById(searchedSector);
 
-exports.deleteSector = async query => Sector.deleteOne(query);
+exports.deleteSectorByIdDB = async sectorId => Sector.deleteOne(sectorId);
