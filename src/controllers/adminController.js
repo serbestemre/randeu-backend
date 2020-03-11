@@ -16,7 +16,7 @@ exports.createService = async (req, res) => {
 
   console.log("service name => ", serviceName);
   try {
-    const service = await ServiceDataAccess.getServiceDB({ serviceName });
+    const service = await ServiceDataAccess.findServiceDB({ serviceName });
     if (service)
       return Response.withError(res, AdminError.serviceAlreadyExist());
 
@@ -44,9 +44,7 @@ exports.createService = async (req, res) => {
 exports.getServiceListByBusiness = async (req, res) => {
   const { businessType } = req.body;
   try {
-    const serviceList = await ServiceDataAccess.getServiceListDB({
-      businessType
-    });
+    const serviceList = await ServiceDataAccess.findServiceListByBusinessDB(businessType);
     if (!serviceList)
       return Response.withError(res, AdminError.noServiceListByGivenBusiness);
 
@@ -60,7 +58,7 @@ exports.getServiceListByBusiness = async (req, res) => {
       // eslint-disable-next-line operator-linebreak
       error.message =
         "Servis listesi yüklenemedi çünkü iş tipi id değeri hatalı";
-      Object.asssign(error, { statusCode: 400 });
+      Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
     Response.withError(res, CommonError.serverError());
@@ -68,9 +66,9 @@ exports.getServiceListByBusiness = async (req, res) => {
 };
 
 exports.updateService = async (req, res) => {
-  const { foundServiceId, updatedServiceName, updatedBusinessType } = req.body;
+  const { searchedService, updatedServiceName, updatedBusinessType } = req.body;
   try {
-    const service = await ServiceDataAccess.getServiceById({ foundServiceId });
+    const service = await ServiceDataAccess.findServiceById(searchedService);
     if (!service) return Response.withError(res, AdminError.serviceNotFound());
     if (service.serviceName === updatedServiceName)
       return Response.withError(res, AdminError.serviceAlreadyExist());
@@ -96,11 +94,11 @@ exports.updateService = async (req, res) => {
 exports.deleteService = async (req, res) => {
   const { serviceId } = req.body;
   try {
-    const foundService = await ServiceDataAccess.getServiceById({ serviceId });
+    const foundService = await ServiceDataAccess.findServiceById(serviceId);
     if (!foundService)
       return Response.withError(res, AdminError.serviceNotFound());
 
-    await ServiceDataAccess.deleteService({ foundService });
+    await ServiceDataAccess.deleteService(foundService);
 
     Response.success(res, 200, { foundService }, "Servis başarıyla silindi");
   } catch (error) {

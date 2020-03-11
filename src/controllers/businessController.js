@@ -453,7 +453,6 @@ exports.removeService = async (req, res) => {
     if (!employee)
       return Response.withError(res, BusinessError.employeeNotFound());
 
-    // TODO change find with dataAccess
     const removingService = employee.providingServices.find(
       service => service._id.toString() === serviceId.toString()
     );

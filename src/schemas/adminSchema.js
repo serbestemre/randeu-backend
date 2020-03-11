@@ -36,7 +36,7 @@ module.exports = {
       .empty()
   }),
   updateService: Joi.object({
-    foundServiceId: Joi.string()
+    searchedService: Joi.string()
       .required()
       .empty(),
     updatedServiceName: Joi.string()
