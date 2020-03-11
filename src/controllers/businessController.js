@@ -248,6 +248,8 @@ exports.deleteService = async (req, res) => {
     if (!deletingService)
       return Response.withError(res, AdminError.serviceNotFound());
 
+    // TODO Eğer silinmek istenen service bir çalışana tanımlıysa buna izin verme
+    // veya çalışandan da bu servisi sil
     business.serviceList.remove(serviceId);
     business.save();
     Response.success(res, 200, serviceId, "Servis başarıyla silindi.");
@@ -433,44 +435,32 @@ exports.assignService = async (req, res) => {
 exports.removeService = async (req, res) => {
   const { businessId, employeeId, serviceId } = req.body;
   try {
-    const business = await Business.findById(businessId);
+    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
 
     if (!business)
       return Response.withError(res, BusinessError.businessCouldnotFound());
 
-    let foundEmployee;
-    if (
-      !business.employeeList.some(employee => {
-        if (employee._id.toString() === employeeId.toString()) {
-          foundEmployee = employee;
-          return true;
-        }
-        return false;
-      })
-    )
+    const employee = business.employeeList.find(
+      emp => emp._id.toString() === employeeId
+    );
+
+    if (!employee)
       return Response.withError(res, BusinessError.employeeNotFound());
 
-    let deletingService;
-    if (
-      !foundEmployee.providingServices.some(service => {
-        if (service._id.toString() === serviceId.toString()) {
-          console.log("serviceId => ", serviceId);
-          deletingService = service;
-          console.log("deletingservice => ", deletingService);
-          return true;
-        }
-        return false;
-      })
-    )
+    const removingService = employee.providingServices.find(
+      service => service._id.toString() === serviceId.toString()
+    );
+    if (!removingService)
       return Response.withError(res, BusinessError.serviceNotProvided());
 
-    foundEmployee.providingServices.pop(deletingService);
+    console.log("REMOVING SERVICE: ", removingService);
+    employee.providingServices.remove(removingService);
     await business.save();
     Response.success(
       res,
       200,
       business,
-      "Servis tanımlanan çalışandan başarıyla silindi."
+      "Servis, tanımlanan çalışandan başarıyla silindi."
     );
   } catch (error) {
     if (error instanceof ValidationError) {
