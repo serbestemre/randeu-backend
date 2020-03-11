@@ -15,6 +15,9 @@ const BusinessError = require("../errors/BusinessError");
 const AdminError = require("../errors/AdminError");
 const BusinessDataAccess = require("../dataAccess/Business");
 const UserDataAccess = require("../dataAccess/User");
+const SectorDataAccess = require("../dataAccess/Sector");
+const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
+const ServiceDataAccess = require("../dataAccess/Service");
 
 exports.createBusiness = async (req, res) => {
   try {
@@ -24,25 +27,24 @@ exports.createBusiness = async (req, res) => {
       sector,
       businessType,
       businessOwnerId
-    } = req.body;
+    } = req.body.trim();
 
-    const businessOwner = await UserDataAccess.findUserById(businessOwnerId);
+    const businessOwner = await UserDataAccess.findUserByIdDB(businessOwnerId);
 
     if (!businessOwner)
       return Response.withError(
         res,
         BusinessError.businessOwnerCouldnotFound()
       );
-    // TODO change findById with dataAccess
-    const doesSectorExist = await Sector.findById(sector);
+    const doesSectorExist = await SectorDataAccess.findSectorByIdDB(sector);
     if (!doesSectorExist)
       return Response.withError(res, BusinessError.sectorCouldnotFound());
 
-    // TODO change findByID with dataAccess
-    const doesBusinessTypeExist = await BusinessType.findById(businessType);
+    const doesBusinessTypeExist = await BusinessTypeDataAccess.findBusinessTypeByIdDB(businessType);
     if (!doesBusinessTypeExist)
       return Response.withError(res, BusinessError.businessTypeCouldnotFound());
 
+    // TODO String fields should be trim
     const newBusiness = new Business({
       businessName,
       address,
@@ -61,7 +63,7 @@ exports.createBusiness = async (req, res) => {
 
     console.log(businessOwner.roles);
 
-    await UserDataAccess.updateUserRoles(businessOwnerId, businessOwner.roles);
+    await UserDataAccess.updateUserRolesDB(businessOwnerId, businessOwner.roles);
 
     const result = await newBusiness.save();
     Response.success(res, 201, result, "Yeni iş yeri oluşturuldu.");
@@ -92,15 +94,13 @@ exports.updateBusiness = async (req, res) => {
 
   const { userId } = req.body;
   try {
-    // TODO change findById with dataAccess
-    const user = await User.findById(userId);
+    const user = await UserDataAccess.findUserByIdDB(userId);
 
     if (!user) return Response.withError(res, BusinessError.notAllowedUser());
 
     // TODO Update isteği oluşturan user bu iş yerinin businessOwner'ı mı kontrol et?
 
-    // TODO change findByID with dataAccess
-    const doesSectorExist = await Sector.findById(updatedSector);
+    const doesSectorExist = await SectorDataAccess.findSectorByIdDB(updatedSector);
     if (!doesSectorExist)
       return Response.withError(res, BusinessError.sectorCouldnotFound());
 
@@ -110,8 +110,7 @@ exports.updateBusiness = async (req, res) => {
     if (!doesBusinessTypeExist)
       return Response.withError(res, BusinessError.businessTypeCouldnotFound());
 
-    // TODO change findById with dataAccess
-    const business = await Business.findById(updatingBusiness);
+    const business = await BusinessDataAccess.findBusinessByIdDB(updatingBusiness);
 
     business.businessName = updatedBusinessName;
     business.address = updatedAddress;
@@ -170,15 +169,14 @@ exports.profile = async (req, res) => {
 exports.deleteBusiness = async (req, res) => {
   const businessId = req.body.businessId;
   try {
-    // TODO change findById with dataAccess
-    const business = await Business.findById(businessId);
+    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
     console.log(business);
 
     if (!business)
       return Response.withError(res, BusinessError.businessCouldnotFound());
 
-    // TODO change deleteOne with dataAccess
-    await Business.deleteOne(business);
+    await BusinessDataAccess.deleteOneDB(business);
+
     Response.success(res, 200, business, "İş yeri başarılya silindi.");
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -201,7 +199,9 @@ exports.addService = async (req, res) => {
   try {
     // TODO change them with dataAccess
     const foundService = await Service.findById(serviceId);
-    const foundBusiness = await Business.findById(businessId);
+    const foundBusiness = await BusinessDataAccess.findBusinessByIdDB(businessId);
+
+    console.log("BULUNAN SERVICE", foundService);
 
     if (!foundService)
       return Response.withError(res, AdminError.serviceNotFound());
@@ -214,15 +214,16 @@ exports.addService = async (req, res) => {
     if (!serviceBusinessType.equals(businessTypeId))
       return Response.withError(res, BusinessError.BusinessTypesNotMatch());
 
-    if (
-      foundBusiness.serviceList.some(
-        service => service._id.toString() === foundService._id.toString()
-      )
-    )
+
+    const doesServiceExists = foundBusiness.serviceList.find(
+      service => service._id.toString() === foundService._id.toString()
+    );
+    if (doesServiceExists)
       return Response.withError(res, BusinessError.ServiceAlreadyExist());
 
     foundBusiness.serviceList.push(foundService);
-    foundBusiness.save();
+    await BusinessDataAccess.updateServiceListDB(businessId, foundBusiness.serviceList);
+    // foundBusiness.save();
     Response.success(res, 200, foundService, "Servis başarıyla tanımlandı.");
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -277,7 +278,7 @@ exports.hireEmployee = async (req, res) => {
   const { userId, businessId } = req.body;
   try {
     const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
-    const user = await UserDataAccess.findUserById(userId);
+    const user = await UserDataAccess.findUserByIdDB(userId);
 
     if (!business)
       return Response.withError(res, BusinessError.businessCouldnotFound());
@@ -294,7 +295,7 @@ exports.hireEmployee = async (req, res) => {
     if (!user.roles.includes(Constants.ROLES.EMPLOYEE))
       user.roles.push(Constants.ROLES.EMPLOYEE);
 
-    UserDataAccess.updateUserRoles(userId, user.roles);
+    UserDataAccess.updateUserRolesDB(userId, user.roles);
     business.employeeList.push(user);
     business.save();
     Response.success(
@@ -323,7 +324,7 @@ exports.dischargeEmployee = async (req, res) => {
   const { userId, businessId } = req.body;
   try {
     const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
-    const user = await UserDataAccess.findUserById(userId);
+    const user = await UserDataAccess.findUserByIdDB(userId);
 
     if (!business)
       return Response.withError(res, BusinessError.businessCouldnotFound());
@@ -342,7 +343,7 @@ exports.dischargeEmployee = async (req, res) => {
     business.employeeList.remove(user);
     business.save();
 
-    await UserDataAccess.updateUserRoles(userId, user.roles);
+    await UserDataAccess.updateUserRolesDB(userId, user.roles);
 
     Response.success(
       res,
@@ -372,14 +373,12 @@ exports.assignService = async (req, res) => {
   } = req.body;
 
   try {
-    // TODO change findById with dataAccess
-    const business = await Business.findById(businessId);
+    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
 
     if (!business)
       return Response.withError(res, BusinessError.businessCouldnotFound());
 
     // Tanımlanmak istenen servis bu iş yerinin servis listesinde var mı?
-    // TODO change find with dataAccess
     const service = business.serviceList.find(
       existingService => existingService._id.toString() === serviceId.toString()
     );
@@ -388,7 +387,6 @@ exports.assignService = async (req, res) => {
 
     console.log("newPr => ", service);
 
-    // TODO change find with dataAccess
     const foundEmployee = business.employeeList.find(
       emp => emp._id.toString() === employeeId.toString()
     );
@@ -400,11 +398,11 @@ exports.assignService = async (req, res) => {
       return Response.withError(res, BusinessError.employeeNotFound());
 
     // Bu iş tipi belirtilen çalışan için daha önceden tanımlanmış mı?
-    // TODO change find with dataAccess
     const isAlreadyProvided = foundEmployee.providingServices.find(
       providingService =>
         providingService._id.toString() === serviceId.toString()
     );
+
     if (isAlreadyProvided)
       return Response.withError(res, BusinessError.serviceAlreadyProviding());
 
