@@ -43,14 +43,6 @@ const businessSchema = new Schema(
         ]
       }
     ],
-    serviceList: [
-      {
-        service: {
-          type: Schema.Types.ObjectId,
-          ref: 'Service'
-        }
-      }
-    ],
     comments: [
       {
         commentOwner: {

@@ -47,7 +47,7 @@ BusinessError.employeeNotFound = () => ({
 BusinessError.serviceNotProvided = () => ({
   statusCode: 400,
   message:
-    "Tanımlanmak istenen iş tipi bu iş yerinin servis listesine tanımlanmamış!"
+    "Silinmek istenen servis, çalışanın sağladığı servis listesinde tanımlanmamış!"
 });
 
 BusinessError.serviceAlreadyProviding = () => ({

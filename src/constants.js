@@ -77,14 +77,6 @@ constants.ENDPOINTS_SCHEMAS = {
     schema: businessSchema.deleteBusiness,
     authorization: [constants.ROLES.BUSINESS_OWNER, constants.ROLES.SUPER_USER]
   },
-  "business/addService": {
-    schema: businessSchema.addService,
-    authorization: [constants.ROLES.BUSINESS_OWNER, constants.ROLES.SUPER_USER]
-  },
-  "business/deleteService": {
-    schema: businessSchema.deleteService,
-    authorization: [constants.ROLES.BUSINESS_OWNER]
-  },
   "business/hireEmployee": {
     schema: businessSchema.hireEmployee,
     authorization: [constants.ROLES.BUSINESS_OWNER]
