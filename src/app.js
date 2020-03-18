@@ -1,4 +1,7 @@
-require("dotenv").config();
+if (process.env.NODE_ENV === "test")
+  require("dotenv").config({ path: ".env.test" });
+else require("dotenv").config({ path: ".env.dev" });
+
 const express = require("express");
 require("./db/mongoose");
 

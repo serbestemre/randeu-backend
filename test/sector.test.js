@@ -10,7 +10,7 @@ test("Should create a Sector", async () => {
     .post("/admin/createSector")
     .set("Authorization", `Bearer ${db.adminJWTToken}`)
     .send({
-      sectorName: "TEST SEKTÖR2"
+      sectorName: "Kişisel Bakım"
     })
     .expect(201);
 });
