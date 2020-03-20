@@ -1,31 +1,31 @@
 const AdminError = {};
 
-AdminError.businessTypeCouldnotFound = () => ({
+AdminError.businessTypeNotFound = () => ({
   statusCode: 404,
   message: "İş tipi bulunamadı"
 });
 
-AdminError.noBusinessTypeByGivenSector = () => ({
+AdminError.businessTypeNotFoundByGivenSector = () => ({
   statusCode: 404,
   message: "Aranan sektöre göre iş yeri tipi bulamadı"
 });
 
-AdminError.noServiceListByGivenBusiness = () => ({
+AdminError.servicesNotFoundByGivenBusinessType = () => ({
   statusCode: 404,
   message: "Aranan iş tipine göre servis bulunamadı"
 });
 
-AdminError.businessAlreadyExist = () => ({
-  statusCode: 403,
+AdminError.businessAlreadyExists = () => ({
+  statusCode: 409,
   message: "İş tipi zaten kayıtlı"
 });
 
-AdminError.serviceAlreadyExist = () => ({
-  statusCode: 403,
+AdminError.serviceAlreadyExists = () => ({
+  statusCode: 409,
   message: "Servis zaten kayıtlı"
 });
 
-AdminError.sectorAlreadyExist = () => ({
+AdminError.sectorAlreadyExists = () => ({
   statusCode: 403,
   message: "Sektör zaten kayıtlı"
 });
