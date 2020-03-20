@@ -25,7 +25,7 @@ router.get("/sectorList", verifyToken, roleCheck, adminController.getSectors);
 // Update a sector according to the given ID in parameter
 router.put(
   "/updateSector",
-  validator,
+  joiValidator(adminSchema.updateSector),
   verifyToken,
   roleCheck,
   adminController.updateSector
@@ -33,7 +33,7 @@ router.put(
 
 router.delete(
   "/deleteSector",
-  validator,
+  joiValidator(adminSchema.deleteSector),
   verifyToken,
   roleCheck,
   adminController.deleteSector
@@ -41,7 +41,7 @@ router.delete(
 
 router.post(
   "/createBusinessType",
-  validator,
+  joiValidator(adminSchema.createBusinessType),
   verifyToken,
   roleCheck,
   adminController.createBusinessType
@@ -49,7 +49,7 @@ router.post(
 
 router.put(
   "/updateBusinessType",
-  validator,
+  joiValidator(adminSchema.updateBusinessType),
   verifyToken,
   roleCheck,
   adminController.updateBusinessType
@@ -57,7 +57,7 @@ router.put(
 
 router.delete(
   "/deleteBusinessType",
-  validator,
+  joiValidator(adminSchema.deleteBusinessType),
   verifyToken,
   roleCheck,
   adminController.deleteBusinessType
@@ -65,7 +65,7 @@ router.delete(
 
 router.get(
   "/businessTypeList",
-  validator,
+  joiValidator(adminSchema.getBusinessTypesBySector),
   verifyToken,
   roleCheck,
   adminController.getBusinessTypesBySector
@@ -73,7 +73,7 @@ router.get(
 
 router.post(
   "/createService",
-  validator,
+  joiValidator(adminSchema.createService),
   verifyToken,
   roleCheck,
   adminController.createService
@@ -81,7 +81,7 @@ router.post(
 
 router.get(
   "/serviceList",
-  validator,
+  joiValidator(adminSchema.serviceList),
   verifyToken,
   roleCheck,
   adminController.getServiceListByBusiness
@@ -89,7 +89,7 @@ router.get(
 
 router.put(
   "/updateService",
-  validator,
+  joiValidator(adminSchema.updateService),
   verifyToken,
   roleCheck,
   adminController.updateService
@@ -97,7 +97,7 @@ router.put(
 
 router.delete(
   "/deleteService",
-  validator,
+  joiValidator(adminSchema.deleteService),
   verifyToken,
   roleCheck,
   adminController.deleteService
