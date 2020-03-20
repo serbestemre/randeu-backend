@@ -1,5 +1,7 @@
 const express = require("express");
 const validator = require("../helpers/validate");
+const joiValidator = require("../middleware/joiValidator");
+const adminSchema = require("../schemas/adminSchema");
 const { verifyToken } = require("../middleware/token");
 const { roleCheck } = require("../middleware/roleAuth");
 
@@ -9,7 +11,7 @@ const adminController = require("../controllers/adminController");
 
 router.post(
   "/createSector",
-  validator,
+  joiValidator(adminSchema.createSector),
   verifyToken,
   roleCheck,
   adminController.createSector

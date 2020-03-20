@@ -7,7 +7,7 @@ CommonError.serverError = error => ({
 });
 
 CommonError.validationError = data => ({
-  statusCode: 400,
+  statusCode: 422,
   message: "Validation Error",
   data
 });

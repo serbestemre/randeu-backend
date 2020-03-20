@@ -5,6 +5,8 @@ const authController = require("../controllers/authController");
 const auth = require("../middleware/auth");
 
 const validator = require("../helpers/validate");
+const joiValidator = require("../middleware/joiValidator");
+const authSchema = require("../schemas/authSchema");
 
 const router = new express.Router();
 
@@ -14,7 +16,7 @@ const passportJWT = passport.authenticate("jwt", { session: false });
 const passportFacebook = passport.authenticate("facebookToken", {
   session: false
 });
-router.post("/register", validator, authController.register);
+router.post("/register", joiValidator(authSchema.register), authController.register);
 router.post("/login", validator, passportSigIn, authController.login);
 router.post("/oauth/google", passportGoogle, authController.googleOAuth);
 router.post("/oauth/facebook", passportFacebook, authController.facebookOAuth);

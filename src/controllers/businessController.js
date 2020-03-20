@@ -34,6 +34,7 @@ exports.createBusiness = async (req, res) => {
         res,
         BusinessError.businessOwnerCouldnotFound()
       );
+
     const doesSectorExist = await SectorDataAccess.findSectorByIdDB(sector);
     if (!doesSectorExist)
       return Response.withError(res, BusinessError.sectorCouldnotFound());
@@ -230,7 +231,10 @@ exports.hireEmployee = async (req, res) => {
     Response.success(
       res,
       200,
-      { user, business },
+      {
+        user,
+        business
+      },
       "Çalışan, iş yerine başarıyla tanımlandı."
     );
   } catch (error) {
@@ -278,7 +282,10 @@ exports.dischargeEmployee = async (req, res) => {
     Response.success(
       res,
       200,
-      { user, business },
+      {
+        user,
+        business
+      },
       "Çalışan belirtilen iş yerinin çalışan listesinden çıkartıldı."
     );
   } catch (error) {
@@ -371,7 +378,9 @@ exports.removeService = async (req, res) => {
     if (!employee)
       return Response.withError(res, BusinessError.employeeNotFound());
 
-    const doesServiceExist = await ServiceDataAccess.findServiceByIdDB(serviceId);
+    const doesServiceExist = await ServiceDataAccess.findServiceByIdDB(
+      serviceId
+    );
 
     if (!doesServiceExist)
       return Response.withError(res, AdminError.serviceNotFound());
