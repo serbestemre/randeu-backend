@@ -6,6 +6,7 @@ const BusinessType = require("../models/BusinessType");
 const Service = require("../models/Service");
 const Response = require("../helpers/response");
 const AdminError = require("../errors/AdminError");
+const AdminSuccess = require("../successes/AdminSuccess");
 const CommonError = require("../errors/CommonError");
 const ServiceDataAccess = require("../dataAccess/Service");
 const SectorDataAccess = require("../dataAccess/Sector");
@@ -26,7 +27,11 @@ exports.createService = async (req, res) => {
     });
 
     const result = await newService.save();
-    Response.success(res, 201, result, "Servis oluşturuldu!");
+    Response.success(
+      res,
+      AdminSuccess.serviceCreated(),
+      result
+    );
   } catch (error) {
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
@@ -50,7 +55,11 @@ exports.getServiceListByBusiness = async (req, res) => {
     if (!serviceList)
       return Response.withError(res, AdminError.servicesNotFoundByGivenBusinessType);
 
-    Response.success(res, 200, { serviceList }, "Servis listesi yüklendi");
+    Response.success(
+      res,
+      AdminSuccess.servicesListedByBusiness(),
+      { serviceList }
+    );
   } catch (error) {
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
@@ -78,7 +87,11 @@ exports.updateService = async (req, res) => {
     service.serviceName = updatedServiceName;
     service.businessType = updatedBusinessType;
     const result = await service.save();
-    Response.success(res, 201, result, "Service başarıyla güncellendi");
+    Response.success(
+      res,
+      AdminSuccess.serviceUpdated(),
+      result
+    );
   } catch (error) {
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
@@ -102,7 +115,11 @@ exports.deleteService = async (req, res) => {
 
     await ServiceDataAccess.deleteServiceDB(foundService);
 
-    Response.success(res, 200, { foundService }, "Servis başarıyla silindi");
+    Response.success(
+      res,
+      AdminSuccess.serviceDeleted(),
+      { foundService }
+    );
   } catch (error) {
     Response.withError(res, CommonError.serverError());
   }
@@ -117,7 +134,7 @@ exports.createSector = async (req, res) => {
       sectorName
     });
     const result = await newSector.save();
-    Response.success(res, 201, result, "Sektör oluşturuldu!");
+    Response.success(res, AdminSuccess.sectorCreated(), result);
   } catch (error) {
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
@@ -130,7 +147,7 @@ exports.createSector = async (req, res) => {
 exports.getSectors = async (req, res) => {
   try {
     const sectors = await SectorDataAccess.findSectorsDB();
-    Response.success(res, 200, sectors, "Sektörler başarıyla listelendi");
+    Response.success(res, AdminSuccess.sectorsListed(), sectors);
   } catch (error) {
     Response.withError(res, CommonError.serverError);
   }
@@ -146,7 +163,7 @@ exports.updateSector = async (req, res) => {
 
     sector.sectorName = updatedSectorName.trim();
     const result = await sector.save();
-    Response.success(res, 201, result, "Sektör başarıyla güncellendi");
+    Response.success(res, AdminSuccess.sectorUpdated(), result);
   } catch (error) {
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
@@ -169,7 +186,7 @@ exports.deleteSector = async (req, res) => {
       return Response.withError(res, AdminError.sectorNotFound());
 
     await SectorDataAccess.deleteSectorByIdDB(foundSector);
-    Response.success(res, 200, { foundSector }, "Sektör başarıyla silindi");
+    Response.success(res, AdminSuccess.sectorDeleted(), { foundSector });
   } catch (error) {
     console.log(error);
     Response.withError(res, CommonError.serverError());
@@ -183,14 +200,21 @@ exports.createBusinessType = async (req, res) => {
   try {
     const foundSector = await SectorDataAccess.findSectorByIdDB(sector);
     if (!foundSector)
-      return Response.withError(res, AdminError.sectorNotFound());
+      return Response.withError(
+        res,
+        AdminError.sectorNotFound()
+      );
 
     const newBusinessType = new BusinessType({
       businessTypeName,
       sector
     });
     const result = await newBusinessType.save();
-    Response.success(res, 201, result, "İşyeri tipi oluşturuldu");
+    Response.success(
+      res,
+      AdminSuccess.businessTypeCreated(),
+      result
+    );
   } catch (error) {
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
@@ -198,7 +222,10 @@ exports.createBusinessType = async (req, res) => {
     }
     if (error instanceof CastError) {
       error.message = "Sektörler listelenemedi!";
-      Object.assign(error, { statusCode: 400 });
+      Object.assign(
+        error,
+        { statusCode: 400 }
+      );
       return Response.withError(res, error);
     }
     Response.withError(res, CommonError.serverError());
@@ -216,9 +243,8 @@ exports.getBusinessTypesBySector = async (req, res) => {
 
     Response.success(
       res,
-      200,
-      { businessTypeList },
-      "İş tipi listesi başarıyla oluşturuldu"
+      AdminSuccess.businessTypeListed(),
+      { businessTypeList }
     );
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -257,9 +283,8 @@ exports.updateBusinessType = async (req, res) => {
     await businessType.save();
     Response.success(
       res,
-      200,
-      { businessType },
-      "İş tipi başarıyla Güncellendi"
+      AdminSuccess.businessTypeUpdated(),
+      { businessType }
     );
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -290,9 +315,8 @@ exports.deleteBusinessType = async (req, res) => {
     await BusinessTypeDataAccess.deleteBusinessTypeDB(foundBusinessType);
     Response.success(
       res,
-      200,
-      { foundBusinessType },
-      "İş tipi başarıyla silindi"
+      AdminSuccess.businessTypeDeleted(),
+      { foundBusinessType }
     );
   } catch (error) {
     console.log(error);

@@ -1,7 +1,9 @@
 const response = {};
 
-response.success = (res, code = 200, data, message = "") => {
-  return res.status(code).json({
+response.success = (res, success, result) => {
+  const { statusCode = 200, message } = success;
+  const data = result;
+  return res.status(statusCode).json({
     message,
     data
   });
