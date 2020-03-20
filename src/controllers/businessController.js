@@ -1,24 +1,21 @@
 const ValidationError = require("mongoose").Error.ValidationError;
 const CastError = require("mongoose").Error.CastError;
-const mongoose = require("mongoose");
 
-const Constants = require("../constants");
-const Business = require("../models/Business");
-const Service = require("../models/Service");
-const BusinessType = require("../models/BusinessType");
-const Response = require("../helpers/response");
-const CommonError = require("../errors/CommonError");
-const AuthError = require("../errors/AuthError");
-const BusinessError = require("../errors/BusinessError");
-const AdminError = require("../errors/AdminError");
-const BusinessDataAccess = require("../dataAccess/Business");
-const UserDataAccess = require("../dataAccess/User");
-const SectorDataAccess = require("../dataAccess/Sector");
 const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
+const BusinessDataAccess = require("../dataAccess/Business");
 const ServiceDataAccess = require("../dataAccess/Service");
+const BusinessError = require("../errors/BusinessError");
+const SectorDataAccess = require("../dataAccess/Sector");
+const BusinessType = require("../models/BusinessType");
+const CommonError = require("../errors/CommonError");
+const UserDataAccess = require("../dataAccess/User");
+const AdminError = require("../errors/AdminError");
+const AuthError = require("../errors/AuthError");
+const Response = require("../helpers/response");
+const Business = require("../models/Business");
+const Constants = require("../constants");
 
 // TODO Check requester userId ===? businessOwnerId/EmployeeId
-
 
 exports.createBusiness = async (req, res) => {
   try {
@@ -33,20 +30,17 @@ exports.createBusiness = async (req, res) => {
     const businessOwner = await UserDataAccess.findUserByIdDB(businessOwnerId);
 
     if (!businessOwner)
-      return Response.withError(
-        res,
-        BusinessError.businessOwnerCouldnotFound()
-      );
+      return Response.withError(res, BusinessError.businessOwnerNotFound());
 
     const doesSectorExist = await SectorDataAccess.findSectorByIdDB(sector);
     if (!doesSectorExist)
-      return Response.withError(res, BusinessError.sectorCouldnotFound());
+      return Response.withError(res, BusinessError.sectorNotFound());
 
     const doesBusinessTypeExist = await BusinessTypeDataAccess.findBusinessTypeByIdDB(
       businessType
     );
     if (!doesBusinessTypeExist)
-      return Response.withError(res, BusinessError.businessTypeCouldnotFound());
+      return Response.withError(res, BusinessError.businessTypeNotFound());
 
     // TODO String fields should be trim
     const newBusiness = new Business({
@@ -111,13 +105,13 @@ exports.updateBusiness = async (req, res) => {
       updatedSector
     );
     if (!doesSectorExist)
-      return Response.withError(res, BusinessError.sectorCouldnotFound());
+      return Response.withError(res, BusinessError.sectorNotFound());
 
     const doesBusinessTypeExist = await BusinessType.findById(
       updatedBusinessType
     );
     if (!doesBusinessTypeExist)
-      return Response.withError(res, BusinessError.businessTypeCouldnotFound());
+      return Response.withError(res, BusinessError.businessTypeNotFound());
 
     const business = await BusinessDataAccess.findBusinessByIdDB(
       updatingBusiness
@@ -153,7 +147,7 @@ exports.profile = async (req, res) => {
     const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
 
     if (!business)
-      return Response.withError(res, BusinessError.businessCouldnotFound());
+      return Response.withError(res, BusinessError.businessNotFound());
 
     Response.success(
       res,
@@ -167,9 +161,8 @@ exports.profile = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Görüntülenmek istenen iş yeri id değeri hatalı. " +
-        "Lütfen iş yeri Id değerlerini doğru giriniz.";
+      error.message = "Görüntülenmek istenen iş yeri id değeri hatalı. "
+        + "Lütfen iş yeri Id değerlerini doğru giriniz.";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -185,7 +178,7 @@ exports.deleteBusiness = async (req, res) => {
     console.log(business);
 
     if (!business)
-      return Response.withError(res, BusinessError.businessCouldnotFound());
+      return Response.withError(res, BusinessError.businessNotFound());
 
     await BusinessDataAccess.deleteOneDB(business);
 
@@ -196,9 +189,8 @@ exports.deleteBusiness = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Silinmek istenen iş yeri id değeri hatalı. " +
-        "Lütfen servis/iş yeri Id değerlerini doğru giriniz.";
+      error.message = "Silinmek istenen iş yeri id değeri hatalı. "
+        + "Lütfen servis/iş yeri Id değerlerini doğru giriniz.";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -214,16 +206,16 @@ exports.hireEmployee = async (req, res) => {
     const user = await UserDataAccess.findUserByIdDB(userId);
 
     if (!business)
-      return Response.withError(res, BusinessError.businessCouldnotFound());
+      return Response.withError(res, BusinessError.businessNotFound());
 
-    if (!user) return Response.withError(res, AuthError.UserNotFound());
+    if (!user) return Response.withError(res, AuthError.userNotFound());
 
     const isEmployed = business.employeeList.find(
       emp => emp._id.toString() === userId
     );
 
     if (isEmployed)
-      return Response.withError(res, BusinessError.employeeAlreadyExist());
+      return Response.withError(res, BusinessError.employeeAlreadyExists());
 
     if (!user.roles.includes(Constants.ROLES.EMPLOYEE))
       user.roles.push(Constants.ROLES.EMPLOYEE);
@@ -246,9 +238,8 @@ exports.hireEmployee = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Çalışan, iş yerine başarıyla tanımlanamadı!" +
-        "Lütfen Çalışan/İş yeri Id değerlerini doğru giriniz.";
+      error.message = "Çalışan, iş yerine başarıyla tanımlanamadı!"
+        + "Lütfen Çalışan/İş yeri Id değerlerini doğru giriniz.";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -264,9 +255,9 @@ exports.dischargeEmployee = async (req, res) => {
     const user = await UserDataAccess.findUserByIdDB(userId);
 
     if (!business)
-      return Response.withError(res, BusinessError.businessCouldnotFound());
+      return Response.withError(res, BusinessError.businessNotFound());
 
-    if (!user) return Response.withError(res, AuthError.UserNotFound());
+    if (!user) return Response.withError(res, AuthError.userNotFound());
 
     const isEmployed = business.employeeList.find(
       emp => emp._id.toString() === userId
@@ -297,9 +288,8 @@ exports.dischargeEmployee = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Çalışan belirtilen iş yerinin çalışan listesinden çıkartılamadı!" +
-        "Lütfen Çalışan ve İş yeri Id değerlerini doğru giriniz!";
+      error.message = "Çalışan belirtilen iş yerinin çalışan listesinden çıkartılamadı!"
+        + "Lütfen Çalışan ve İş yeri Id değerlerini doğru giriniz!";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -309,13 +299,15 @@ exports.dischargeEmployee = async (req, res) => {
 };
 
 exports.assignService = async (req, res) => {
-  const { serviceId, employeeId, businessId, price, duration } = req.body;
+  const {
+    serviceId, employeeId, businessId, price, duration
+  } = req.body;
 
   try {
     const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
 
     if (!business)
-      return Response.withError(res, BusinessError.businessCouldnotFound());
+      return Response.withError(res, BusinessError.businessNotFound());
 
     const service = await ServiceDataAccess.findServiceByIdDB(serviceId);
 
@@ -355,9 +347,8 @@ exports.assignService = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Çalışan için bir servis tanımlanamadı!" +
-        " Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin";
+      error.message = "Çalışan için bir servis tanımlanamadı!"
+        + " Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
@@ -372,7 +363,7 @@ exports.removeService = async (req, res) => {
     const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
 
     if (!business)
-      return Response.withError(res, BusinessError.businessCouldnotFound());
+      return Response.withError(res, BusinessError.businessNotFound());
 
     const employee = business.employeeList.find(
       emp => emp._id.toString() === employeeId
@@ -410,9 +401,8 @@ exports.removeService = async (req, res) => {
       return Response.withError(res, error);
     }
     if (error instanceof CastError) {
-      error.message =
-        "Çalışanın servis listesinden silinmek istenen servis silinimedi!" +
-        " Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin.";
+      error.message = "Çalışanın servis listesinden silinmek istenen servis silinimedi!"
+        + " Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin.";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }

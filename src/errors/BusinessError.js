@@ -1,49 +1,51 @@
 const BusinessError = {};
 
-BusinessError.businessCouldnotFound = () => ({
+BusinessError.businessNotFound = () => ({
   statusCode: 404,
-  message: "Aranan iş yeri bulunamadı!"
+  message: "Aranan iş yeri bulunamadı"
 });
 
-BusinessError.sectorCouldnotFound = () => ({
+BusinessError.sectorNotFound = () => ({
   statusCode: 404,
-  message: "Tanımlanmak istenen sektör bulunamadı!"
+  message: "Tanımlanmak istenen sektör bulunamadı"
 });
 
-BusinessError.businessTypeCouldnotFound = () => ({
+BusinessError.businessTypeNotFound = () => ({
   statusCode: 404,
-  message: "Tanımlanmak istenen iş yeri tipi bulunamadı!"
+  message: "Tanımlanmak istenen iş yeri tipi bulunamadı"
 });
 
-BusinessError.businessOwnerCouldnotFound = () => ({
+BusinessError.businessOwnerNotFound = () => ({
   statusCode: 404,
-  message: "İş yeri sahibi bulunamadı!"
+  message: "İş yeri sahibi bulunamadı"
 });
 
 BusinessError.notAllowedUser = () => ({
-  statusCode: 401,
+  statusCode: 403,
   message:
-    "İş yeri bilgilerini güncellemek için gerekli yetkilere sahip olmayan kullanıcı."
+    "İş yeri bilgilerini güncellemek için gerekli yetkilere sahip olmayan kullanıcı"
 });
 
-BusinessError.BusinessTypesNotMatch = () => ({
+BusinessError.businessTypesNotMatch = () => ({
   statusCode: 400,
-  message: "İş yeri tipiyle servisin tanımlı olduğu iş yeri tipi eşleşmiyor."
+  message: "İş yeri tipiyle servisin tanımlı olduğu iş yeri tipi eşleşmiyor"
 });
 
-BusinessError.ServiceAlreadyExist = () => ({
+BusinessError.serviceAlreadyExists = () => ({
   statusCode: 403,
-  message: "Bu servis zaten tanımlı."
+  message: "Bu servis zaten tanımlı"
 });
 
-BusinessError.employeeAlreadyExist = () => ({
+BusinessError.employeeAlreadyExists = () => ({
   statusCode: 403,
-  message: "Bu çalışan zaten tanımlı."
+  message: "Bu çalışan zaten tanımlı"
 });
+
 BusinessError.employeeNotFound = () => ({
   statusCode: 404,
   message: "Aranan çalışan bu iş yerinde bulunamadı!"
 });
+
 BusinessError.serviceNotProvided = () => ({
   statusCode: 400,
   message:

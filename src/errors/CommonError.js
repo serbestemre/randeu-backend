@@ -7,7 +7,7 @@ CommonError.serverError = error => ({
 });
 
 CommonError.validationError = data => ({
-  statusCode: 422,
+  statusCode: 400,
   message: "Validation Error",
   data
 });
@@ -20,7 +20,7 @@ CommonError.notAuthenticated = data => ({
 
 CommonError.notAuthorized = data => ({
   statusCode: 403,
-  message: "Bu işlemi yapmak için yetkiniz yok!",
+  message: "Bu işlemi yapmak için yetkiniz yok",
   data
 });
 
