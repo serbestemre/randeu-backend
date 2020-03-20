@@ -1,7 +1,7 @@
 const express = require("express");
-const validator = require("../helpers/validate");
+const CONSTANTS = require("../constants");
+const roleChecker = require("../middleware/roleChecker");
 const { verifyToken } = require("../middleware/token");
-const { roleCheck } = require("../middleware/roleAuth");
 const joiValidator = require("../middleware/joiValidator");
 const businessController = require("../controllers/businessController");
 const businessSchema = require("../schemas/businessSchema");
@@ -12,7 +12,7 @@ router.post(
   "/createBusiness",
   joiValidator(businessSchema.createBusiness),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.USER]),
   businessController.createBusiness
 );
 
@@ -20,7 +20,7 @@ router.put(
   "/updateBusiness",
   joiValidator(businessSchema.updateBusiness),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.EMPLOYEE, CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.updateBusiness
 );
 
@@ -28,7 +28,7 @@ router.get(
   "/profile",
   joiValidator(businessSchema.profile),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.EMPLOYEE, CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.profile
 );
 
@@ -36,16 +36,23 @@ router.delete(
   "/deleteBusiness",
   joiValidator(businessSchema.deleteBusiness),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.deleteBusiness
 );
 
-router.post("/hireEmployee", validator, businessController.hireEmployee);
+// TODO pass joiValidator as middleware beside validator
+router.post(
+  "/hireEmployee",
+  joiValidator(businessSchema.hireEmployee),
+  roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
+  businessController.hireEmployee
+);
+
 router.delete(
   "/dischargeEmployee",
   joiValidator(businessSchema.dischargeEmployee),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.dischargeEmployee
 );
 
@@ -53,7 +60,7 @@ router.post(
   "/employee/assignService",
   joiValidator(businessSchema.assignOrEditService),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.assignService
 );
 
@@ -62,7 +69,7 @@ router.delete(
   "/employee/removeService",
   joiValidator(businessSchema.removeService),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.removeService
 );
 

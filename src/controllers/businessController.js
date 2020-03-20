@@ -17,6 +17,9 @@ const SectorDataAccess = require("../dataAccess/Sector");
 const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 const ServiceDataAccess = require("../dataAccess/Service");
 
+// TODO Check requester userId ===? businessOwnerId/EmployeeId
+
+
 exports.createBusiness = async (req, res) => {
   try {
     const {

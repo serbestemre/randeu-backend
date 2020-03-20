@@ -1,11 +1,9 @@
 const express = require("express");
-const validator = require("../helpers/validate");
+const CONSTANTS = require("../constants");
+const roleChecker = require("../middleware/roleChecker");
 const joiValidator = require("../middleware/joiValidator");
 const adminSchema = require("../schemas/adminSchema");
-const roleChecker = require("../middleware/roleChecker");
 const { verifyToken } = require("../middleware/token");
-const { roleCheck } = require("../middleware/roleAuth");
-const constants = require("../constants");
 
 const router = express.Router({ mergeParams: true });
 
@@ -15,19 +13,24 @@ router.post(
   "/createSector",
   joiValidator(adminSchema.createSector),
   verifyToken,
-  roleChecker([constants.ROLES.SUPER_USER]),
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.createSector
 );
 
 // Get all sector list
-router.get("/sectorList", verifyToken, roleCheck, adminController.getSectors);
+router.get(
+  "/sectorList",
+  verifyToken,
+  roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER, CONSTANTS.ROLES.SUPER_USER]),
+  adminController.getSectors
+);
 
 // Update a sector according to the given ID in parameter
 router.put(
   "/updateSector",
   joiValidator(adminSchema.updateSector),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.updateSector
 );
 
@@ -35,7 +38,7 @@ router.delete(
   "/deleteSector",
   joiValidator(adminSchema.deleteSector),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.deleteSector
 );
 
@@ -43,7 +46,7 @@ router.post(
   "/createBusinessType",
   joiValidator(adminSchema.createBusinessType),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.createBusinessType
 );
 
@@ -51,7 +54,7 @@ router.put(
   "/updateBusinessType",
   joiValidator(adminSchema.updateBusinessType),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.updateBusinessType
 );
 
@@ -59,7 +62,7 @@ router.delete(
   "/deleteBusinessType",
   joiValidator(adminSchema.deleteBusinessType),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.deleteBusinessType
 );
 
@@ -67,7 +70,7 @@ router.get(
   "/businessTypeList",
   joiValidator(adminSchema.getBusinessTypesBySector),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.getBusinessTypesBySector
 );
 
@@ -75,7 +78,7 @@ router.post(
   "/createService",
   joiValidator(adminSchema.createService),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.createService
 );
 
@@ -83,7 +86,7 @@ router.get(
   "/serviceList",
   joiValidator(adminSchema.serviceList),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.getServiceListByBusiness
 );
 
@@ -91,7 +94,7 @@ router.put(
   "/updateService",
   joiValidator(adminSchema.updateService),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.updateService
 );
 
@@ -99,7 +102,7 @@ router.delete(
   "/deleteService",
   joiValidator(adminSchema.deleteService),
   verifyToken,
-  roleCheck,
+  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.deleteService
 );
 
