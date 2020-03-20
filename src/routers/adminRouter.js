@@ -2,8 +2,10 @@ const express = require("express");
 const validator = require("../helpers/validate");
 const joiValidator = require("../middleware/joiValidator");
 const adminSchema = require("../schemas/adminSchema");
+const roleChecker = require("../middleware/roleChecker");
 const { verifyToken } = require("../middleware/token");
 const { roleCheck } = require("../middleware/roleAuth");
+const constants = require("../constants");
 
 const router = express.Router({ mergeParams: true });
 
@@ -13,7 +15,7 @@ router.post(
   "/createSector",
   joiValidator(adminSchema.createSector),
   verifyToken,
-  roleCheck,
+  roleChecker([constants.ROLES.SUPER_USER]),
   adminController.createSector
 );
 
