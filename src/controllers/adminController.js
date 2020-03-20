@@ -44,7 +44,9 @@ exports.createService = async (req, res) => {
 exports.getServiceListByBusiness = async (req, res) => {
   const { businessType } = req.body;
   try {
-    const serviceList = await ServiceDataAccess.findServiceListByBusinessDB(businessType);
+    const serviceList = await ServiceDataAccess.findServiceListByBusinessDB(
+      businessType
+    );
     if (!serviceList)
       return Response.withError(res, AdminError.noServiceListByGivenBusiness);
 
