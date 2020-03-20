@@ -17,7 +17,7 @@ const passportFacebook = passport.authenticate("facebookToken", {
   session: false
 });
 router.post("/register", joiValidator(authSchema.register), authController.register);
-router.post("/login", validator, passportSigIn, authController.login);
+router.post("/login", joiValidator(authSchema.login), passportSigIn, authController.login);
 router.post("/oauth/google", passportGoogle, authController.googleOAuth);
 router.post("/oauth/facebook", passportFacebook, authController.facebookOAuth);
 router.get("/secret", passportJWT, authController.secret);

@@ -4,11 +4,12 @@ module.exports = {
   createSector: Joi.object({
     sectorName: Joi.string()
       .required()
+      .regex(/[a-zA-Z]/)
       .empty()
       .messages({
         "string.base": "Sektör adı yazı tipinde olmalı",
-        "string.empty": "Sektör adı boş bırakılamaz"
-        // "string.pattern.base": "Sektör adı yazı tipinde olmalı"
+        "string.empty": "Sektör adı boş bırakılamaz",
+        "string.pattern.base": "Sektör adı değişik tipinde olmalı"
       })
   }),
   updateSector: Joi.object({
