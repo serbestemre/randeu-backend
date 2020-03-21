@@ -5,6 +5,7 @@ const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 const BusinessDataAccess = require("../dataAccess/Business");
 const ServiceDataAccess = require("../dataAccess/Service");
 const BusinessError = require("../errors/BusinessError");
+const BusinessSuccess = require("../successes/BusinessSuccess");
 const SectorDataAccess = require("../dataAccess/Sector");
 const BusinessType = require("../models/BusinessType");
 const CommonError = require("../errors/CommonError");
@@ -67,7 +68,11 @@ exports.createBusiness = async (req, res) => {
     );
 
     const result = await newBusiness.save();
-    Response.success(res, 201, result, "Yeni iş yeri oluşturuldu.");
+    Response.success(
+      res,
+      BusinessSuccess.businessCreated(),
+      result
+    );
   } catch (error) {
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
@@ -125,7 +130,11 @@ exports.updateBusiness = async (req, res) => {
 
     const result = await business.save();
 
-    Response.success(res, 200, result, "İş yeri başarıyla güncellendi.");
+    Response.success(
+      res,
+      BusinessSuccess.updatedBusiness(),
+      result
+    );
   } catch (error) {
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
@@ -151,9 +160,8 @@ exports.profile = async (req, res) => {
 
     Response.success(
       res,
-      200,
-      business,
-      "İş yeri profiline başarıyla ulaşıldı."
+      BusinessSuccess.businessListed(),
+      business
     );
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -182,7 +190,11 @@ exports.deleteBusiness = async (req, res) => {
 
     await BusinessDataAccess.deleteOneDB(business);
 
-    Response.success(res, 200, business, "İş yeri başarılya silindi.");
+    Response.success(
+      res,
+      BusinessSuccess.businessDeleted(),
+      business
+    );
   } catch (error) {
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
@@ -225,12 +237,11 @@ exports.hireEmployee = async (req, res) => {
     business.save();
     Response.success(
       res,
-      200,
+      BusinessSuccess.hiredEmployee(),
       {
         user,
         business
-      },
-      "Çalışan, iş yerine başarıyla tanımlandı."
+      }
     );
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -275,12 +286,11 @@ exports.dischargeEmployee = async (req, res) => {
 
     Response.success(
       res,
-      200,
+      BusinessSuccess.dischargedEmployee(),
       {
         user,
         business
-      },
-      "Çalışan belirtilen iş yerinin çalışan listesinden çıkartıldı."
+      }
     );
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -336,9 +346,8 @@ exports.assignService = async (req, res) => {
     await business.save();
     Response.success(
       res,
-      200,
-      foundEmployee,
-      "Servis, çalışana başarıyla tanımlandı."
+      BusinessSuccess.assignedService(),
+      foundEmployee
     );
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -391,9 +400,8 @@ exports.removeService = async (req, res) => {
     await business.save();
     Response.success(
       res,
-      200,
-      business,
-      "Servis, tanımlanan çalışandan başarıyla silindi."
+      BusinessSuccess.removedService(),
+      business
     );
   } catch (error) {
     if (error instanceof ValidationError) {
