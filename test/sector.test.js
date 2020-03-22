@@ -7,7 +7,7 @@ beforeEach(db.setupDatabase);
 
 test("Should create a Sector", async () => {
   await request(app)
-    .post("/admin/createSector")
+    .post("/admin/sector")
     .set("Authorization", `Bearer ${db.adminJWTToken}`)
     .send({
       sectorName: "Kişisel Bakım"

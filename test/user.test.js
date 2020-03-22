@@ -10,7 +10,7 @@ test("Should create a user", async () => {
     .post("/register")
     .send({
       fullName: "Emre Serbest",
-      email: "emre@gmail.com",
+      email: "emre2@gmail.com",
       password: "123456",
       passwordCheck: "123456"
     })
