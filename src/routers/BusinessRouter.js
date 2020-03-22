@@ -1,10 +1,10 @@
 const express = require("express");
 const CONSTANTS = require("../constants");
-const roleChecker = require("../middleware/roleChecker");
-const { verifyToken } = require("../middleware/token");
-const joiValidator = require("../middleware/joiValidator");
-const businessController = require("../controllers/businessController");
-const businessSchema = require("../schemas/businessSchema");
+const roleChecker = require("../middleware/RoleChecker");
+const { verifyToken } = require("../middleware/Token");
+const joiValidator = require("../middleware/JoiValidator");
+const businessController = require("../controllers/BusinessController");
+const businessSchema = require("../schemas/BusinessSchema");
 
 const router = new express.Router();
 

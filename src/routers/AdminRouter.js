@@ -1,13 +1,13 @@
 const express = require("express");
 const CONSTANTS = require("../constants");
-const roleChecker = require("../middleware/roleChecker");
-const joiValidator = require("../middleware/joiValidator");
-const adminSchema = require("../schemas/adminSchema");
-const { verifyToken } = require("../middleware/token");
+const roleChecker = require("../middleware/RoleChecker");
+const joiValidator = require("../middleware/JoiValidator");
+const adminSchema = require("../schemas/AdminSchema");
+const { verifyToken } = require("../middleware/Token");
 
 const router = express.Router({ mergeParams: true });
 
-const adminController = require("../controllers/adminController");
+const adminController = require("../controllers/AdminController");
 
 router.post(
   "/sector",

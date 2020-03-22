@@ -4,7 +4,7 @@ const JWT = require("jsonwebtoken");
 const UserDataAccess = require("../dataAccess/User");
 const CommonError = require("../errors/CommonError");
 const AuthError = require("../errors/AuthError");
-const response = require("../helpers/response");
+const response = require("../helpers/Response");
 const User = require("../models/User");
 
 const signToken = user =>

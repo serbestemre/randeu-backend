@@ -1,10 +1,10 @@
 const express = require("express");
 const passport = require("passport");
-const authController = require("../controllers/authController");
+const authController = require("../controllers/AuthController");
 // eslint-disable-next-line no-unused-vars
-const auth = require("../middleware/auth");
-const joiValidator = require("../middleware/joiValidator");
-const authSchema = require("../schemas/authSchema");
+const auth = require("../middleware/Auth");
+const joiValidator = require("../middleware/JoiValidator");
+const authSchema = require("../schemas/AuthSchema");
 
 const router = new express.Router();
 

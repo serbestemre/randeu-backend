@@ -7,3 +7,11 @@ exports.findBusinessTypeByIdDB = async searchedBusinessType =>
 
 exports.deleteBusinessTypeDB = async foundBusinessType =>
   BusinessType.deleteOne(foundBusinessType);
+
+exports.createBusinessType = async (businessTypeName, sector) => {
+  const newBusinessType = new BusinessType({
+    businessTypeName,
+    sector
+  });
+  return newBusinessType.save();
+};

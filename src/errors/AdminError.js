@@ -1,14 +1,12 @@
 const AdminError = {};
+const CustomError = require("../helpers/CustomError");
 
-AdminError.businessTypeNotFound = () => ({
-  statusCode: 404,
-  message: "İş tipi bulunamadı"
-});
+AdminError.BusinessTypeNotFound = () => new CustomError(404, "İş tipi bulunamadı");
 
-AdminError.businessTypeNotFoundByGivenSector = () => ({
-  statusCode: 404,
-  message: "Aranan sektöre göre iş yeri tipi bulamadı"
-});
+AdminError.businessTypeNotFoundByGivenSector = () => new CustomError(
+  404,
+  "Aranan sektöre göre iş yeri tipi bulamadı"
+);
 
 AdminError.servicesNotFoundByGivenBusinessType = () => ({
   statusCode: 404,
@@ -30,10 +28,7 @@ AdminError.sectorAlreadyExists = () => ({
   message: "Sektör zaten kayıtlı"
 });
 
-AdminError.sectorNotFound = () => ({
-  statusCode: 404,
-  message: "Sektör bulunamadı"
-});
+AdminError.SectorNotFound = () => new CustomError(404, "Sektör bulunamadı");
 
 AdminError.serviceNotFound = () => ({
   statusCode: 404,

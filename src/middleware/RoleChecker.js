@@ -1,4 +1,4 @@
-const Response = require("../helpers/response");
+const Response = require("../helpers/Response");
 const CommonError = require("../errors/CommonError");
 const CONSTANTS = require("../constants");
 

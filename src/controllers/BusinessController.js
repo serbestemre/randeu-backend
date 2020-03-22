@@ -12,7 +12,7 @@ const CommonError = require("../errors/CommonError");
 const UserDataAccess = require("../dataAccess/User");
 const AdminError = require("../errors/AdminError");
 const AuthError = require("../errors/AuthError");
-const Response = require("../helpers/response");
+const Response = require("../helpers/Response");
 const Business = require("../models/Business");
 const Constants = require("../constants");
 

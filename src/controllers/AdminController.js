@@ -1,14 +1,16 @@
 const ValidationError = require("mongoose").Error.ValidationError;
 const CastError = require("mongoose").Error.CastError;
 
+const BusinessTypeService = require("../services/BusinessTypeService");
 const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 const ServiceDataAccess = require("../dataAccess/Service");
 const AdminSuccess = require("../successes/AdminSuccess");
 const SectorDataAccess = require("../dataAccess/Sector");
 const BusinessType = require("../models/BusinessType");
+const CustomError = require("../helpers/CustomError");
 const CommonError = require("../errors/CommonError");
 const AdminError = require("../errors/AdminError");
-const Response = require("../helpers/response");
+const Response = require("../helpers/Response");
 const Service = require("../models/Service");
 const Sector = require("../models/Sector");
 
@@ -192,6 +194,11 @@ exports.deleteSector = async (req, res) => {
     await SectorDataAccess.deleteSectorByIdDB(foundSector);
     Response.success(res, AdminSuccess.sectorDeleted(), { foundSector });
   } catch (error) {
+    if (error instanceof CastError) {
+      error.message = "Güncellenmek istenen sektör id hatalı";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
     console.log(error);
     Response.withError(res, CommonError.serverError());
   }
@@ -202,36 +209,19 @@ exports.createBusinessType = async (req, res) => {
   // TODO If there exist a businessType in DB, it will be checked (case-insensetive)
   // BusinessType model add collation as in Sector Model
   try {
-    const foundSector = await SectorDataAccess.findSectorByIdDB(sector);
-    if (!foundSector)
-      return Response.withError(
-        res,
-        AdminError.sectorNotFound()
-      );
-
-    const newBusinessType = new BusinessType({
-      businessTypeName,
-      sector
-    });
-    const result = await newBusinessType.save();
-    Response.success(
-      res,
-      AdminSuccess.businessTypeCreated(),
-      result
-    );
+    const businessType = await BusinessTypeService
+      .createBusinessTypeService(businessTypeName, sector);
+    Response.success(res, AdminSuccess.businessTypeCreated(), businessType);
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
       error.message = "Sektörler listelenemedi!";
       Object.assign(
         error,
         { statusCode: 400 }
       );
-      return Response.withError(res, error);
     }
+
     Response.withError(res, CommonError.serverError());
   }
 };

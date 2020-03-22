@@ -5,10 +5,10 @@ else require("dotenv").config({ path: ".env.dev" });
 const express = require("express");
 require("./db/mongoose");
 
-const authRouter = require("./routers/authRouter");
-const userRouter = require("./routers/userRouter");
-const adminRouter = require("./routers/adminRouter");
-const businessRouter = require("./routers/businessRouter");
+const authRouter = require("./routers/AuthRouter");
+const userRouter = require("./routers/UserRouter");
+const adminRouter = require("./routers/AdminRouter");
+const businessRouter = require("./routers/BusinessRouter");
 
 const app = express();
 
