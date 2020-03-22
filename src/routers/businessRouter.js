@@ -9,7 +9,7 @@ const businessSchema = require("../schemas/businessSchema");
 const router = new express.Router();
 
 router.post(
-  "/createBusiness",
+  "/register",
   joiValidator(businessSchema.createBusiness),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.USER]),
@@ -17,7 +17,7 @@ router.post(
 );
 
 router.put(
-  "/updateBusiness",
+  "/profile/update/:id",
   joiValidator(businessSchema.updateBusiness),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.EMPLOYEE, CONSTANTS.ROLES.BUSINESS_OWNER]),
@@ -25,7 +25,7 @@ router.put(
 );
 
 router.get(
-  "/profile",
+  "/profile/:id",
   joiValidator(businessSchema.profile),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.EMPLOYEE, CONSTANTS.ROLES.BUSINESS_OWNER]),
@@ -33,7 +33,7 @@ router.get(
 );
 
 router.delete(
-  "/deleteBusiness",
+  "/profile/delete/:id",
   joiValidator(businessSchema.deleteBusiness),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
@@ -42,14 +42,14 @@ router.delete(
 
 // TODO pass joiValidator as middleware beside validator
 router.post(
-  "/hireEmployee",
+  "/hire-employee",
   joiValidator(businessSchema.hireEmployee),
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.hireEmployee
 );
 
 router.delete(
-  "/dischargeEmployee",
+  "/discharge-employee",
   joiValidator(businessSchema.dischargeEmployee),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
@@ -57,7 +57,7 @@ router.delete(
 );
 
 router.post(
-  "/employee/assignService",
+  "/employee/assign-service/:id",
   joiValidator(businessSchema.assignOrEditService),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
@@ -66,7 +66,7 @@ router.post(
 
 // router.put("/employee/editService", validator, businessController.editService);
 router.delete(
-  "/employee/removeService",
+  "/employee/remove-service/:id",
   joiValidator(businessSchema.removeService),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),

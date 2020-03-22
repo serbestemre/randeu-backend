@@ -47,11 +47,9 @@ exports.createService = async (req, res) => {
 };
 
 exports.getServiceListByBusiness = async (req, res) => {
-  const { businessType } = req.body;
+  const _id = req.params.businessTypeId;
   try {
-    const serviceList = await ServiceDataAccess.findServiceListByBusinessDB(
-      businessType
-    );
+    const serviceList = await ServiceDataAccess.findServiceListByBusinessDB(_id);
     if (!serviceList)
       return Response.withError(res, AdminError.servicesNotFoundByGivenBusinessType);
 
@@ -77,9 +75,11 @@ exports.getServiceListByBusiness = async (req, res) => {
 };
 
 exports.updateService = async (req, res) => {
-  const { searchedService, updatedServiceName, updatedBusinessType } = req.body;
+  const _id = req.params.serviceId;
+  const { updatedServiceName, updatedBusinessType } = req.body;
   try {
-    const service = await ServiceDataAccess.findServiceByIdDB(searchedService);
+    const service = await ServiceDataAccess.findServiceByIdDB(_id);
+
     if (!service) return Response.withError(res, AdminError.serviceNotFound());
     if (service.serviceName === updatedServiceName)
       return Response.withError(res, AdminError.serviceAlreadyExists());
@@ -107,9 +107,9 @@ exports.updateService = async (req, res) => {
 };
 
 exports.deleteService = async (req, res) => {
-  const { serviceId } = req.body;
+  const _id = req.params.serviceId;
   try {
-    const foundService = await ServiceDataAccess.findServiceByIdDB(serviceId);
+    const foundService = await ServiceDataAccess.findServiceByIdDB(_id);
     if (!foundService)
       return Response.withError(res, AdminError.serviceNotFound());
 
@@ -154,9 +154,12 @@ exports.getSectors = async (req, res) => {
 };
 
 exports.updateSector = async (req, res) => {
-  const { searchedSector, updatedSectorName } = req.body;
+  const _id = req.params.sectorId;
+  console.log("Sektör id", _id);
+  const { updatedSectorName } = req.body;
   try {
-    const sector = await SectorDataAccess.findSectorByIdDB(searchedSector);
+    const sector = await SectorDataAccess.findSectorByIdDB(_id);
+
     if (!sector) return Response.withError(res, AdminError.sectorNotFound());
     if (sector.sectorName === updatedSectorName)
       return Response.withError(res, AdminError.sectorAlreadyExists());
@@ -179,9 +182,10 @@ exports.updateSector = async (req, res) => {
 };
 
 exports.deleteSector = async (req, res) => {
-  const { searchedSector } = req.body;
+  const _id = req.params.sectorId;
   try {
-    const foundSector = await SectorDataAccess.findSectorByIdDB(searchedSector);
+    const foundSector = await SectorDataAccess.findSectorByIdDB(_id);
+    console.log("Sector id:", _id);
     if (!foundSector)
       return Response.withError(res, AdminError.sectorNotFound());
 
@@ -233,11 +237,10 @@ exports.createBusinessType = async (req, res) => {
 };
 
 exports.getBusinessTypesBySector = async (req, res) => {
-  const { sector } = req.body;
+  const _id = req.params.sectorId;
   try {
-    const businessTypeList = await BusinessTypeDataAccess.findBusinessTypeDB(
-      sector
-    );
+    const businessTypeList = await BusinessTypeDataAccess.findBusinessTypeDB(_id);
+
     if (!businessTypeList)
       return Response.withError(res, AdminError.businessTypeNotFoundByGivenSector());
 
@@ -262,15 +265,15 @@ exports.getBusinessTypesBySector = async (req, res) => {
 };
 
 exports.updateBusinessType = async (req, res) => {
+  const _id = req.params.businessTypeId;
+  console.log("BusinessType id: ", _id);
   const {
-    searchedBusinessType,
     updatedBusinessTypeName,
     updatedSector
   } = req.body;
   try {
-    const businessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(
-      searchedBusinessType
-    );
+    const businessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(_id);
+
     if (!businessType)
       return Response.withError(res, AdminError.businessTypeNotFound());
 
@@ -302,12 +305,10 @@ exports.updateBusinessType = async (req, res) => {
 };
 
 exports.deleteBusinessType = async (req, res) => {
-  const { searchedBusinessType } = req.body;
-  console.log("businesstype id => ", searchedBusinessType);
+  const _id = req.params.businessTypeId;
+  console.log("businesstype id => ", _id);
   try {
-    const foundBusinessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(
-      searchedBusinessType
-    );
+    const foundBusinessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(_id);
 
     if (!foundBusinessType)
       return Response.withError(res, AdminError.businessTypeNotFound());

@@ -10,7 +10,7 @@ const router = express.Router({ mergeParams: true });
 const adminController = require("../controllers/adminController");
 
 router.post(
-  "/createSector",
+  "/sector",
   joiValidator(adminSchema.createSector),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
@@ -19,7 +19,7 @@ router.post(
 
 // Get all sector list
 router.get(
-  "/sectorList",
+  "/sectors",
   verifyToken,
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER, CONSTANTS.ROLES.SUPER_USER]),
   adminController.getSectors
@@ -27,7 +27,7 @@ router.get(
 
 // Update a sector according to the given ID in parameter
 router.put(
-  "/updateSector",
+  "/sector/:sectorId",
   joiValidator(adminSchema.updateSector),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
@@ -35,15 +35,14 @@ router.put(
 );
 
 router.delete(
-  "/deleteSector",
-  joiValidator(adminSchema.deleteSector),
+  "/sector/:sectorId",
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.deleteSector
 );
 
 router.post(
-  "/createBusinessType",
+  "/businesstype",
   joiValidator(adminSchema.createBusinessType),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
@@ -51,31 +50,28 @@ router.post(
 );
 
 router.put(
-  "/updateBusinessType",
-  joiValidator(adminSchema.updateBusinessType),
+  "/businesstype/:businessTypeId",
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.updateBusinessType
 );
 
 router.delete(
-  "/deleteBusinessType",
-  joiValidator(adminSchema.deleteBusinessType),
+  "/businesstype/:businessTypeId",
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.deleteBusinessType
 );
 
 router.get(
-  "/businessTypeList",
-  joiValidator(adminSchema.getBusinessTypesBySector),
+  "/businesstypes/:sectorId",
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.getBusinessTypesBySector
 );
 
 router.post(
-  "/createService",
+  "/service",
   joiValidator(adminSchema.createService),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
@@ -83,15 +79,14 @@ router.post(
 );
 
 router.get(
-  "/serviceList",
-  joiValidator(adminSchema.serviceList),
+  "/services/:businessTypeId",
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.getServiceListByBusiness
 );
 
 router.put(
-  "/updateService",
+  "/service/:serviceId",
   joiValidator(adminSchema.updateService),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
@@ -99,8 +94,7 @@ router.put(
 );
 
 router.delete(
-  "/deleteService",
-  joiValidator(adminSchema.deleteService),
+  "/service/:serviceId",
   verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.deleteService
