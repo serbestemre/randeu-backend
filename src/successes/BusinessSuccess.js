@@ -6,7 +6,7 @@ BusinessSuccess.businessCreated = () => ({
 });
 
 BusinessSuccess.updatedBusiness = () => ({
-  statusCode: 201,
+  statusCode: 200,
   message: "İş yeri güncellendi"
 });
 

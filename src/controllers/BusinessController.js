@@ -6,8 +6,6 @@ const BusinessService = require("../services/BusinessService");
 const BusinessDataAccess = require("../dataAccess/Business");
 const ServiceDataAccess = require("../dataAccess/Service");
 const BusinessError = require("../errors/BusinessError");
-const SectorDataAccess = require("../dataAccess/Sector");
-const BusinessType = require("../models/BusinessType");
 const CustomError = require("../helpers/CustomError");
 const CommonError = require("../errors/CommonError");
 const UserDataAccess = require("../dataAccess/User");
@@ -46,58 +44,28 @@ exports.createBusiness = async (req, res) => {
 };
 exports.updateBusiness = async (req, res) => {
   const {
-    updatingBusiness,
-    updatedBusinessName,
-    updatedAddress,
-    updatedSector,
-    updatedBusinessType,
-    updatedBusinessOwner
+    updatedBusinessName, updatedAddress, updatedSector,
+    updatedBusinessType, updatedBusinessOwner, userId
   } = req.body;
 
-  const { userId } = req.body;
+  const { businessId } = req.params;
+
   try {
-    const user = await UserDataAccess.findUserByIdDB(userId);
-
-    if (!user) return Response.withError(res, BusinessError.notAllowedUser());
-
-    // TODO Update isteği oluşturan user bu iş yerinin businessOwner'ı mı kontrol et?
-
-    const doesSectorExist = await SectorDataAccess.findSectorByIdDB(
-      updatedSector
-    );
-    if (!doesSectorExist)
-      return Response.withError(res, BusinessError.sectorNotFound());
-
-    const doesBusinessTypeExist = await BusinessType.findById(
-      updatedBusinessType
-    );
-    if (!doesBusinessTypeExist)
-      return Response.withError(res, BusinessError.businessTypeNotFound());
-
-    const business = await BusinessDataAccess.findBusinessByIdDB(
-      updatingBusiness
+    const updatedBusiness = await BusinessService.updateBusinessService(
+      businessId.trim(),
+      updatedBusinessName.trim(),
+      updatedAddress.trim(),
+      updatedSector.trim(),
+      updatedBusinessType.trim(),
+      updatedBusinessOwner.trim(),
+      userId.trim()
     );
 
-    business.businessName = updatedBusinessName;
-    business.address = updatedAddress;
-    business.sector = updatedSector;
-    business.businessType = updatedBusinessType;
-    business.businessOwner = updatedBusinessOwner;
-
-    const result = await business.save();
-
-    Response.success(
-      res,
-      BusinessSuccess.updatedBusiness(),
-      result
-    );
+    Response.success(res, BusinessSuccess.updatedBusiness(), updatedBusiness);
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
-      error.message = "İş yeri Güncellenemedi!";
+      error.message = "İş yeri güncellenemedi!";
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }

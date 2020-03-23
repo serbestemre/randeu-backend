@@ -17,7 +17,7 @@ router.post(
 );
 
 router.put(
-  "/profile/update/:id",
+  "/profile/update/:businessId",
   joiValidator(businessSchema.updateBusiness),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.EMPLOYEE, CONSTANTS.ROLES.BUSINESS_OWNER]),

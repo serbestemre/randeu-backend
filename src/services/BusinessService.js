@@ -5,6 +5,7 @@ const BusinessError = require("../errors/BusinessError");
 const UserDataAccess = require("../dataAccess/User");
 const AdminError = require("../errors/AdminError");
 const Business = require("../models/Business");
+const BusinessType = require("../models/BusinessType");
 const CONSTANTS = require("../constants");
 
 exports.createBusinessService = async (
@@ -41,4 +42,39 @@ exports.createBusinessService = async (
   await UserDataAccess.updateUserRolesDB(businessOwnerId, businessOwner.roles);
 
   return newBusiness;
+};
+
+exports.updateBusinessService = async (updatingBusiness,
+  updatedBusinessName,
+  updatedAddress,
+  updatedSector,
+  updatedBusinessType,
+  updatedBusinessOwner,
+  userId) => {
+  const user = await UserDataAccess.findUserByIdDB(userId);
+
+  if (!user) throw BusinessError.notAllowedUser();
+
+  // TODO Update isteği oluşturan user bu iş yerinin businessOwner'ı mı kontrol et?
+  const doesSectorExist = await SectorDataAccess.findSectorByIdDB(
+    updatedSector
+  );
+  if (!doesSectorExist)
+    throw BusinessError.sectorNotFound();
+
+  const doesBusinessTypeExist = await BusinessType.findById(
+    updatedBusinessType
+  );
+  if (!doesBusinessTypeExist)
+    throw BusinessError.businessTypeNotFound();
+
+  const business = await BusinessDataAccess.findBusinessByIdDB(
+    updatingBusiness
+  );
+
+  return BusinessDataAccess.updateOneBusinessDB(business, updatedBusinessName,
+    updatedAddress,
+    updatedSector,
+    updatedBusinessType,
+    updatedBusinessOwner);
 };

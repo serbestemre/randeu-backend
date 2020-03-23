@@ -43,14 +43,6 @@ module.exports = {
       })
   }),
   updateBusiness: Joi.object({
-    updatingBusiness: Joi.string()
-      .required()
-      .regex(/^[0-9a-fA-F]{24}$/)
-      .empty()
-      .messages({
-        "string.pattern.base": "Güncellenen businessTypeId değeri standartlara uygun değil",
-        "string.empty": "Güncellenen iş tipi alanı boş bırakılamaz"
-      }),
     updatedBusinessName: Joi.string()
       .empty()
       .regex(/[a-zA-Z0-9]/)

@@ -1,5 +1,7 @@
 const AdminSuccess = {};
 
+// TODO Updated status Code should be 200
+
 AdminSuccess.sectorCreated = () => ({
   statusCode: 201,
   message: "Sektör başarıyla oluşturuldu"
