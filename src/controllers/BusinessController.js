@@ -136,41 +136,12 @@ exports.hireEmployee = async (req, res) => {
 exports.dischargeEmployee = async (req, res) => {
   try {
     const { userId, businessId } = req.body;
-    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
-    const user = await UserDataAccess.findUserByIdDB(userId);
 
-    if (!business)
-      return Response.withError(res, BusinessError.businessNotFound());
+    const dischargedEmployee = await BusinessService.dischargeEmployeeService(userId, businessId);
 
-    if (!user) return Response.withError(res, AuthError.userNotFound());
-
-    const isEmployed = business.employeeList.find(
-      emp => emp._id.toString() === userId
-    );
-
-    if (!isEmployed)
-      return Response.withError(res, BusinessError.employeeNotFound());
-
-    user.roles.remove(Constants.ROLES.EMPLOYEE);
-
-    business.employeeList.remove(user);
-    business.save();
-
-    await UserDataAccess.updateUserRolesDB(userId, user.roles);
-
-    Response.success(
-      res,
-      BusinessSuccess.dischargedEmployee(),
-      {
-        user,
-        business
-      }
-    );
+    Response.success(res, BusinessSuccess.dischargedEmployee(), { dischargedEmployee });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
       error.message = "Çalışan belirtilen iş yerinin çalışan listesinden çıkartılamadı!"
         + "Lütfen Çalışan ve İş yeri Id değerlerini doğru giriniz!";

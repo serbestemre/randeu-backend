@@ -122,3 +122,26 @@ exports.hireEmployeeService = async (userId, businessId) => {
   await business.save();
   return user;
 };
+
+exports.dischargeEmployeeService = async (userId, businessId) => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+  const user = await UserDataAccess.findUserByIdDB(userId);
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+  if (!user) throw AuthError.userNotFound();
+
+  const isEmployed = business.employeeList.find(
+    emp => emp._id.toString() === userId
+  );
+
+  if (!isEmployed)
+    throw BusinessError.employeeNotFound();
+
+  user.roles.remove(CONSTANTS.ROLES.EMPLOYEE);
+  business.employeeList.remove(user);
+  business.save();
+
+  return UserDataAccess.updateUserRolesDB(userId, user.roles);
+};
