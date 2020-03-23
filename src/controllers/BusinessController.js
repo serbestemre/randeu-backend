@@ -1,19 +1,19 @@
 const ValidationError = require("mongoose").Error.ValidationError;
 const CastError = require("mongoose").Error.CastError;
 
-const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 const BusinessSuccess = require("../successes/BusinessSuccess");
+const BusinessService = require("../services/BusinessService");
 const BusinessDataAccess = require("../dataAccess/Business");
 const ServiceDataAccess = require("../dataAccess/Service");
 const BusinessError = require("../errors/BusinessError");
 const SectorDataAccess = require("../dataAccess/Sector");
 const BusinessType = require("../models/BusinessType");
+const CustomError = require("../helpers/CustomError");
 const CommonError = require("../errors/CommonError");
 const UserDataAccess = require("../dataAccess/User");
 const AdminError = require("../errors/AdminError");
 const AuthError = require("../errors/AuthError");
 const Response = require("../helpers/Response");
-const Business = require("../models/Business");
 const Constants = require("../constants");
 
 // TODO Check requester userId ===? businessOwnerId/EmployeeId
@@ -21,73 +21,29 @@ const Constants = require("../constants");
 exports.createBusiness = async (req, res) => {
   try {
     const {
-      businessName,
-      address,
-      sector,
-      businessType,
-      businessOwnerId
+      businessName, address, sector, businessType, businessOwnerId
     } = req.body;
 
-    const businessOwner = await UserDataAccess.findUserByIdDB(businessOwnerId);
-
-    if (!businessOwner)
-      return Response.withError(res, BusinessError.businessOwnerNotFound());
-
-    const doesSectorExist = await SectorDataAccess.findSectorByIdDB(sector);
-    if (!doesSectorExist)
-      return Response.withError(res, BusinessError.sectorNotFound());
-
-    const doesBusinessTypeExist = await BusinessTypeDataAccess.findBusinessTypeByIdDB(
-      businessType
-    );
-    if (!doesBusinessTypeExist)
-      return Response.withError(res, BusinessError.businessTypeNotFound());
-
-    // TODO String fields should be trim
-    const newBusiness = new Business({
-      businessName,
-      address,
-      sector,
-      businessType
-    });
-
-    newBusiness.businessOwnerList.push(businessOwner);
-    newBusiness.employeeList.push(businessOwner);
-
-    if (!businessOwner.roles.includes(Constants.ROLES.EMPLOYEE))
-      businessOwner.roles.push(Constants.ROLES.EMPLOYEE);
-
-    if (!businessOwner.roles.includes(Constants.ROLES.BUSINESS_OWNER))
-      businessOwner.roles.push(Constants.ROLES.BUSINESS_OWNER);
-
-    console.log(businessOwner.roles);
-
-    await UserDataAccess.updateUserRolesDB(
-      businessOwnerId,
-      businessOwner.roles
+    const newBusiness = await BusinessService.createBusinessService(
+      businessName.trim(),
+      address.trim(),
+      sector.trim(),
+      businessType.trim(),
+      businessOwnerId.trim()
     );
 
-    const result = await newBusiness.save();
-    Response.success(
-      res,
-      BusinessSuccess.businessCreated(),
-      result
-    );
+    Response.success(res, BusinessSuccess.businessCreated(), newBusiness);
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
-      error.message = "İş yeri oluşturulamadı!";
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
+      error.message = "Sektörler listelenemedi!";
+      Object.assign(
+        error, { statusCode: 400 }
+      );
     }
-    console.log("create business error: ", error);
     Response.withError(res, CommonError.serverError());
   }
 };
-
 exports.updateBusiness = async (req, res) => {
   const {
     updatingBusiness,
