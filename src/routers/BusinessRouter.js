@@ -56,7 +56,7 @@ router.delete(
 );
 
 router.post(
-  "/employee/assign-service/:id",
+  "/employee/assign-service",
   joiValidator(businessSchema.assignOrEditService),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),

@@ -1,7 +1,9 @@
-const SectorDataAccess = require("../dataAccess/Sector");
+const mongoose = require('mongoose');
 const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 const BusinessDataAccess = require("../dataAccess/Business");
+const ServiceDataAccess = require("../dataAccess/Service");
 const BusinessError = require("../errors/BusinessError");
+const SectorDataAccess = require("../dataAccess/Sector");
 const BusinessType = require("../models/BusinessType");
 const UserDataAccess = require("../dataAccess/User");
 const AuthError = require("../errors/AuthError");
@@ -144,4 +146,38 @@ exports.dischargeEmployeeService = async (userId, businessId) => {
   business.save();
 
   return UserDataAccess.updateUserRolesDB(userId, user.roles);
+};
+
+exports.assignService = async (serviceId, employeeId, businessId, price, duration) => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+  const service = await ServiceDataAccess.findServiceByIdDB(serviceId);
+
+  const foundEmployee = business.employeeList.find(
+    emp => emp._id.toString() === employeeId.toString()
+  );
+
+  // Servisin tanımlanmak istendiği çalışan bu iş yerinde çalışıyor mu?
+  if (!foundEmployee)
+    throw BusinessError.employeeNotFound();
+
+  // Bu iş tipi belirtilen çalışan için daha önceden tanımlanmış mı?
+  const doesServiceProviding = foundEmployee.providingServices.find(
+    providignService =>
+      providignService.service.toString() === serviceId.toString()
+  );
+
+  if (doesServiceProviding)
+    throw BusinessError.serviceAlreadyProviding();
+
+  foundEmployee.providingServices.push({
+    service: service._id,
+    price,
+    duration
+  });
+  await business.save();
+  return foundEmployee;
 };

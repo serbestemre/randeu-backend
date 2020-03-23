@@ -154,52 +154,17 @@ exports.dischargeEmployee = async (req, res) => {
 };
 
 exports.assignService = async (req, res) => {
-  const {
-    serviceId, employeeId, businessId, price, duration
-  } = req.body;
-
   try {
-    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+    const {
+      serviceId, employeeId, businessId, price, duration
+    } = req.body;
 
-    if (!business)
-      return Response.withError(res, BusinessError.businessNotFound());
-
-    const service = await ServiceDataAccess.findServiceByIdDB(serviceId);
-
-    const foundEmployee = business.employeeList.find(
-      emp => emp._id.toString() === employeeId.toString()
+    const business = await BusinessService.assignService(
+      serviceId, employeeId, businessId, price, duration
     );
-
-    // Servisin tanımlanmak istendiği çalışan bu iş yerinde çalışıyor mu?
-    if (!foundEmployee)
-      return Response.withError(res, BusinessError.employeeNotFound());
-
-    // Bu iş tipi belirtilen çalışan için daha önceden tanımlanmış mı?
-    const doesServiceProviding = foundEmployee.providingServices.find(
-      providignService =>
-        providignService.service.toString() === serviceId.toString()
-    );
-
-    if (doesServiceProviding)
-      return Response.withError(res, BusinessError.serviceAlreadyProviding());
-
-    foundEmployee.providingServices.push({
-      service: service._id,
-      price,
-      duration
-    });
-    await business.save();
-    Response.success(
-      res,
-      BusinessSuccess.assignedService(),
-      foundEmployee
-    );
+    Response.success(res, BusinessSuccess.assignedService(), business);
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      console.log(error);
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
       error.message = "Çalışan için bir servis tanımlanamadı!"
         + " Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin";
