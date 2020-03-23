@@ -78,3 +78,12 @@ exports.updateBusinessService = async (updatingBusiness,
     updatedBusinessType,
     updatedBusinessOwner);
 };
+
+exports.deleteBusinessService = async businessId => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+  return BusinessDataAccess.deleteOneDB(business);
+};

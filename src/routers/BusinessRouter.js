@@ -33,8 +33,7 @@ router.get(
 );
 
 router.delete(
-  "/profile/delete/:id",
-  joiValidator(businessSchema.deleteBusiness),
+  "/profile/delete/:businessId",
   verifyToken,
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.deleteBusiness

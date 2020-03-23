@@ -104,26 +104,13 @@ exports.profile = async (req, res) => {
 };
 
 exports.deleteBusiness = async (req, res) => {
-  const businessId = req.body.businessId;
+  const { businessId } = req.params;
   try {
-    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
-    console.log(business);
+    await BusinessService.deleteBusinessService(businessId);
 
-    if (!business)
-      return Response.withError(res, BusinessError.businessNotFound());
-
-    await BusinessDataAccess.deleteOneDB(business);
-
-    Response.success(
-      res,
-      BusinessSuccess.businessDeleted(),
-      business
-    );
+    Response.success(res, BusinessSuccess.businessDeleted());
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
       error.message = "Silinmek istenen iş yeri id değeri hatalı. "
         + "Lütfen servis/iş yeri Id değerlerini doğru giriniz.";

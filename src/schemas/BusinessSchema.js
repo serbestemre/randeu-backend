@@ -91,17 +91,6 @@ module.exports = {
         "string.empty": "İşyeri alanı boş bırakılamaz"
       })
   }),
-  deleteBusiness: Joi.object({
-    businessId: Joi.string()
-      .empty()
-      .required()
-      .regex(/^[0-9a-fA-F]{24}$/)
-      .normalize()
-      .messages({
-        "string.pattern.base": "BusinessId değeri standartlara uygun değil",
-        "string.empty": "İşyeri alanı boş bırakılamaz"
-      })
-  }),
   addService: Joi.object({
     serviceId: Joi.string()
       .empty()
