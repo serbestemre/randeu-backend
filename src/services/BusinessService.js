@@ -2,10 +2,10 @@ const SectorDataAccess = require("../dataAccess/Sector");
 const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 const BusinessDataAccess = require("../dataAccess/Business");
 const BusinessError = require("../errors/BusinessError");
-const UserDataAccess = require("../dataAccess/User");
-const AdminError = require("../errors/AdminError");
-const Business = require("../models/Business");
 const BusinessType = require("../models/BusinessType");
+const UserDataAccess = require("../dataAccess/User");
+const AuthError = require("../errors/AuthError");
+const Business = require("../models/Business");
 const CONSTANTS = require("../constants");
 
 exports.createBusinessService = async (
@@ -95,5 +95,30 @@ exports.profileService = async businessId => {
     throw BusinessError.businessNotFound();
 
   return business;
+};
 
+exports.hireEmployeeService = async (userId, businessId) => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+  const user = await UserDataAccess.findUserByIdDB(userId);
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+  if (!user) throw AuthError.userNotFound();
+
+  const isEmployed = business.employeeList.find(
+    emp => emp._id.toString() === userId
+  );
+
+  if (isEmployed)
+    throw BusinessError.employeeAlreadyExists();
+
+  if (!user.roles.includes(CONSTANTS.ROLES.EMPLOYEE))
+    user.roles.push(CONSTANTS.ROLES.EMPLOYEE);
+
+  await UserDataAccess.updateUserRolesDB(userId, user.roles);
+
+  business.employeeList.push(user);
+  await business.save();
+  return user;
 };

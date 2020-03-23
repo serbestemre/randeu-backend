@@ -42,6 +42,7 @@ router.delete(
 router.post(
   "/hire-employee",
   joiValidator(businessSchema.hireEmployee),
+  verifyToken,
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.hireEmployee
 );

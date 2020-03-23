@@ -43,14 +43,14 @@ exports.createBusiness = async (req, res) => {
   }
 };
 exports.updateBusiness = async (req, res) => {
-  const {
-    updatedBusinessName, updatedAddress, updatedSector,
-    updatedBusinessType, updatedBusinessOwner, userId
-  } = req.body;
-
-  const { businessId } = req.params;
-
   try {
+    const {
+      updatedBusinessName, updatedAddress, updatedSector,
+      updatedBusinessType, updatedBusinessOwner, userId
+    } = req.body;
+
+    const { businessId } = req.params;
+
     const updatedBusiness = await BusinessService.updateBusinessService(
       businessId.trim(),
       updatedBusinessName.trim(),
@@ -94,8 +94,8 @@ exports.profile = async (req, res) => {
 };
 
 exports.deleteBusiness = async (req, res) => {
-  const { businessId } = req.params;
   try {
+    const { businessId } = req.params;
     await BusinessService.deleteBusinessService(businessId);
 
     Response.success(res, BusinessSuccess.businessDeleted());
@@ -112,43 +112,16 @@ exports.deleteBusiness = async (req, res) => {
   }
 };
 
+// TODO Add workingBusinessId to the user's model when a user hired
 exports.hireEmployee = async (req, res) => {
-  const { userId, businessId } = req.body;
   try {
-    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
-    const user = await UserDataAccess.findUserByIdDB(userId);
+    const { userId, businessId } = req.body;
+    const hiredEmployee = await BusinessService.hireEmployeeService(userId, businessId);
 
-    if (!business)
-      return Response.withError(res, BusinessError.businessNotFound());
-
-    if (!user) return Response.withError(res, AuthError.userNotFound());
-
-    const isEmployed = business.employeeList.find(
-      emp => emp._id.toString() === userId
-    );
-
-    if (isEmployed)
-      return Response.withError(res, BusinessError.employeeAlreadyExists());
-
-    if (!user.roles.includes(Constants.ROLES.EMPLOYEE))
-      user.roles.push(Constants.ROLES.EMPLOYEE);
-
-    UserDataAccess.updateUserRolesDB(userId, user.roles);
-    business.employeeList.push(user);
-    business.save();
-    Response.success(
-      res,
-      BusinessSuccess.hiredEmployee(),
-      {
-        user,
-        business
-      }
-    );
+    Response.success(res,
+      BusinessSuccess.hiredEmployee(), { hiredEmployee });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
       error.message = "Çalışan, iş yerine başarıyla tanımlanamadı!"
         + "Lütfen Çalışan/İş yeri Id değerlerini doğru giriniz.";
@@ -161,8 +134,8 @@ exports.hireEmployee = async (req, res) => {
 };
 
 exports.dischargeEmployee = async (req, res) => {
-  const { userId, businessId } = req.body;
   try {
+    const { userId, businessId } = req.body;
     const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
     const user = await UserDataAccess.findUserByIdDB(userId);
 
