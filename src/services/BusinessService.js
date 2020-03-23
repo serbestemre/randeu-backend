@@ -87,3 +87,13 @@ exports.deleteBusinessService = async businessId => {
 
   return BusinessDataAccess.deleteOneDB(business);
 };
+
+exports.profileService = async businessId => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+  return business;
+
+};

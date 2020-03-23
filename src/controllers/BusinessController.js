@@ -74,24 +74,14 @@ exports.updateBusiness = async (req, res) => {
 };
 
 exports.profile = async (req, res) => {
-  const { businessId } = req.body;
-
   try {
-    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+    const { businessId } = req.params;
 
-    if (!business)
-      return Response.withError(res, BusinessError.businessNotFound());
+    const business = await BusinessService.profileService(businessId);
 
-    Response.success(
-      res,
-      BusinessSuccess.businessListed(),
-      business
-    );
+    Response.success(res, BusinessSuccess.businessListed(), business);
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
       error.message = "Görüntülenmek istenen iş yeri id değeri hatalı. "
         + "Lütfen iş yeri Id değerlerini doğru giriniz.";

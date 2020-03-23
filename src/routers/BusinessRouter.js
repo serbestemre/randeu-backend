@@ -25,8 +25,7 @@ router.put(
 );
 
 router.get(
-  "/profile/:id",
-  joiValidator(businessSchema.profile),
+  "/profile/:businessId",
   verifyToken,
   roleChecker([CONSTANTS.ROLES.EMPLOYEE, CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.profile
