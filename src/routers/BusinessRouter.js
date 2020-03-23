@@ -65,7 +65,7 @@ router.post(
 
 // router.put("/employee/editService", validator, businessController.editService);
 router.delete(
-  "/employee/remove-service/:id",
+  "/employee/remove-service",
   joiValidator(businessSchema.removeService),
   verifyToken,
   roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER]),

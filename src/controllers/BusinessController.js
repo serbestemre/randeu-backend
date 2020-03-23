@@ -1,18 +1,9 @@
-const ValidationError = require("mongoose").Error.ValidationError;
 const CastError = require("mongoose").Error.CastError;
-
 const BusinessSuccess = require("../successes/BusinessSuccess");
 const BusinessService = require("../services/BusinessService");
-const BusinessDataAccess = require("../dataAccess/Business");
-const ServiceDataAccess = require("../dataAccess/Service");
-const BusinessError = require("../errors/BusinessError");
 const CustomError = require("../helpers/CustomError");
 const CommonError = require("../errors/CommonError");
-const UserDataAccess = require("../dataAccess/User");
-const AdminError = require("../errors/AdminError");
-const AuthError = require("../errors/AuthError");
 const Response = require("../helpers/Response");
-const Constants = require("../constants");
 
 // TODO Check requester userId ===? businessOwnerId/EmployeeId
 
@@ -42,6 +33,7 @@ exports.createBusiness = async (req, res) => {
     Response.withError(res, CommonError.serverError());
   }
 };
+
 exports.updateBusiness = async (req, res) => {
   try {
     const {
@@ -77,7 +69,7 @@ exports.profile = async (req, res) => {
   try {
     const { businessId } = req.params;
 
-    const business = await BusinessService.profileService(businessId);
+    const business = await BusinessService.profileService(businessId.trim());
 
     Response.success(res, BusinessSuccess.businessListed(), business);
   } catch (error) {
@@ -96,7 +88,7 @@ exports.profile = async (req, res) => {
 exports.deleteBusiness = async (req, res) => {
   try {
     const { businessId } = req.params;
-    await BusinessService.deleteBusinessService(businessId);
+    await BusinessService.deleteBusinessService(businessId.trim());
 
     Response.success(res, BusinessSuccess.businessDeleted());
   } catch (error) {
@@ -116,10 +108,12 @@ exports.deleteBusiness = async (req, res) => {
 exports.hireEmployee = async (req, res) => {
   try {
     const { userId, businessId } = req.body;
-    const hiredEmployee = await BusinessService.hireEmployeeService(userId, businessId);
+    const business = await BusinessService.hireEmployeeService(
+      userId.trim(), businessId.trim()
+    );
 
     Response.success(res,
-      BusinessSuccess.hiredEmployee(), { hiredEmployee });
+      BusinessSuccess.hiredEmployee(), business);
   } catch (error) {
     if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
@@ -137,7 +131,7 @@ exports.dischargeEmployee = async (req, res) => {
   try {
     const { userId, businessId } = req.body;
 
-    const dischargedEmployee = await BusinessService.dischargeEmployeeService(userId, businessId);
+    const dischargedEmployee = await BusinessService.dischargeEmployeeService(userId.trim(), businessId.trim());
 
     Response.success(res, BusinessSuccess.dischargedEmployee(), { dischargedEmployee });
   } catch (error) {
@@ -160,7 +154,7 @@ exports.assignService = async (req, res) => {
     } = req.body;
 
     const business = await BusinessService.assignService(
-      serviceId, employeeId, businessId, price, duration
+      serviceId.trim(), employeeId.trim(), businessId.trim(), price, duration
     );
     Response.success(res, BusinessSuccess.assignedService(), business);
   } catch (error) {
@@ -177,47 +171,16 @@ exports.assignService = async (req, res) => {
 };
 
 exports.removeService = async (req, res) => {
-  const { businessId, employeeId, serviceId } = req.body;
   try {
-    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+    const { businessId, employeeId, serviceId } = req.body;
 
-    if (!business)
-      return Response.withError(res, BusinessError.businessNotFound());
-
-    const employee = business.employeeList.find(
-      emp => emp._id.toString() === employeeId
+    const business = await BusinessService.removeService(
+      businessId.trim(), employeeId.trim(), serviceId.trim()
     );
 
-    if (!employee)
-      return Response.withError(res, BusinessError.employeeNotFound());
-
-    const doesServiceExist = await ServiceDataAccess.findServiceByIdDB(
-      serviceId
-    );
-
-    if (!doesServiceExist)
-      return Response.withError(res, AdminError.serviceNotFound());
-
-    const removingService = employee.providingServices.find(
-      providingService =>
-        providingService.service.toString() === serviceId.toString()
-    );
-
-    if (!removingService)
-      return Response.withError(res, BusinessError.serviceNotProvided());
-
-    employee.providingServices.remove(removingService);
-    await business.save();
-    Response.success(
-      res,
-      BusinessSuccess.removedService(),
-      business
-    );
+    Response.success(res, BusinessSuccess.removedService(), business);
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {
       error.message = "Çalışanın servis listesinden silinmek istenen servis silinimedi!"
         + " Lütfen çalışan/iş yeri/servis Id bilgilerini kontrol edin.";

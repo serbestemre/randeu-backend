@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 const BusinessDataAccess = require("../dataAccess/Business");
 const ServiceDataAccess = require("../dataAccess/Service");
@@ -7,7 +6,7 @@ const SectorDataAccess = require("../dataAccess/Sector");
 const BusinessType = require("../models/BusinessType");
 const UserDataAccess = require("../dataAccess/User");
 const AuthError = require("../errors/AuthError");
-const Business = require("../models/Business");
+const AdminError = require("../errors/AdminError");
 const CONSTANTS = require("../constants");
 
 exports.createBusinessService = async (
@@ -180,4 +179,37 @@ exports.assignService = async (serviceId, employeeId, businessId, price, duratio
   });
   await business.save();
   return foundEmployee;
+};
+
+exports.removeService = async (businessId, employeeId, serviceId) => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+  const employee = business.employeeList.find(
+    emp => emp._id.toString() === employeeId
+  );
+
+  if (!employee)
+    throw BusinessError.employeeNotFound();
+
+  const doesServiceExist = await ServiceDataAccess.findServiceByIdDB(
+    serviceId
+  );
+
+  if (!doesServiceExist)
+    throw AdminError.serviceNotFound();
+
+  const removingService = employee.providingServices.find(
+    providingService =>
+      providingService.service.toString() === serviceId.toString()
+  );
+
+  if (!removingService)
+    throw BusinessError.serviceNotProvided();
+
+  employee.providingServices.remove(removingService);
+
+  return business.save();
 };
