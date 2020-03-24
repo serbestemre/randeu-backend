@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
-const User = require("../../src/models/User");
-const UserDataAccessLayer = require("../../src/dataAccess/User");
 const SectorDataAccessLayer = require("../../src/dataAccess/Sector");
+const UserDataAccessLayer = require("../../src/dataAccess/User");
+const User = require("../../src/models/User");
 
 const signToken = user =>
   jwt.sign(
@@ -47,7 +47,7 @@ const employeeOne = new User({
   fullName: "employeeOne",
   email: "employeeOne@gmail.com",
   password: "123456",
-  roles: [1]
+  roles: [1, 2]
 });
 const employeeOneToken = signToken(employeeOne);
 
@@ -58,7 +58,7 @@ const employeeTwo = new User({
   fullName: "employeeTwo",
   email: "employeeTwo@gmail.com",
   password: "123456",
-  roles: [1]
+  roles: [1, 2]
 });
 const employeeTwoToken = signToken(employeeTwo);
 
@@ -66,12 +66,24 @@ const businessOwnerOneId = new mongoose.Types.ObjectId();
 const businessOwnerOne = new User({
   method: "local",
   _id: businessOwnerOneId,
-  fullName: "employeeTwo",
-  email: "employeeTwo@gmail.com",
+  fullName: "businessOwnerOne",
+  email: "businessOwnerOne@gmail.com",
   password: "123456",
-  roles: [1]
+  roles: [1, 2, 3]
 });
 const businessOwnerOneToken = signToken(businessOwnerOne);
+
+const businessOwnerTwoId = new mongoose.Types.ObjectId();
+const businessOwnerTwo = new User({
+  method: "local",
+  _id: businessOwnerTwoId,
+  fullName: "businessOwnerTwo",
+  email: "businessOwnerTwo@gmail.com",
+  password: "123456",
+  roles: [1, 2, 3]
+});
+const businessOwnerTwoToken = signToken(businessOwnerTwo);
+
 
 const adminId = new mongoose.Types.ObjectId();
 const admin = new User({
@@ -82,18 +94,17 @@ const admin = new User({
   password: "123456",
   roles: [1, 4]
 });
-const adminJWTToken = signToken(admin);
+const adminToken = signToken(admin);
 
-const setupDatabase = async () => {
-  console.log("SETUP DATABASE ÇALIŞTI");
+const setupUserDB = async () => {
   await UserDataAccessLayer.deleteManyUsersDB();
-  await SectorDataAccessLayer.deleteManySectorsDB();
   await UserDataAccessLayer.insertManyUsersDB(
     [userOne,
       userTwo,
       employeeOne,
       employeeTwo,
       businessOwnerOne,
+      businessOwnerTwo,
       admin]
   );
 };
@@ -109,7 +120,9 @@ module.exports = {
   employeeTwoToken,
   businessOwnerOne,
   businessOwnerOneToken,
+  businessOwnerTwo,
+  businessOwnerTwoToken,
   admin,
-  adminJWTToken,
-  setupDatabase
+  adminToken,
+  setupUserDB
 };

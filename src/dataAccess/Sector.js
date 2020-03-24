@@ -1,5 +1,7 @@
 const Sector = require("../models/Sector");
 
+exports.insertManySectorsDB = async sectors => Sector.insertMany(sectors);
+
 exports.findSectorByNameDB = async sectorName => Sector.findOne(sectorName);
 
 exports.findSectorsDB = async () => Sector.find();

@@ -23,6 +23,7 @@ exports.insertOneBusinessDB = async (
 
 exports.updateOneBusinessDB = async (business, updatedBusinessName, updatedAddress,
   updatedSector, updatedBusinessType, updatedBusinessOwner) => {
+
   business.businessName = updatedBusinessName;
   business.address = updatedAddress;
   business.sector = updatedSector;
