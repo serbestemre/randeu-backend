@@ -14,6 +14,9 @@ const Response = require("../helpers/Response");
 const Service = require("../models/Service");
 const Sector = require("../models/Sector");
 
+// TODO Edit Service Model add sector field and don't forget these steps
+// TODO Refactor ==>>> updateService()
+// TODO Edit =>>>> ServiceMock add sector fields from the SectorMocks created objects
 exports.createService = async (req, res) => {
   const { serviceName, businessType } = req.body;
 
@@ -203,6 +206,7 @@ exports.deleteSector = async (req, res) => {
     Response.withError(res, CommonError.serverError());
   }
 };
+
 
 exports.createBusinessType = async (req, res) => {
   const { businessTypeName, sector } = req.body;

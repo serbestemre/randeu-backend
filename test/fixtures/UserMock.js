@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
-const SectorDataAccessLayer = require("../../src/dataAccess/Sector");
 const UserDataAccessLayer = require("../../src/dataAccess/User");
 const User = require("../../src/models/User");
 
