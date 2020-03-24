@@ -24,5 +24,7 @@ exports.updateSectorService = async (id, sectorName) => {
     throw AdminError.SectorNotFound();
 
   if (sector.sectorName === sectorName)
-    throw AdminError.sectorAlreadyExists();
+    throw AdminError.SectorAlreadyExists();
+
+  return SectorDataAccess.updateSector(sectorName, sector);
 };

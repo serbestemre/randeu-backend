@@ -7,6 +7,11 @@ exports.createSectorDB = async sectorName => {
   return newSector.save();
 };
 
+exports.updateSector = async (updatedSectorName, sector) => {
+  sector.sectorName = updatedSectorName;
+  return sector.save();
+};
+
 exports.findSectorByNameDB = async sectorName => Sector.findOne(sectorName);
 
 exports.findSectorsDB = async () => Sector.find();

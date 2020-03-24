@@ -161,20 +161,12 @@ exports.updateSector = async (req, res) => {
   console.log("Sektör id", _id);
   const { updatedSectorName } = req.body;
   try {
-    const sector = await SectorDataAccess.findSectorByIdDB(_id);
+    const sector = await SectorService.updateSectorService(_id, updatedSectorName);
 
-    if (!sector) return Response.withError(res, AdminError.sectorNotFound());
-    if (sector.sectorName === updatedSectorName)
-      return Response.withError(res, AdminError.sectorAlreadyExists());
-
-    sector.sectorName = updatedSectorName.trim();
-    const result = await sector.save();
-    Response.success(res, AdminSuccess.sectorUpdated(), result);
+    Response.success(res, AdminSuccess.sectorUpdated(), sector);
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
+    if (error instanceof CustomError)
       return Response.withError(res, error);
-    }
     if (error instanceof CastError) {
       error.message = "Güncellenmek istenen sektör id hatalı";
       Object.assign(error, { statusCode: 400 });
