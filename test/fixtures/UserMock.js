@@ -39,50 +39,49 @@ const userTwo = new User({
 });
 const userTwoToken = signToken(userTwo);
 
-const employeeOneId = new mongoose.Types.ObjectId();
-const employeeOne = new User({
+const employeeOneKuaforId = new mongoose.Types.ObjectId();
+const employeeOneKuafor = new User({
   method: "local",
-  _id: employeeOneId,
-  fullName: "employeeOne",
-  email: "employeeOne@gmail.com",
+  _id: employeeOneKuaforId,
+  fullName: "employeeOne Kuaför",
+  email: "employeeOneKuafor@gmail.com",
   password: "123456",
   roles: [1, 2]
 });
-const employeeOneToken = signToken(employeeOne);
+const employeeOneKuaforToken = signToken(employeeOneKuafor);
 
-const employeeTwoId = new mongoose.Types.ObjectId();
-const employeeTwo = new User({
+const employeeTwoDisHekimiId = new mongoose.Types.ObjectId();
+const employeeTwoDisHekimi = new User({
   method: "local",
-  _id: employeeTwoId,
-  fullName: "employeeTwo",
-  email: "employeeTwo@gmail.com",
+  _id: employeeTwoDisHekimiId,
+  fullName: "employeeTwo Dis Hekimi",
+  email: "employeeTwoDisHekimi@gmail.com",
   password: "123456",
   roles: [1, 2]
 });
-const employeeTwoToken = signToken(employeeTwo);
+const employeeTwoDisHekimiToken = signToken(employeeTwoDisHekimi);
 
-const businessOwnerOneId = new mongoose.Types.ObjectId();
-const businessOwnerOne = new User({
+const businessOwnerKuaforId = new mongoose.Types.ObjectId();
+const businessOwnerKuafor = new User({
   method: "local",
-  _id: businessOwnerOneId,
-  fullName: "businessOwnerOne",
-  email: "businessOwnerOne@gmail.com",
+  _id: businessOwnerKuaforId,
+  fullName: "businessOwner Kuaför",
+  email: "businessOwnerKuafore@gmail.com",
   password: "123456",
   roles: [1, 2, 3]
 });
-const businessOwnerOneToken = signToken(businessOwnerOne);
+const businessOwnerKuaforToken = signToken(businessOwnerKuafor);
 
-const businessOwnerTwoId = new mongoose.Types.ObjectId();
-const businessOwnerTwo = new User({
+const businessOwnerDisHekimiId = new mongoose.Types.ObjectId();
+const businessOwnerDisHekimi = new User({
   method: "local",
-  _id: businessOwnerTwoId,
-  fullName: "businessOwnerTwo",
-  email: "businessOwnerTwo@gmail.com",
+  _id: businessOwnerDisHekimiId,
+  fullName: "businessOwner Diş Hekimi",
+  email: "businessOwnerDisHekimi@gmail.com",
   password: "123456",
   roles: [1, 2, 3]
 });
-const businessOwnerTwoToken = signToken(businessOwnerTwo);
-
+const businessOwnerDisHekimiToken = signToken(businessOwnerDisHekimi);
 
 const adminId = new mongoose.Types.ObjectId();
 const admin = new User({
@@ -100,10 +99,10 @@ const setupUserDB = async () => {
   await UserDataAccessLayer.insertManyUsersDB(
     [userOne,
       userTwo,
-      employeeOne,
-      employeeTwo,
-      businessOwnerOne,
-      businessOwnerTwo,
+      employeeOneKuafor,
+      employeeTwoDisHekimi,
+      businessOwnerKuafor,
+      businessOwnerDisHekimi,
       admin]
   );
 };
@@ -113,14 +112,14 @@ module.exports = {
   userOneToken,
   userTwo,
   userTwoToken,
-  employeeOne,
-  employeeOneToken,
-  employeeTwo,
-  employeeTwoToken,
-  businessOwnerOne,
-  businessOwnerOneToken,
-  businessOwnerTwo,
-  businessOwnerTwoToken,
+  employeeOne: employeeOneKuafor,
+  employeeOneToken: employeeOneKuaforToken,
+  employeeTwo: employeeTwoDisHekimi,
+  employeeTwoToken: employeeTwoDisHekimiToken,
+  businessOwnerKuafor,
+  businessOwnerOneToken: businessOwnerKuaforToken,
+  businessOwnerTwo: businessOwnerDisHekimi,
+  businessOwnerTwoToken: businessOwnerDisHekimiToken,
   admin,
   adminToken,
   setupUserDB
