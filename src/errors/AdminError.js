@@ -8,31 +8,19 @@ AdminError.businessTypeNotFoundByGivenSector = () => new CustomError(
   "Aranan sektöre göre iş yeri tipi bulamadı"
 );
 
-AdminError.servicesNotFoundByGivenBusinessType = () => ({
-  statusCode: 404,
-  message: "Aranan iş tipine göre servis bulunamadı"
-});
+AdminError.servicesNotFoundByGivenBusinessType = () => new CustomError(
+  404,
+  "Aranan iş tipine göre servis bulunamadı"
+);
 
-AdminError.businessAlreadyExists = () => ({
-  statusCode: 409,
-  message: "İş tipi zaten kayıtlı"
-});
+AdminError.businessAlreadyExists = () => new CustomError(409, "İş tipi zaten kayıtlı");
 
-AdminError.serviceAlreadyExists = () => ({
-  statusCode: 409,
-  message: "Servis zaten kayıtlı"
-});
+AdminError.serviceAlreadyExists = () => new CustomError(409, "Servis zaten kayıtlı");
 
-AdminError.sectorAlreadyExists = () => ({
-  statusCode: 403,
-  message: "Sektör zaten kayıtlı"
-});
+AdminError.sectorAlreadyExists = () => new CustomError(403, "Sektör zaten kayıtlı");
 
 AdminError.SectorNotFound = () => new CustomError(404, "Sektör bulunamadı");
 
-AdminError.serviceNotFound = () => ({
-  statusCode: 404,
-  message: "Servis bulunamadı"
-});
+AdminError.serviceNotFound = () => new CustomError(404, "Servis bulunamadı");
 
 module.exports = AdminError;
