@@ -14,11 +14,8 @@ exports.createBusiness = async (req, res) => {
     } = req.body;
 
     const newBusiness = await BusinessService.createBusinessService(
-      businessName.trim(),
-      address.trim(),
-      sector.trim(),
-      businessType.trim(),
-      businessOwnerId.trim()
+      businessName.trim(), address.trim(), sector.trim(),
+      businessType.trim(), businessOwnerId.trim()
     );
 
     Response.success(res, BusinessSuccess.businessCreated(), newBusiness);
@@ -30,6 +27,7 @@ exports.createBusiness = async (req, res) => {
         error, { statusCode: 400 }
       );
     }
+    console.log(error);
     Response.withError(res, CommonError.serverError());
   }
 };

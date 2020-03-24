@@ -8,20 +8,17 @@ exports.updateServiceListDB = async (_id, serviceList) => {
   Business.updateOne({ _id }, { $set: { serviceList } });
 };
 
-// TODO Refactor this method with mongoose insert() query
 exports.insertOneBusinessDB = async (
   businessName, address, sector, businessType, businessOwner) => {
-  const newBusiness = new Business({
+  const resultBusiness = Business.create({
     businessName,
     address,
     sector,
-    businessType
+    businessType,
+    businessOwnerList: [{ _id: businessOwner._id }],
+    employeeList: [{ _id: businessOwner._id }]
   });
-
-  newBusiness.businessOwnerList.push(businessOwner);
-  newBusiness.employeeList.push(businessOwner);
-
-  return newBusiness.save();
+  console.log(resultBusiness);
 };
 
 exports.updateOneBusinessDB = async (business, updatedBusinessName, updatedAddress,
