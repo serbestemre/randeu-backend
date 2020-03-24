@@ -7,8 +7,8 @@ const UserMock = require("./fixtures/UserMock");
 
 jest.setTimeout(30000);
 
-beforeEach(BusinessTypeMock.setupBusinessTypeDB);
 beforeAll(SectorMock.setupSectorDB);
+beforeEach(BusinessTypeMock.setupBusinessTypeDB);
 
 test("Should create a BusinessType", async () => {
   await request(app)
