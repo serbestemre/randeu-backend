@@ -4,6 +4,7 @@ const CastError = require("mongoose").Error.CastError;
 const BusinessTypeService = require("../services/BusinessTypeService");
 const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 const ServiceDataAccess = require("../dataAccess/Service");
+const SectorService = require("../services/SectorService");
 const AdminSuccess = require("../successes/AdminSuccess");
 const SectorDataAccess = require("../dataAccess/Sector");
 const BusinessType = require("../models/BusinessType");
@@ -130,14 +131,11 @@ exports.deleteService = async (req, res) => {
 exports.createSector = async (req, res) => {
   const sectorName = req.body.sectorName.trim();
   try {
-    const sector = await SectorDataAccess.findSectorByNameDB({ sectorName });
-    if (sector) return Response.withError(res, AdminError.sectorAlreadyExists());
-    const newSector = new Sector({
-      sectorName
-    });
-    const result = await newSector.save();
-    Response.success(res, AdminSuccess.sectorCreated(), result);
+    const sector = await SectorService.createSectorService(sectorName);
+    Response.success(res, AdminSuccess.sectorCreated(), sector);
   } catch (error) {
+    if (error instanceof CustomError) return Response.withError(res, error);
+
     if (error instanceof ValidationError) {
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
@@ -148,9 +146,12 @@ exports.createSector = async (req, res) => {
 
 exports.getSectors = async (req, res) => {
   try {
-    const sectors = await SectorDataAccess.findSectorsDB();
+    const sectors = await SectorService.getSectorsService();
     Response.success(res, AdminSuccess.sectorsListed(), sectors);
   } catch (error) {
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
+
     Response.withError(res, CommonError.serverError);
   }
 };
