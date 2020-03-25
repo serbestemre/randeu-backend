@@ -35,3 +35,12 @@ exports.updateBusinessTypeService = async (id, businessTypeName, sector) => {
 
   return BusinessTypeDataAccess.updateOneBusinessTypeDB(businessType, businessTypeName, sector);
 };
+
+exports.deleteBusinessTypeService = async id => {
+  const businessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(id);
+
+  if (!businessType)
+    return AdminError.BusinessTypeNotFound();
+
+  return BusinessTypeDataAccess.deleteBusinessTypeDB(id, businessType);
+};

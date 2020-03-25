@@ -5,8 +5,10 @@ exports.findBusinessTypeDB = async sector => BusinessType.find({ sector });
 exports.findBusinessTypeByIdDB = async searchedBusinessType =>
   BusinessType.findById(searchedBusinessType);
 
-exports.deleteBusinessTypeDB = async foundBusinessType =>
-  BusinessType.deleteOne(foundBusinessType);
+exports.deleteBusinessTypeDB = async (businessTypeId, businessType) => {
+  businessType.deleteOne({ businessTypeId });
+  return businessType;
+};
 
 exports.insertOneBusinessTypeDB = async (sector, businessTypeName) =>
   BusinessType.create({

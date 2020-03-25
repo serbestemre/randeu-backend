@@ -271,18 +271,16 @@ exports.deleteBusinessType = async (req, res) => {
   const _id = req.params.businessTypeId;
   console.log("businesstype id => ", _id);
   try {
-    const foundBusinessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(_id);
+    const businessType = await BusinessTypeService.deleteBusinessTypeService(_id);
 
-    if (!foundBusinessType)
-      return Response.withError(res, AdminError.businessTypeNotFound());
-
-    await BusinessTypeDataAccess.deleteBusinessTypeDB(foundBusinessType);
     Response.success(
       res,
       AdminSuccess.businessTypeDeleted(),
-      { foundBusinessType }
+      { businessType }
     );
   } catch (error) {
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
     console.log(error);
     Response.withError(res, CommonError.serverError());
   }
