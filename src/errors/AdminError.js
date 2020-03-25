@@ -1,43 +1,26 @@
 const AdminError = {};
+const CustomError = require("../helpers/CustomError");
 
-AdminError.businessTypeCouldnotFound = () => ({
-  statusCode: 404,
-  message: "İş tipi bulunamadı"
-});
+AdminError.BusinessTypeNotFound = () => new CustomError(404, "İş tipi bulunamadı");
 
-AdminError.noBusinessTypeByGivenSector = () => ({
-  statusCode: 404,
-  message: "Aranan sektöre göre iş yeri tipi bulamadı"
-});
+AdminError.BusinessTypeNotFoundByGivenSector = () => new CustomError(
+  404,
+  "Aranan sektöre göre iş yeri tipi bulamadı"
+);
 
-AdminError.noServiceListByGivenBusiness = () => ({
-  statusCode: 404,
-  message: "Aranan iş tipine göre servis bulunamadı"
-});
+AdminError.ServicesNotFoundByGivenBusinessType = () => new CustomError(
+  404,
+  "Aranan iş tipine göre servis bulunamadı"
+);
 
-AdminError.businessAlreadyExist = () => ({
-  statusCode: 403,
-  message: "İş tipi zaten kayıtlı"
-});
+AdminError.BusinessTypeAlreadyExists = () => new CustomError(409, "İş tipi zaten kayıtlı");
 
-AdminError.serviceAlreadyExist = () => ({
-  statusCode: 403,
-  message: "Servis zaten kayıtlı"
-});
+AdminError.ServiceAlreadyExists = () => new CustomError(409, "Servis zaten kayıtlı");
 
-AdminError.sectorAlreadyExist = () => ({
-  statusCode: 403,
-  message: "Sektör zaten kayıtlı"
-});
+AdminError.SectorAlreadyExists = () => new CustomError(403, "Sektör zaten kayıtlı");
 
-AdminError.sectorNotFound = () => ({
-  statusCode: 404,
-  message: "Sektör bulunamadı"
-});
+AdminError.SectorNotFound = () => new CustomError(404, "Sektör bulunamadı");
 
-AdminError.serviceNotFound = () => ({
-  statusCode: 404,
-  message: "Servis bulunamadı"
-});
+AdminError.ServiceNotFound = () => new CustomError(404, "Servis bulunamadı");
 
 module.exports = AdminError;

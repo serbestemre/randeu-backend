@@ -1,11 +1,11 @@
 const ValidationError = require("mongoose").Error.ValidationError;
 const JWT = require("jsonwebtoken");
 
-const User = require("../models/User");
-const response = require("../helpers/response");
-const AuthError = require("../errors/AuthError");
-const CommonError = require("../errors/CommonError");
 const UserDataAccess = require("../dataAccess/User");
+const CommonError = require("../errors/CommonError");
+const AuthError = require("../errors/AuthError");
+const response = require("../helpers/Response");
+const User = require("../models/User");
 
 const signToken = user =>
   JWT.sign(

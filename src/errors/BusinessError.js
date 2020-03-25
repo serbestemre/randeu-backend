@@ -1,58 +1,38 @@
 const BusinessError = {};
+const CustomError = require("../helpers/CustomError");
 
-BusinessError.businessCouldnotFound = () => ({
-  statusCode: 404,
-  message: "Aranan iş yeri bulunamadı!"
-});
+BusinessError.businessNotFound = () => new CustomError(400,
+  "Aranan iş yeri bulunamadı");
 
-BusinessError.sectorCouldnotFound = () => ({
-  statusCode: 404,
-  message: "Tanımlanmak istenen sektör bulunamadı!"
-});
+BusinessError.sectorNotFound = () => new CustomError(404,
+  "Sektör bulunamadı");
 
-BusinessError.businessTypeCouldnotFound = () => ({
-  statusCode: 404,
-  message: "Tanımlanmak istenen iş yeri tipi bulunamadı!"
-});
+BusinessError.businessTypeNotFound = () => new CustomError(404,
+  "İş yeri tipi bulunamadı");
 
-BusinessError.businessOwnerCouldnotFound = () => ({
-  statusCode: 404,
-  message: "İş yeri sahibi bulunamadı!"
-});
+BusinessError.businessOwnerNotFound = () => new CustomError(404,
+  "İş yeri sahibi bulunamadı");
 
-BusinessError.notAllowedUser = () => ({
-  statusCode: 401,
-  message:
-    "İş yeri bilgilerini güncellemek için gerekli yetkilere sahip olmayan kullanıcı."
-});
+BusinessError.notAllowedUser = () => new CustomError(403,
+  "İş yeri bilgilerini güncellemek için gerekli yetkilere sahip olmayan kullanıcı");
 
-BusinessError.BusinessTypesNotMatch = () => ({
-  statusCode: 400,
-  message: "İş yeri tipiyle servisin tanımlı olduğu iş yeri tipi eşleşmiyor."
-});
+BusinessError.businessTypesNotMatch = () => new CustomError(400,
+  "İş yeri tipiyle servisin tanımlı olduğu iş yeri tipi eşleşmiyor");
 
-BusinessError.ServiceAlreadyExist = () => ({
-  statusCode: 403,
-  message: "Bu servis zaten tanımlı."
-});
+BusinessError.serviceAlreadyExists = () => new CustomError(403,
+  "Bu servis zaten tanımlı");
 
-BusinessError.employeeAlreadyExist = () => ({
-  statusCode: 403,
-  message: "Bu çalışan zaten tanımlı."
-});
-BusinessError.employeeNotFound = () => ({
-  statusCode: 404,
-  message: "Aranan çalışan bu iş yerinde bulunamadı!"
-});
-BusinessError.serviceNotProvided = () => ({
-  statusCode: 400,
-  message:
-    "Tanımlanmak istenen iş tipi bu iş yerinin servis listesine tanımlanmamış!"
-});
+BusinessError.employeeAlreadyExists = () => new CustomError(403,
+  "Bu çalışan zaten tanımlı");
 
-BusinessError.serviceAlreadyProviding = () => ({
-  statusCode: 403,
-  message: "İş tipi zaten bu çalışan için daha önceden tanımlanmış!"
-});
+BusinessError.employeeNotFound = () => new CustomError(404,
+  "Aranan çalışan bu iş yerinde bulunamadı");
+
+BusinessError.serviceNotProvided = () => new CustomError(400,
+  "Silinmek istenen servis, çalışanın sağladığı servis listesinde tanımlanmamış");
+
+
+BusinessError.serviceAlreadyProviding = () => new CustomError(404,
+  "İş tipi zaten bu çalışan için daha önceden tanımlanmış");
 
 module.exports = BusinessError;

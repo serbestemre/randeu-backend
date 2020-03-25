@@ -1,5 +1,5 @@
 const JWT = require("jsonwebtoken");
-const Response = require("../helpers/response");
+const Response = require("../helpers/Response");
 const CommonError = require("../errors/CommonError");
 
 exports.verifyToken = (req, res, next) => {

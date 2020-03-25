@@ -20,7 +20,7 @@ CommonError.notAuthenticated = data => ({
 
 CommonError.notAuthorized = data => ({
   statusCode: 403,
-  message: "Bu işlemi yapmak için yetkiniz yok!",
+  message: "Bu işlemi yapmak için yetkiniz yok",
   data
 });
 
