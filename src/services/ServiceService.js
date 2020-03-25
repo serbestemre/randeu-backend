@@ -32,3 +32,11 @@ exports.updateServiceService = async (serviceId, serviceName, businessType) => {
 
   return ServiceDataAccess.updateServiceDB(service, serviceName, businessType);
 };
+
+exports.deleteServiceService = async id => {
+  const service = await ServiceDataAccess.findServiceByIdDB(id);
+  if (!service)
+    return AdminError.ServiceNotFound();
+
+  return ServiceDataAccess.deleteServiceByIdDB(service, id);
+};

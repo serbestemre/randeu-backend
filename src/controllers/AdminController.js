@@ -87,18 +87,16 @@ exports.updateService = async (req, res) => {
 exports.deleteService = async (req, res) => {
   const _id = req.params.serviceId;
   try {
-    const foundService = await ServiceDataAccess.findServiceByIdDB(_id);
-    if (!foundService)
-      return Response.withError(res, AdminError.serviceNotFound());
-
-    await ServiceDataAccess.deleteServiceDB(foundService);
+    const service = await ServiceService.deleteServiceService(_id);
 
     Response.success(
       res,
       AdminSuccess.serviceDeleted(),
-      { foundService }
+      service
     );
   } catch (error) {
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
     Response.withError(res, CommonError.serverError());
   }
 };

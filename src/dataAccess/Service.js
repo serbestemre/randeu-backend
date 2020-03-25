@@ -6,7 +6,10 @@ exports.findServiceListByBusinessDB = async id => Service.find(id);
 
 exports.findServiceByIdDB = async searchedService => Service.findById(searchedService);
 
-exports.deleteServiceDB = async foundService => Service.deleteOne(foundService);
+exports.deleteServiceByIdDB = async (service, serviceId) => {
+  service.deleteOne({ serviceId });
+  return service;
+};
 
 exports.insertOneServiceDB = async (serviceName, businessType) =>
   Service.create({
