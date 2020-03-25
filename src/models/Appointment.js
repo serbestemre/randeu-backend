@@ -25,7 +25,8 @@ const appointmentSchema = new mongoose.Schema(
     date: { type: Date },
     status: {
       type: String,
-      enum: [...Object.values(CONSTANTS.STATUS)]
+      enum: [...Object.values(CONSTANTS.STATUS)],
+      default: CONSTANTS.STATUS.WAITING
     }
   }
 );
