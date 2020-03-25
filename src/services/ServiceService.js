@@ -12,9 +12,9 @@ exports.createServiceService = async (serviceName, businessType) => {
 };
 
 exports.getServiceListByBusinessService = async businessTypeId => {
-  const serviceList = await ServiceDataAccess.findServiceListByBusinessDB({ businessTypeId });
+  const serviceList = await ServiceDataAccess.findServiceListByBusinessTypeDB(businessTypeId);
   if (!serviceList)
-    return AdminError.ServicesNotFoundByGivenBusinessType();
+    throw AdminError.ServicesNotFoundByGivenBusinessType();
 
   return serviceList;
 };
