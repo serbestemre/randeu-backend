@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+
+const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 const Constants = require("../constants");
 
@@ -19,7 +21,29 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true },
     password: { type: String },
     birthday: { type: Date },
-    id: { type: String }
+    id: { type: String },
+    ownedBusinesses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Business"
+      }
+    ],
+    workingBusinesses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Business"
+      }
+    ],
+    appointments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Appointment"
+      }
+    ],
+    isActive: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true
