@@ -7,5 +7,13 @@ exports.createBusinessTypeService = async (businessTypeName, sector) => {
   if (!foundSector)
     throw AdminError.SectorNotFound();
 
-  return BusinessTypeDataAccess.createBusinessType(businessTypeName, sector);
+  return BusinessTypeDataAccess.insertOneBusinessTypeDB(businessTypeName, sector);
+};
+
+exports.getBusinessTypeBySectorService = async id => {
+  const businessTypeList = await BusinessTypeDataAccess.findBusinessTypeDB(id);
+  if (!businessTypeList)
+    throw AdminError.BusinessTypeNotFoundByGivenSector();
+
+  return businessTypeList;
 };

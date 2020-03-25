@@ -14,7 +14,7 @@ exports.getSectorsService = async () => {
   if (!sectors)
     throw AdminError.SectorNotFound();
 
-  return SectorDataAccess.findSectorsDB();
+  return sectors;
 };
 
 exports.updateSectorService = async (id, sectorName) => {
