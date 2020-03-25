@@ -12,6 +12,8 @@ exports.updateSector = async (updatedSectorName, sector) => {
   return sector.save();
 };
 
+exports.insertManySectorsDB = async sectors => Sector.insertMany(sectors);
+
 exports.findSectorByNameDB = async sectorName => Sector.findOne(sectorName);
 
 exports.findSectorsDB = async () => Sector.find();

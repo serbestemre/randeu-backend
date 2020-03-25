@@ -1,9 +1,11 @@
 const request = require("supertest");
 const app = require("../src/app");
 
-const db = require("./fixtures/db");
+const UserMock = require("./fixtures/UserMock");
 
-beforeEach(db.setupDatabase);
+jest.setTimeout(30000);
+
+beforeEach(UserMock.setupUserDB);
 
 test("Should create a user", async () => {
   await request(app)
@@ -14,15 +16,15 @@ test("Should create a user", async () => {
       password: "123456",
       passwordCheck: "123456"
     })
-    .expect(201);
+    .expect(200);
 });
 
 test("Should NOT Create the existing user", async () => {
   await request(app)
     .post("/register")
     .send({
-      fullName: db.userOne.fullName,
-      email: db.userOne.email,
+      fullName: UserMock.userOne.fullName,
+      email: UserMock.userOne.email,
       password: "123456",
       passwordCheck: "123456"
     })

@@ -6,7 +6,6 @@ function validateBodyScheme(schema) {
   return async function(req, res, next) {
     try {
       const value = await schema.validateAsync(req.body);
-      console.log(value);
       next();
     } catch (err) {
       console.log("JOI VALIDATON ERROR: ", err);

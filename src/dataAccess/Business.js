@@ -1,5 +1,8 @@
 const Business = require("../models/Business");
 
+exports.insertManyBusinessDB = async businesses =>
+  Business.insertMany(businesses);
+
 exports.findBusinessByIdDB = async businessId => Business.findById(businessId);
 
 exports.deleteOneDB = async business => Business.deleteOne(business);
@@ -31,3 +34,6 @@ exports.updateOneBusinessDB = async (business, updatedBusinessName, updatedAddre
 
   return business.save();
 };
+
+exports.deleteManyBusinessDB = async () =>
+  Business.deleteMany();
