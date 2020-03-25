@@ -4,6 +4,7 @@ const CastError = require("mongoose").Error.CastError;
 const BusinessTypeService = require("../services/BusinessTypeService");
 const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
 const ServiceDataAccess = require("../dataAccess/Service");
+const ServiceService = require("../services/ServiceService");
 const SectorService = require("../services/SectorService");
 const AdminSuccess = require("../successes/AdminSuccess");
 const SectorDataAccess = require("../dataAccess/Sector");
@@ -20,26 +21,12 @@ exports.createService = async (req, res) => {
 
   console.log("service name => ", serviceName);
   try {
-    const service = await ServiceDataAccess.findServiceDB({ serviceName });
-    if (service)
-      return Response.withError(res, AdminError.serviceAlreadyExists());
-
-    const newService = new Service({
-      serviceName,
-      businessType
-    });
-
-    const result = await newService.save();
-    Response.success(
-      res,
-      AdminSuccess.serviceCreated(),
-      result
-    );
+    const service = await ServiceService.createServiceService(serviceName, businessType);
+    Response.success(res, AdminSuccess.serviceCreated(), service);
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
+    if (error instanceof CustomError)
       return Response.withError(res, error);
-    }
+
     if (error instanceof CastError) {
       error.message = "İşyeri tipleri listelenemedi!";
       Object.assign(error, { statusCode: 400 });
@@ -52,20 +39,16 @@ exports.createService = async (req, res) => {
 exports.getServiceListByBusiness = async (req, res) => {
   const _id = req.params.businessTypeId;
   try {
-    const serviceList = await ServiceDataAccess.findServiceListByBusinessDB(_id);
-    if (!serviceList)
-      return Response.withError(res, AdminError.servicesNotFoundByGivenBusinessType);
-
+    const serviceList = await ServiceService.getServiceListByBusinessService(_id);
     Response.success(
       res,
       AdminSuccess.servicesListedByBusiness(),
-      { serviceList }
+      serviceList
     );
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
+    if (error instanceof CustomError)
       return Response.withError(res, error);
-    }
+
     if (error instanceof CastError) {
       // eslint-disable-next-line operator-linebreak
       error.message =
@@ -81,25 +64,17 @@ exports.updateService = async (req, res) => {
   const _id = req.params.serviceId;
   const { updatedServiceName, updatedBusinessType } = req.body;
   try {
-    const service = await ServiceDataAccess.findServiceByIdDB(_id);
+    const service = await ServiceService
+      .updateServiceService(_id, updatedServiceName, updatedBusinessType);
 
-    if (!service) return Response.withError(res, AdminError.serviceNotFound());
-    if (service.serviceName === updatedServiceName)
-      return Response.withError(res, AdminError.serviceAlreadyExists());
-
-    service.serviceName = updatedServiceName;
-    service.businessType = updatedBusinessType;
-    const result = await service.save();
     Response.success(
       res,
       AdminSuccess.serviceUpdated(),
-      result
+      service
     );
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
+    if (error instanceof CustomError)
       return Response.withError(res, error);
-    }
     if (error instanceof CastError) {
       error.message = "Güncellenmek istenen service id hatalı";
       Object.assign(error, { statusCode: 400 });
