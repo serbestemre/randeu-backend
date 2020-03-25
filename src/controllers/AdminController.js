@@ -136,10 +136,6 @@ exports.createSector = async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError) return Response.withError(res, error);
 
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
     Response.withError(res, CommonError.serverError);
   }
 };
@@ -196,23 +192,23 @@ exports.deleteSector = async (req, res) => {
 };
 
 exports.createBusinessType = async (req, res) => {
-  const { businessTypeName, sector } = req.body;
+  const { sector, businessTypeName } = req.body;
   // TODO If there exist a businessType in DB, it will be checked (case-insensetive)
   // BusinessType model add collation as in Sector Model
   try {
     const businessType = await BusinessTypeService
-      .createBusinessTypeService(businessTypeName, sector);
+      .createBusinessTypeService(sector, businessTypeName);
     Response.success(res, AdminSuccess.businessTypeCreated(), businessType);
   } catch (error) {
-    if (error instanceof CustomError) return Response.withError(res, error);
-    if (error instanceof CastError) {
-      error.message = "Sektörler listelenemedi!";
-      Object.assign(
-        error,
-        { statusCode: 400 }
-      );
-    }
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
 
+    if (error instanceof CastError) {
+      error.message = "Güncellenmek istenen sektör id hatalı";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
     Response.withError(res, CommonError.serverError());
   }
 };
@@ -249,28 +245,18 @@ exports.updateBusinessType = async (req, res) => {
     updatedSector
   } = req.body;
   try {
-    const businessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(_id);
+    const businessType = await BusinessTypeService
+      .updateBusinessTypeService(_id, updatedBusinessTypeName, updatedSector);
 
-    if (!businessType)
-      return Response.withError(res, AdminError.businessTypeNotFound());
-
-    if (businessType.businessTypeName === updatedBusinessTypeName)
-      return Response.withError(res, AdminError.businessAlreadyExists());
-
-    businessType.businessTypeName = updatedBusinessTypeName;
-    businessType.sector = updatedSector;
-
-    await businessType.save();
     Response.success(
       res,
       AdminSuccess.businessTypeUpdated(),
       { businessType }
     );
   } catch (error) {
-    if (error instanceof ValidationError) {
-      Object.assign(error, { statusCode: 400 });
+    if (error instanceof CustomError)
       return Response.withError(res, error);
-    }
+
     if (error instanceof CastError) {
       error.message = "Güncellenmek istenen iş tipinin id değeri hatalı";
       Object.assign(error, { statusCode: 400 });

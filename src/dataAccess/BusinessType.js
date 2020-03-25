@@ -8,10 +8,17 @@ exports.findBusinessTypeByIdDB = async searchedBusinessType =>
 exports.deleteBusinessTypeDB = async foundBusinessType =>
   BusinessType.deleteOne(foundBusinessType);
 
-exports.insertOneBusinessTypeDB = async (businessTypeName, sector) => {
-  const newBusinessType = new BusinessType({
+exports.insertOneBusinessTypeDB = async (sector, businessTypeName) =>
+  BusinessType.create({
     businessTypeName,
     sector
   });
-  return newBusinessType.save();
+
+exports.findBusinessTypeByNameDB = async businessTypeName => BusinessType.findOne(businessTypeName);
+
+exports.updateOneBusinessTypeDB = async (businessType, businessTypeName, sector) => {
+  const updatedBusinessType = businessType;
+  updatedBusinessType.businessTypeName = businessTypeName;
+  updatedBusinessType.sector = sector;
+  return updatedBusinessType.save();
 };

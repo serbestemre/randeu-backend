@@ -8,12 +8,12 @@ AdminError.BusinessTypeNotFoundByGivenSector = () => new CustomError(
   "Aranan sektöre göre iş yeri tipi bulamadı"
 );
 
-AdminError.servicesNotFoundByGivenBusinessType = () => new CustomError(
+AdminError.ServicesNotFoundByGivenBusinessType = () => new CustomError(
   404,
   "Aranan iş tipine göre servis bulunamadı"
 );
 
-AdminError.BusinessAlreadyExists = () => new CustomError(409, "İş tipi zaten kayıtlı");
+AdminError.BusinessTypeAlreadyExists = () => new CustomError(409, "İş tipi zaten kayıtlı");
 
 AdminError.ServiceAlreadyExists = () => new CustomError(409, "Servis zaten kayıtlı");
 
