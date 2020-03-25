@@ -4,9 +4,9 @@ const AdminError = require("../errors/AdminError");
 exports.createSectorService = async sectorName => {
   const sector = await SectorDataAccess.findSectorByNameDB({ sectorName });
   if (sector)
-    throw AdminError.sectorAlreadyExists();
+    throw AdminError.SectorAlreadyExists();
 
-  return SectorDataAccess.createSectorDB(sectorName);
+  return SectorDataAccess.insertOneSectorDB(sectorName);
 };
 
 exports.getSectorsService = async () => {
@@ -27,4 +27,12 @@ exports.updateSectorService = async (id, sectorName) => {
     throw AdminError.SectorAlreadyExists();
 
   return SectorDataAccess.updateSector(sectorName, sector);
+};
+
+exports.deleteSectorService = async id => {
+  const sector = await SectorDataAccess.findSectorByIdDB(id);
+  if (!sector)
+    throw AdminError.SectorNotFound();
+
+  return SectorDataAccess.deleteSectorByIdDB(id, sector);
 };

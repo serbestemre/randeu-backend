@@ -179,14 +179,12 @@ exports.updateSector = async (req, res) => {
 exports.deleteSector = async (req, res) => {
   const _id = req.params.sectorId;
   try {
-    const foundSector = await SectorDataAccess.findSectorByIdDB(_id);
-    console.log("Sector id:", _id);
-    if (!foundSector)
-      return Response.withError(res, AdminError.sectorNotFound());
+    const sector = await SectorService.deleteSectorService(_id);
 
-    await SectorDataAccess.deleteSectorByIdDB(foundSector);
-    Response.success(res, AdminSuccess.sectorDeleted(), { foundSector });
+    Response.success(res, AdminSuccess.sectorDeleted(), sector);
   } catch (error) {
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
     if (error instanceof CastError) {
       error.message = "Güncellenmek istenen sektör id hatalı";
       Object.assign(error, { statusCode: 400 });
