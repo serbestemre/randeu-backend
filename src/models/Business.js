@@ -43,6 +43,12 @@ const businessSchema = new Schema(
         ]
       }
     ],
+    calendar: [{
+      day: [{ type: String }],
+      opening: { type: Date },
+      closing: { type: Date },
+      interval: { type: Date }
+    }],
     comments: [
       {
         commentOwner: {

@@ -17,4 +17,10 @@ router.post(
   AppointmentController.requestAppointment
 );
 
+router.get(
+  "/getEmployeeCalendar",
+  AppointmentController.getEmployeeCalendar
+);
+
 module.exports = router;
+
