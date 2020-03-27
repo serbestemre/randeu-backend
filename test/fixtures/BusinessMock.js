@@ -31,14 +31,12 @@ const businessKuafor = new Business({
   ],
   calendar: [
     {
-      day: ["Çarşamba", "Perşembe"],
-      opening: new Date("2020-03-26T09:00:00Z"),
-      closing: new Date("2020-03-26T12:00:00Z"),
-      interval: new Date("2015-03-25T00:15:00Z")
+      day: ["Salı", "Çarşamba", "Perşembe", "Cuma"],
+      opening: new Date("2020-03-27T09:00:00Z"),
+      closing: new Date("2020-03-27T18:00:00Z"),
+      interval: new Date("2020-03-27T00:15:00Z")
     }
-
   ]
-
 });
 
 const setupBusinessDB = async () => {
