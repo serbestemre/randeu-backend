@@ -31,6 +31,11 @@ BusinessError.employeeNotFound = () => new CustomError(404,
 BusinessError.serviceNotProvided = () => new CustomError(400,
   "Silinmek istenen servis, çalışanın sağladığı servis listesinde tanımlanmamış");
 
+BusinessError.employeeNotWorking = () => new CustomError(404,
+  "Çalışan bu iş yerinin çalışan listesinde bulunmadı");
+
+BusinessError.ServiceNotProviding = () => new CustomError(404,
+  "Servis bu iş yeri tarafından verilmiyor");
 
 BusinessError.serviceAlreadyProviding = () => new CustomError(404,
   "İş tipi zaten bu çalışan için daha önceden tanımlanmış");

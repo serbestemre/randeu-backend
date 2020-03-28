@@ -40,14 +40,20 @@ const businessSchema = new Schema(
             price: { type: Number },
             duration: { type: Number }
           }
-        ]
+        ],
+        workingHours: [{
+          day: { type: String },
+          opening: { type: Date },
+          closing: { type: Date },
+          interval: { type: Number }
+        }]
       }
     ],
-    calendar: [{
-      day: [{ type: String }],
+    businessWorkingHours: [{
+      day: { type: String },
       opening: { type: Date },
       closing: { type: Date },
-      interval: { type: Date }
+      interval: { type: Number }
     }],
     comments: [
       {

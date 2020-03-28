@@ -4,7 +4,7 @@ const ServiceDataAccess = require("../dataAccess/Service");
 const BusinessError = require("../errors/BusinessError");
 const UserDataAccess = require("../dataAccess/User");
 const AdminError = require("../errors/AdminError");
-const AppointmentDB = require("../dataAccess/Appointment");
+const AppointmentDataAccess = require("../dataAccess/Appointment");
 
 
 exports.requestAppointmentService = async (
@@ -29,11 +29,33 @@ exports.requestAppointmentService = async (
   if (!business)
     throw BusinessError.businessNotFound();
 
+  const isWorking = await business.employeeList.find(obj => {
+    console.log(obj);
+    return obj.employee.toString() === employeeId;
+  });
+
+  if (!isWorking)
+    throw BusinessError.employeeNotWorking();
+
   const service = await ServiceDataAccess.findServiceByIdDB(serviceId);
   if (!service)
     throw AdminError.ServiceNotFound();
 
-  return AppointmentDB.insertOneRequestAppointmentDB(
+  const isProviding = await employee.providingServices.find(obj =>
+    obj.service.toString() === serviceId);
+
+  if (!isProviding)
+    throw BusinessError.ServiceNotProviding();
+
+  // @TODO check if date is okay for the employeeWorkingHours
+  const newDate = new Date(date);
+  const isAvailable = await AppointmentDataAccess
+    .isEmployeeAvailableDB(date, employeeId, businessId);
+
+  if (!isAvailable)
+    throw AppointmentError.EmployeeIsNotAvailable();
+
+  return AppointmentDataAccess.insertOneRequestAppointmentDB(
     customerId,
     businessId,
     employeeId,

@@ -24,6 +24,7 @@
   "homepage": "https://github.com/serbestemre/personal-appointment-assistant#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.0",
+    "@hapi/joi-date": "^2.0.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

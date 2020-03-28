@@ -14,3 +14,8 @@ exports.insertOneRequestAppointmentDB = async (
     service,
     date
   });
+
+exports.isEmployeeAvailableDB = async (date, employee, business) => {
+  console.log("Buraya vardınız");
+  Appointment.find({ employee, date, business });
+};

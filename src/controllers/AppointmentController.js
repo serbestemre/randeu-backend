@@ -11,6 +11,13 @@ const CommonError = require("../errors/CommonError");
 const BusinessError = require("../errors/BusinessError");
 
 exports.requestAppointment = async (req, res) => {
+  /* Check the date is empty at requested date for the appointment from employee appointments
+
+  find all appointments from Appointment db by employee ID, date and businessID
+   */
+
+  // !!!! CHECK REQUEST APPOINTMENT SERVICE AND DATA ACCESS
+
   const {
     customerId, businessId, employeeId, serviceId, date
   } = req.body;
@@ -35,74 +42,17 @@ exports.requestAppointment = async (req, res) => {
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
+    console.log(error);
     Response.withError(res, CommonError.serverError());
   }
 };
 
 
-exports.getEmployeeCalendar = async (req, res) => {
-  const { businessId, employeeId, date } = req.body;
-  try {
-    const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
-    if (!business)
-      console.log("Business yok");
+exports.businessCalendar = async (req, res) => {
+  // Business ID and check if exists
+  /*  Servis kısmında tek bir employee bazlı gününe göre
+  bütün appointmentları dönen bir servis yazılacak
+   */
+  // Date (hangi günün) appointmentlar
 
-
-    const foundEmployee = await UserDataAccess.findUserByIdDB(employeeId);
-    if (!foundEmployee)
-      console.log("Employee yok");
-
-
-    const employee = employeeId;
-    const employeeAppointments = await Appointment.find({ employee });
-
-    employeeAppointments.forEach(app => console.log("APP DATE", app.date));
-
-    // console.log(employeeAppointments);
-
-    const requestedDay = new Date(date);
-    // console.log("Req DAY: ", requestedDay);
-    const weekday = requestedDay.getDay();// haftanın kaçıncı günü
-    // console.log("weekDay: ", weekday);
-    const options = { weekday: 'long' };
-    // const dayName = new Intl.DateTimeFormat('tr-TR', options).format(requestedDay);
-
-    // örn: pazartesi salı
-    const days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
-    const d = new Date(requestedDay);
-    const dayName = days[d.getDay()];
-
-
-    // çalışma günleri içnerisinde mi?
-    const isBusinessOpen = business.calendar[0].day.find(day => day === dayName);
-    console.log("dayName: ", dayName);
-
-    if (!isBusinessOpen)
-      console.log("iş yeri kapalı!");
-
-
-    const opening = business.calendar[0].opening;
-    const closing = business.calendar[0].closing;
-    const interval = business.calendar[0].interval;
-
-    const starting = opening;
-    let status = "";
-
-    while (starting < closing) {
-      const isMatch = employeeAppointments.find(appointment =>
-        (appointment.date.toString() === starting.toString() && appointment.status !== "REJECTED"));
-
-      if (isMatch)
-        status = `DOLU *** Appointment.status= ${isMatch.status}`;
-      else
-        status = "BOŞ";
-
-      const ending = new Date(opening.setMinutes(starting.getMinutes() + interval.getMinutes()));
-      console.log("Başlangıç:", `${starting.getHours()}:${starting.getMinutes()}`, "-", "Bitiş: ", `${ending.getHours()}:${ending.getMinutes()}`, "Durum: ", status);
-      console.log();
-    }
-  } catch (error) {
-    console.log(error);
-    console.log("neler oluyor????");
-  }
 };

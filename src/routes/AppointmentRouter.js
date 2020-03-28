@@ -18,9 +18,8 @@ router.post(
 );
 
 router.get(
-  "/getEmployeeCalendar",
-  AppointmentController.getEmployeeCalendar
+  "/businessCalendar",
+  AppointmentController.businessCalendar
 );
 
 module.exports = router;
-
