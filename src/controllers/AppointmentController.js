@@ -1,23 +1,12 @@
 const CastError = require("mongoose").Error.CastError;
 
 const AppointmentService = require("../services/AppointmentService");
-const Appointment = require("../models/Appointment");
 const AppointmentSuccess = require("../successes/AppointmentSuccess");
-const BusinessDataAccess = require("../dataAccess/Business");
-const UserDataAccess = require("../dataAccess/User");
 const CustomError = require("../helpers/CustomError");
 const Response = require("../helpers/Response");
 const CommonError = require("../errors/CommonError");
-const BusinessError = require("../errors/BusinessError");
 
 exports.requestAppointment = async (req, res) => {
-  /* Check the date is empty at requested date for the appointment from employee appointments
-
-  find all appointments from Appointment db by employee ID, date and businessID
-   */
-
-  // !!!! CHECK REQUEST APPOINTMENT SERVICE AND DATA ACCESS
-
   const {
     customerId, businessId, employeeId, serviceId, date
   } = req.body;
@@ -50,11 +39,6 @@ exports.requestAppointment = async (req, res) => {
 
 
 exports.businessCalendar = async (req, res) => {
-  // Business ID and check if exists
-  /*  Servis kısmında tek bir employee bazlı gününe göre
-  bütün appointmentları dönen bir servis yazılacak
-   */
-  // Date (hangi günün) appointmentlar
   const { businessId, date } = req.body;
 
   try {

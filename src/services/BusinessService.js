@@ -34,6 +34,8 @@ exports.createBusinessService = async (
     businessName, address, sector, businessType, businessOwner
   );
 
+  // TODO add user's model of businessOwner ownderBusiness[newBusinessID]
+
   if (!businessOwner.roles.includes(CONSTANTS.ROLES.EMPLOYEE))
     businessOwner.roles.push(CONSTANTS.ROLES.EMPLOYEE);
 
@@ -118,6 +120,8 @@ exports.hireEmployeeService = async (userId, businessId) => {
     user.roles.push(CONSTANTS.ROLES.EMPLOYEE);
 
   await UserDataAccess.updateUserRolesDB(userId, user.roles);
+
+  // TODO Add user's model of employee workingBusiness[businessId]
 
   // return BusinessDataAccess
   //   .addEmployeeToTheBusinessDB(businessId, user);

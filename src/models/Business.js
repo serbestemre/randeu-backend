@@ -46,6 +46,7 @@ const businessSchema = new Schema(
         ],
         workingHours: [{
           day: { type: String },
+          // @TODO change types to string for now
           opening: { type: Date, default: dateIstanbul },
           closing: { type: Date, default: dateIstanbul },
           interval: { type: Number }
@@ -54,6 +55,7 @@ const businessSchema = new Schema(
     ],
     businessWorkingHours: [{
       day: { type: String },
+      // @TODO change types to string for now
       opening: { type: Date, default: dateIstanbul },
       closing: { type: Date, default: dateIstanbul },
       interval: { type: Number }
@@ -70,6 +72,7 @@ const businessSchema = new Schema(
           required: true
         },
         date: {
+          // @TODO change types to string for now
           type: Date,
           default: dateIstanbul,
           required: true
