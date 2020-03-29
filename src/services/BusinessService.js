@@ -119,7 +119,9 @@ exports.hireEmployeeService = async (userId, businessId) => {
 
   await UserDataAccess.updateUserRolesDB(userId, user.roles);
 
-  business.employeeList.push(user);
+  // return BusinessDataAccess
+  //   .addEmployeeToTheBusinessDB(businessId, user);
+  business.employeeList.push({ employee: user._id });
   await business.save();
   return user;
 };
@@ -156,7 +158,7 @@ exports.assignService = async (serviceId, employeeId, businessId, price, duratio
   const service = await ServiceDataAccess.findServiceByIdDB(serviceId);
 
   const foundEmployee = business.employeeList.find(
-    emp => emp._id.toString() === employeeId.toString()
+    obj => obj.employee.toString() === employeeId.toString()
   );
 
   // Servisin tanımlanmak istendiği çalışan bu iş yerinde çalışıyor mu?

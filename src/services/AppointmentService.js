@@ -19,7 +19,7 @@ exports.requestAppointmentService = async (
   if (!customer)
     throw AppointmentError.CustomerNotFound();
 
-  const employee = await UserDataAccess.findUserByIdDB(customerId);
+  const employee = await UserDataAccess.findUserByIdDB(employeeId);
 
   if (!employee)
     throw AppointmentError.EmployeeNotFound();
@@ -29,30 +29,31 @@ exports.requestAppointmentService = async (
   if (!business)
     throw BusinessError.businessNotFound();
 
-  const isWorking = await business.employeeList.find(obj => {
-    console.log(obj);
-    return obj.employee.toString() === employeeId;
-  });
+  const foundEmployee = business.employeeList.find(
+    obj => obj.employee.toString() === employeeId
+  );
 
-  if (!isWorking)
+  if (!foundEmployee)
     throw BusinessError.employeeNotWorking();
 
   const service = await ServiceDataAccess.findServiceByIdDB(serviceId);
   if (!service)
     throw AdminError.ServiceNotFound();
 
-  const isProviding = await employee.providingServices.find(obj =>
+  console.log("Employee: ", foundEmployee);
+  const isProviding = await foundEmployee.providingServices.find(obj =>
     obj.service.toString() === serviceId);
 
   if (!isProviding)
     throw BusinessError.ServiceNotProviding();
 
   // @TODO check if date is okay for the employeeWorkingHours
-  const newDate = new Date(date);
-  const isAvailable = await AppointmentDataAccess
+  // const newDate = new Date(date);
+
+  const appointment = await AppointmentDataAccess
     .isEmployeeAvailableDB(date, employeeId, businessId);
 
-  if (!isAvailable)
+  if (appointment.length)
     throw AppointmentError.EmployeeIsNotAvailable();
 
   return AppointmentDataAccess.insertOneRequestAppointmentDB(
@@ -62,4 +63,13 @@ exports.requestAppointmentService = async (
     serviceId,
     date
   );
+};
+
+exports.getCalendar = async (businessId, date) => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+  const appointments = await AppointmentDataAccess.findAppointmentPerEmployee(business);
 };

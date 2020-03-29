@@ -54,5 +54,26 @@ exports.businessCalendar = async (req, res) => {
   bütün appointmentları dönen bir servis yazılacak
    */
   // Date (hangi günün) appointmentlar
+  const { businessId, date } = req.body;
 
+  try {
+    const calendar = await AppointmentService.getCalendar(
+      businessId.trim(),
+      date
+    );
+
+    Response.success(res, AppointmentSuccess.CalendarListed(), calendar);
+  } catch (error) {
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
+
+
+    if (error instanceof CastError) {
+      error.message = "Bir çok şey ters gittti!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
 };

@@ -17,5 +17,5 @@ exports.insertOneRequestAppointmentDB = async (
 
 exports.isEmployeeAvailableDB = async (date, employee, business) => {
   console.log("Buraya vardınız");
-  Appointment.find({ employee, date, business });
+  return Appointment.find({ date, employee, business });
 };
