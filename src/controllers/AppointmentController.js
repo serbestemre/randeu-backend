@@ -33,6 +33,8 @@ exports.requestAppointment = async (req, res) => {
 
     Response.success(res, AppointmentSuccess.appointmentRequest(), appointment);
   } catch (error) {
+    console.log(error);
+
     if (error instanceof CustomError)
       return Response.withError(res, error);
 
@@ -42,7 +44,6 @@ exports.requestAppointment = async (req, res) => {
       Object.assign(error, { statusCode: 400 });
       return Response.withError(res, error);
     }
-    console.log(error);
     Response.withError(res, CommonError.serverError());
   }
 };

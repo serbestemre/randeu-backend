@@ -1,3 +1,4 @@
+const moment = require("moment");
 const AppointmentError = require("../errors/AppointmentError");
 const BusinessDataAccess = require("../dataAccess/Business");
 const ServiceDataAccess = require("../dataAccess/Service");
@@ -5,7 +6,6 @@ const BusinessError = require("../errors/BusinessError");
 const UserDataAccess = require("../dataAccess/User");
 const AdminError = require("../errors/AdminError");
 const AppointmentDataAccess = require("../dataAccess/Appointment");
-
 
 exports.requestAppointmentService = async (
   customerId,
@@ -50,8 +50,11 @@ exports.requestAppointmentService = async (
   // @TODO check if date is okay for the employeeWorkingHours
   // const newDate = new Date(date);
 
+  const day = moment(date).format("L");
+  const hour = moment(date).format("HH:mm");
+  console.log("HPPUR ", hour);
   const appointment = await AppointmentDataAccess
-    .isEmployeeAvailableDB(date, employeeId, businessId);
+    .employeeAppointmentScheduleDB(day, hour, employeeId, businessId);
 
   if (appointment.length)
     throw AppointmentError.EmployeeIsNotAvailable();
@@ -61,15 +64,18 @@ exports.requestAppointmentService = async (
     businessId,
     employeeId,
     serviceId,
-    date
+    day,
+    hour
   );
 };
 
 exports.getCalendar = async (businessId, date) => {
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+  const day = moment(date).format("L");
+
 
   if (!business)
     throw BusinessError.businessNotFound();
 
-  const appointments = await AppointmentDataAccess.findAppointmentPerEmployee(business);
+  return AppointmentDataAccess.businessAppointmentScheduleDB(day, businessId);
 };

@@ -1,8 +1,11 @@
+const moment = require("moment-timezone");
 const mongoose = require("mongoose");
 const CONSTANTS = require("../constants");
 
 const Schema = mongoose.Schema;
 
+const dateIstanbul = moment.tz(Date.now(), "Europe/Istanbul");
+const hourType = moment().format("HH:mm");
 
 const appointmentSchema = new mongoose.Schema(
   {
@@ -22,12 +25,14 @@ const appointmentSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Service"
     },
-    date: { type: Date },
+    // date: { type: Date, default: dateIstanbul },
     status: {
       type: String,
       enum: [...Object.values(CONSTANTS.STATUS)],
       default: CONSTANTS.STATUS.WAITING
-    }
+    },
+    day: { type: String },
+    hour: { type: String }
   }
 );
 

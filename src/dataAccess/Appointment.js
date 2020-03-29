@@ -5,17 +5,22 @@ exports.insertOneRequestAppointmentDB = async (
   business,
   employee,
   service,
-  date
+  day,
+  hour
 ) =>
   Appointment.create({
     customer,
     business,
     employee,
     service,
-    date
+    day,
+    hour
   });
 
-exports.isEmployeeAvailableDB = async (date, employee, business) => {
-  console.log("Buraya vardınız");
-  return Appointment.find({ date, employee, business });
-};
+exports.employeeAppointmentScheduleDB = async (day, hour, employee, business) =>
+  Appointment.find({
+    day, hour, employee, business
+  });
+
+exports.businessAppointmentScheduleDB = async (day, business) =>
+  Appointment.find({ day, business });
