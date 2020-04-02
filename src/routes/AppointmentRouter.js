@@ -22,4 +22,9 @@ router.get(
   AppointmentController.businessCalendar
 );
 
+router.get(
+  "/businessCalendar/:employeeId",
+  AppointmentController.employeeCalendar
+)
+
 module.exports = router;

@@ -10,4 +10,9 @@ AppointmentSuccess.CalendarListed = () => ({
   message: "İş yeri takvimi başarıyla listelendi"
 });
 
+AppointmentSuccess.CalendarListedForEmployee = () => ({
+  statusCode: 200,
+  message: "Çalışan takvimi başarıyla listelendi"
+});
+
 module.exports = AppointmentSuccess;
