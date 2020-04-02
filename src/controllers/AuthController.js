@@ -5,6 +5,7 @@ const UserDataAccess = require("../dataAccess/User");
 const CommonError = require("../errors/CommonError");
 const AuthError = require("../errors/AuthError");
 const response = require("../helpers/Response");
+const Email = require("../helpers/Email");
 const User = require("../models/User");
 
 const signToken = user =>
@@ -37,6 +38,8 @@ exports.register = async (req, res) => {
 
     await newUser.save();
     const token = signToken(newUser);
+
+    Email.sendWelcomeEmailToUser(newUser.email, newUser.fullName);
 
     return response.success(res, 201, { newUser, token });
   } catch (error) {

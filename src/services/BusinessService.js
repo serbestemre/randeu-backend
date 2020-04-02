@@ -8,6 +8,8 @@ const UserDataAccess = require("../dataAccess/User");
 const AuthError = require("../errors/AuthError");
 const AdminError = require("../errors/AdminError");
 const CONSTANTS = require("../constants");
+const Email = require("../helpers/Email");
+
 
 exports.createBusinessService = async (
   businessName,
@@ -43,6 +45,8 @@ exports.createBusinessService = async (
     businessOwner.roles.push(CONSTANTS.ROLES.BUSINESS_OWNER);
 
   await UserDataAccess.updateUserRolesDB(businessOwnerId, businessOwner.roles);
+
+  Email.sendWelcomeEmailToBusiness(businessOwner.email, businessOwner.fullName, businessName);
 
   return newBusiness;
 };
