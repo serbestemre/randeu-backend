@@ -1,8 +1,18 @@
 const express = require("express");
+const RoleChecker = require("../middleware/RoleChecker");
+const CONSTANTS = require("../constants");
+const { verifyToken } = require("../middleware/Token");
+const userController = require("../controllers/UserController");
 
-// eslint-disable-next-line no-unused-vars
-const auth = require("../middleware/Auth");
+const router = new express.Router({ mergeParams: true });
 
-const router = new express.Router();
+
+router.get(
+  "/profile/:userId",
+  verifyToken,
+  RoleChecker([CONSTANTS.ROLES.USER]),
+  userController.profile
+);
+
 
 module.exports = router;
