@@ -62,3 +62,30 @@ exports.businessCalendar = async (req, res) => {
     Response.withError(res, CommonError.serverError());
   }
 };
+
+exports.employeeCalendar = async (req, res) => {
+  const employee = req.params.employeeId;
+  const { businessId, date } = req.body;
+
+  try {
+    const employeeCalendar = await AppointmentService.getEmployeeCalendar(
+      businessId.trim(),
+      date,
+      employee
+    );
+
+    Response.success(res, AppointmentSuccess.CalendarListedForEmployee(), employeeCalendar);
+  } catch (error) {
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
+
+
+    if (error instanceof CastError) {
+      error.message = "Bir çok şey ters gittti!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+};

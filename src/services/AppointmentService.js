@@ -73,9 +73,26 @@ exports.getCalendar = async (businessId, date) => {
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
   const day = moment(date).format("L");
 
-
   if (!business)
     throw BusinessError.businessNotFound();
 
   return AppointmentDataAccess.businessAppointmentScheduleDB(day, businessId);
+};
+
+exports.getEmployeeCalendar = async (businessId, date, employee) => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+  const day = moment(date).format("L");
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+  // TODO move foundEmployee function to a service
+  const foundEmployee = business.employeeList.find(
+    obj => obj.employee.toString() === employee
+  );
+
+  if (!foundEmployee)
+    throw BusinessError.employeeNotWorking();
+
+  return AppointmentDataAccess.businessAppointmentScheduleByEmployeeDB(day, businessId, employee);
 };
