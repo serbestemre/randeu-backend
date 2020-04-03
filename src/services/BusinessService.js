@@ -111,7 +111,7 @@ exports.hireEmployeeService = async (userId, businessId) => {
   if (!business)
     throw BusinessError.businessNotFound();
 
-  if (!user) throw AuthError.userNotFound();
+  if (!user) throw AuthError.UserNotFound();
 
   const isEmployed = business.employeeList.find(
     emp => emp._id.toString() === userId
@@ -141,7 +141,7 @@ exports.dischargeEmployeeService = async (userId, businessId) => {
   if (!business)
     throw BusinessError.businessNotFound();
 
-  if (!user) throw AuthError.userNotFound();
+  if (!user) throw AuthError.UserNotFound();
 
   const isEmployed = business.employeeList.find(
     emp => emp._id.toString() === userId

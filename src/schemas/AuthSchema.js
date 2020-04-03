@@ -49,5 +49,15 @@ module.exports = {
         "string.empty": "Şifre alanı boş bırakılamaz",
         "string.min": "Şifre en az 6 karakter olmalı"
       })
+  }),
+  reSendActivationLink: Joi.object({
+    email: Joi.string()
+      .email()
+      .required()
+      .messages({
+        "string.base": "Email alanı yazı tipinde olmalı",
+        "string.empty": "Email alanı boş bırakılamaz",
+        "string.email": "Lütfen geçerli email giriniz"
+      })
   })
 };

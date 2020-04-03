@@ -11,7 +11,8 @@ const constants = {
     REJECTED: "REJECTED",
     CANCELLED: "CANCELLED",
     DONE: "DONE"
-  }
+  },
+  SERVER_MAIL: "randeu.official@gmail.com"
 };
 
 module.exports = constants;

@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+
+const CONSTANTS = require("../constants");
 
 const Schema = mongoose.Schema;
-const bcrypt = require("bcryptjs");
-const Constants = require("../constants");
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,7 +15,7 @@ const userSchema = new mongoose.Schema(
     roles: [
       {
         type: Number,
-        enum: [...Object.values(Constants.ROLES)]
+        enum: [...Object.values(CONSTANTS.ROLES)]
       }
     ],
     fullName: { type: String, required: true },
@@ -62,20 +63,6 @@ userSchema.methods.toJSON = function() {
 };
 
 // eslint-disable-next-line func-names
-// userSchema.methods.generateAuthToken = async function() {
-//   const user = this;
-//   const token = jwt.sign(
-//     { _id: user._id.toString() },
-//     process.env.JWT_SECRET_KEY
-//   );
-
-//   user.local.tokens = user.local.tokens.concat({ token });
-//   await user.save();
-
-//   return token;
-// };
-
-// eslint-disable-next-line func-names
 userSchema.methods.isValidPassword = async function(newPassword) {
   try {
     console.log("this.password", this.password);
@@ -85,39 +72,6 @@ userSchema.methods.isValidPassword = async function(newPassword) {
     throw new Error(error);
   }
 };
-
-// userSchema.statics.findByCredentials = async (email, password) => {
-//   // eslint-disable-next-line no-use-before-define
-//   const user = await User.findOne({ 'local.email': email });
-
-//   if (!user) {
-//     throw new Error('Unable to login user');
-//   }
-
-//   const isMatch = await bcrypt.compare(password, user.local.password);
-
-//   if (!isMatch) {
-//     throw new Error('Unable to login');
-//   }
-
-//   return user;
-// };
-
-// Hash the plain text password before saving
-// eslint-disable-next-line func-names
-
-userSchema.pre("save", async function(next) {
-  try {
-    if (this.method !== "local") next();
-    // Generate a password hash(salt + hash)
-    const passwordHash = await bcrypt.hash(this.password, 8);
-    // Re-assign hashed version over original, plain text password
-    this.password = passwordHash;
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
 
 const User = mongoose.model("User", userSchema);
 

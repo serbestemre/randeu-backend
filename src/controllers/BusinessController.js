@@ -5,8 +5,6 @@ const CustomError = require("../helpers/CustomError");
 const CommonError = require("../errors/CommonError");
 const Response = require("../helpers/Response");
 
-
-
 exports.createBusiness = async (req, res) => {
   try {
     const {
