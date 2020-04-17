@@ -4,6 +4,10 @@ const AuthController = require("../controllers/AuthController");
 const JoiValidator = require("../middleware/JoiValidator");
 const AuthSchema = require("../schemas/AuthSchema");
 
+// Dont delete this import
+// eslint-disable-next-line no-unused-vars
+const auth = require("../middleware/Auth");
+
 const router = new express.Router();
 
 const passportSigIn = Passport.authenticate("local", { session: false });

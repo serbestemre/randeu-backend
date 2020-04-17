@@ -5,7 +5,7 @@ const UserDataAccess = require("../dataAccess/User");
 const AuthError = require("../errors/AuthError");
 const Email = require("../helpers/Email");
 
-const redis = new Redis();
+const redis = new Redis(); // redis server burda mı çalıştırılmalı
 
 exports.registerService = async (fullName, email, password, passwordCheck) => {
 // check if there any user with the same email
@@ -29,7 +29,7 @@ exports.registerService = async (fullName, email, password, passwordCheck) => {
 };
 
 exports.createActivationLinkService = async (userId, email) => {
-  const uuid = v4();
+  const uuid = v4(); // şifrelenmeli mi?
   await redis.set(uuid, userId);
   await redis.expire(uuid, 60 * 60 * 24);
 
