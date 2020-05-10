@@ -8,6 +8,8 @@ const UserDataAccess = require("../dataAccess/User");
 const AuthError = require("../errors/AuthError");
 const AdminError = require("../errors/AdminError");
 const CONSTANTS = require("../constants");
+const Email = require("../helpers/Email");
+
 
 exports.createBusinessService = async (
   businessName,
@@ -34,6 +36,8 @@ exports.createBusinessService = async (
     businessName, address, sector, businessType, businessOwner
   );
 
+  // TODO add user's model of businessOwner ownderBusiness[newBusinessID]
+
   if (!businessOwner.roles.includes(CONSTANTS.ROLES.EMPLOYEE))
     businessOwner.roles.push(CONSTANTS.ROLES.EMPLOYEE);
 
@@ -41,6 +45,8 @@ exports.createBusinessService = async (
     businessOwner.roles.push(CONSTANTS.ROLES.BUSINESS_OWNER);
 
   await UserDataAccess.updateUserRolesDB(businessOwnerId, businessOwner.roles);
+
+  Email.sendWelcomeEmailToBusiness(businessOwner.email, businessOwner.fullName, businessName);
 
   return newBusiness;
 };
@@ -105,7 +111,7 @@ exports.hireEmployeeService = async (userId, businessId) => {
   if (!business)
     throw BusinessError.businessNotFound();
 
-  if (!user) throw AuthError.userNotFound();
+  if (!user) throw AuthError.UserNotFound();
 
   const isEmployed = business.employeeList.find(
     emp => emp._id.toString() === userId
@@ -119,7 +125,11 @@ exports.hireEmployeeService = async (userId, businessId) => {
 
   await UserDataAccess.updateUserRolesDB(userId, user.roles);
 
-  business.employeeList.push(user);
+  // TODO Add user's model of employee workingBusiness[businessId]
+
+  // return BusinessDataAccess
+  //   .addEmployeeToTheBusinessDB(businessId, user);
+  business.employeeList.push({ employee: user._id });
   await business.save();
   return user;
 };
@@ -131,7 +141,7 @@ exports.dischargeEmployeeService = async (userId, businessId) => {
   if (!business)
     throw BusinessError.businessNotFound();
 
-  if (!user) throw AuthError.userNotFound();
+  if (!user) throw AuthError.UserNotFound();
 
   const isEmployed = business.employeeList.find(
     emp => emp._id.toString() === userId
@@ -156,7 +166,7 @@ exports.assignService = async (serviceId, employeeId, businessId, price, duratio
   const service = await ServiceDataAccess.findServiceByIdDB(serviceId);
 
   const foundEmployee = business.employeeList.find(
-    emp => emp._id.toString() === employeeId.toString()
+    obj => obj.employee.toString() === employeeId.toString()
   );
 
   // Servisin tanımlanmak istendiği çalışan bu iş yerinde çalışıyor mu?

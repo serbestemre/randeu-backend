@@ -28,6 +28,14 @@ const businessKuafor = new Business({
       employee: UserMock.employeeOne._id,
       providingServices: [{ service: ServiceMock.serviceSacKesim, price: 20, duration: 30 }]
     }
+  ],
+  calendar: [
+    {
+      day: ["Salı", "Çarşamba", "Perşembe", "Cuma"],
+      opening: new Date("2020-03-27T09:00:00Z"),
+      closing: new Date("2020-03-27T18:00:00Z"),
+      interval: new Date("2020-03-27T00:15:00Z")
+    }
   ]
 });
 

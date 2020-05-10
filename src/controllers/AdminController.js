@@ -1,20 +1,13 @@
-const ValidationError = require("mongoose").Error.ValidationError;
 const CastError = require("mongoose").Error.CastError;
 
 const BusinessTypeService = require("../services/BusinessTypeService");
-const BusinessTypeDataAccess = require("../dataAccess/BusinessType");
-const ServiceDataAccess = require("../dataAccess/Service");
 const ServiceService = require("../services/ServiceService");
 const SectorService = require("../services/SectorService");
 const AdminSuccess = require("../successes/AdminSuccess");
-const SectorDataAccess = require("../dataAccess/Sector");
-const BusinessType = require("../models/BusinessType");
 const CustomError = require("../helpers/CustomError");
 const CommonError = require("../errors/CommonError");
-const AdminError = require("../errors/AdminError");
 const Response = require("../helpers/Response");
-const Service = require("../models/Service");
-const Sector = require("../models/Sector");
+
 
 // TODO Edit Service Model add sector field and don't forget these steps
 // TODO Refactor ==>>> updateService()
@@ -25,7 +18,7 @@ exports.createService = async (req, res) => {
   console.log("service name => ", serviceName);
   try {
     const service = await ServiceService.createServiceService(serviceName, businessType);
-    Response.success(res, AdminSuccess.serviceCreated(), service);
+    Response.success(res, AdminSuccess.ServiceCreated(), service);
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
@@ -45,7 +38,7 @@ exports.getServiceListByBusiness = async (req, res) => {
     const serviceList = await ServiceService.getServiceListByBusinessService(_id);
     Response.success(
       res,
-      AdminSuccess.servicesListedByBusiness(),
+      AdminSuccess.ServicesListedByBusiness(),
       serviceList
     );
   } catch (error) {
@@ -72,7 +65,7 @@ exports.updateService = async (req, res) => {
 
     Response.success(
       res,
-      AdminSuccess.serviceUpdated(),
+      AdminSuccess.ServiceUpdated(),
       service
     );
   } catch (error) {
@@ -94,7 +87,7 @@ exports.deleteService = async (req, res) => {
 
     Response.success(
       res,
-      AdminSuccess.serviceDeleted(),
+      AdminSuccess.ServiceDeleted(),
       service
     );
   } catch (error) {
@@ -108,7 +101,7 @@ exports.createSector = async (req, res) => {
   const sectorName = req.body.sectorName.trim();
   try {
     const sector = await SectorService.createSectorService(sectorName);
-    Response.success(res, AdminSuccess.sectorCreated(), sector);
+    Response.success(res, AdminSuccess.SectorCreated(), sector);
   } catch (error) {
     if (error instanceof CustomError) return Response.withError(res, error);
 
@@ -119,7 +112,7 @@ exports.createSector = async (req, res) => {
 exports.getSectors = async (req, res) => {
   try {
     const sectors = await SectorService.getSectorsService();
-    Response.success(res, AdminSuccess.sectorsListed(), sectors);
+    Response.success(res, AdminSuccess.SectorsListed(), sectors);
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
@@ -135,7 +128,7 @@ exports.updateSector = async (req, res) => {
   try {
     const sector = await SectorService.updateSectorService(_id, updatedSectorName);
 
-    Response.success(res, AdminSuccess.sectorUpdated(), sector);
+    Response.success(res, AdminSuccess.SectorUpdated(), sector);
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
@@ -153,7 +146,7 @@ exports.deleteSector = async (req, res) => {
   try {
     const sector = await SectorService.deleteSectorService(_id);
 
-    Response.success(res, AdminSuccess.sectorDeleted(), sector);
+    Response.success(res, AdminSuccess.SectorDeleted(), sector);
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
@@ -175,7 +168,7 @@ exports.createBusinessType = async (req, res) => {
   try {
     const businessType = await BusinessTypeService
       .createBusinessTypeService(sector, businessTypeName);
-    Response.success(res, AdminSuccess.businessTypeCreated(), businessType);
+    Response.success(res, AdminSuccess.BusinessTypeCreated(), businessType);
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
@@ -197,7 +190,7 @@ exports.getBusinessTypesBySector = async (req, res) => {
 
     Response.success(
       res,
-      AdminSuccess.businessTypeListed(),
+      AdminSuccess.BusinessTypeListed(),
       { businessTypeList }
     );
   } catch (error) {
@@ -227,7 +220,7 @@ exports.updateBusinessType = async (req, res) => {
 
     Response.success(
       res,
-      AdminSuccess.businessTypeUpdated(),
+      AdminSuccess.BusinessTypeUpdated(),
       { businessType }
     );
   } catch (error) {
@@ -252,7 +245,7 @@ exports.deleteBusinessType = async (req, res) => {
 
     Response.success(
       res,
-      AdminSuccess.businessTypeDeleted(),
+      AdminSuccess.BusinessTypeDeleted(),
       { businessType }
     );
   } catch (error) {

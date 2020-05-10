@@ -1,12 +1,18 @@
 const AuthError = {};
-AuthError.userAlreadyExists = () => ({
-  statusCode: 403,
-  message: "Kullanıcı zaten kayıtlı."
-});
+const CustomError = require("../helpers/CustomError");
 
-AuthError.userNotFound = () => ({
-  statusCode: 404,
-  message: "Kullanıcı bulunamadı"
-});
+AuthError.UserAlreadyExists = () =>
+  new CustomError(403, "Bu mail adresi ile zaten daha önce kayıt olunmuş");
+
+AuthError.UserNotFound = () => new CustomError(404,
+  "Kullanıcı bulunamadı");
+
+AuthError.UserAccountIsAlreadyActivated = () => new CustomError(400,
+  "Bu kullanıcı daha önce zaten aktif edilmiş");
+
+AuthError.ActivationLinkExpired = () => new CustomError(400,
+  "Bu link artık geçerli değil");
+AuthError.PasswordsNotMatch = () => new CustomError(400,
+  "Girilen parolalar uyuşmuyor");
 
 module.exports = AuthError;

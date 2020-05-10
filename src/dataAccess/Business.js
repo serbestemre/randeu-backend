@@ -18,8 +18,8 @@ exports.insertOneBusinessDB = async (
     address,
     sector,
     businessType,
-    businessOwnerList: [{ _id: businessOwner._id }],
-    employeeList: [{ _id: businessOwner._id }]
+    businessOwnerList: [{ businessOwner: businessOwner._id }],
+    employeeList: [{ employee: businessOwner._id }]
   });
   console.log(resultBusiness);
 };
@@ -37,3 +37,7 @@ exports.updateOneBusinessDB = async (business, updatedBusinessName, updatedAddre
 
 exports.deleteManyBusinessDB = async () =>
   Business.deleteMany();
+
+// exports.addEmployeeToTheBusinessDB = async (_id, employee) => {
+//   Business.updateOne({ _id }, { $push: { 'employeeList.employee': employee._id } });
+// };

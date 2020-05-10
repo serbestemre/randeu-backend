@@ -5,10 +5,11 @@ else require("dotenv").config({ path: ".env.dev" });
 const express = require("express");
 require("./db/mongoose");
 
-const authRouter = require("./routers/AuthRouter");
-const userRouter = require("./routers/UserRouter");
-const adminRouter = require("./routers/AdminRouter");
-const businessRouter = require("./routers/BusinessRouter");
+const authRouter = require("./routes/AuthRouter");
+const userRouter = require("./routes/UserRouter");
+const adminRouter = require("./routes/AdminRouter");
+const businessRouter = require("./routes/BusinessRouter");
+const appointmentRouter = require("./routes/AppointmentRouter");
 
 const app = express();
 
@@ -27,5 +28,6 @@ app.use("/", authRouter);
 app.use("/user", userRouter);
 app.use("/admin", adminRouter);
 app.use("/business", businessRouter);
+app.use("/appointment", appointmentRouter);
 
 module.exports = app;

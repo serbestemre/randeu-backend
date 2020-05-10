@@ -5,8 +5,6 @@ const CustomError = require("../helpers/CustomError");
 const CommonError = require("../errors/CommonError");
 const Response = require("../helpers/Response");
 
-// TODO Check requester userId ===? businessOwnerId/EmployeeId
-
 exports.createBusiness = async (req, res) => {
   try {
     const {
@@ -31,6 +29,8 @@ exports.createBusiness = async (req, res) => {
     Response.withError(res, CommonError.serverError());
   }
 };
+
+// TODO get working hours for business will be implemented
 
 exports.updateBusiness = async (req, res) => {
   try {
@@ -124,6 +124,10 @@ exports.hireEmployee = async (req, res) => {
     console.log(error);
   }
 };
+
+// @TODO set working hours for employee willl be implemented in employeeList => workingHours.
+
+// @TODO set working hours for business willl be implemented in businessWorkingHours.
 
 exports.dischargeEmployee = async (req, res) => {
   try {

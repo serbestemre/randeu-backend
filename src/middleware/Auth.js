@@ -1,37 +1,9 @@
 const passport = require("passport");
-const JwtStrategy = require("passport-jwt").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
-const { ExtractJwt } = require("passport-jwt");
 const GooglePlusTokenStrategy = require("passport-google-plus-token");
 const FacebookTokenStrategy = require("passport-facebook-token");
 const User = require("../models/User");
-
-const response = require("../helpers/Response");
 const AuthError = require("../errors/AuthError");
-
-// JSON WEB TOKENS STRATEGY
-passport.use(
-  new JwtStrategy(
-    {
-      jwtFromRequest: ExtractJwt.fromHeader("authorization"),
-      secretOrKey: process.env.JWT_SECRET_KEY
-    },
-    async (payload, done) => {
-      try {
-        // Find the user specified in token
-        const user = await User.findById(payload.sub);
-
-        // TODO return an error
-        if (!user) return done(null, false);
-
-        done(null, user);
-      } catch (error) {
-        // TODO return an Internal Server Error
-        done(error, false);
-      }
-    }
-  )
-);
 
 passport.use(
   "facebookToken",
@@ -46,7 +18,7 @@ passport.use(
         const foundFacebookUser = await User.findOne({ id });
 
         // TODO return a proper response as json error or redirect the page
-        if (foundFacebookUser) done(AuthError.userAlreadyExists(), null);
+        if (foundFacebookUser) done(AuthError.UserAlreadyExists(), null);
         const newUser = new User({
           method: "facebook",
           id: profile.id,
@@ -108,17 +80,15 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         // Check whether this current user exists in our DB
-        const googleExistingUser = await User.findOne({
+        const existingUser = await User.findOne({
           id: profile.id
         });
 
-        if (googleExistingUser) {
-          console.log("User already exists in our DB");
+        // Return existing user's token if the user already exists
+        if (existingUser)
+          return done(null, existingUser);
 
-          return done(AuthError.userAlreadyExists(), null);
-        }
-        console.log("User doenst exist, we are creating new one");
-        // If new account
+        // Create new account for the user
         const newUser = new User({
           method: "google",
           id: profile.id,

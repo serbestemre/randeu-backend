@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
+const moment = require("moment-timezone");
 
 const Schema = mongoose.Schema;
+
+const dateIstanbul = moment.tz(Date.now(), "Europe/Istanbul");
 
 const businessSchema = new Schema(
   {
@@ -40,9 +43,23 @@ const businessSchema = new Schema(
             price: { type: Number },
             duration: { type: Number }
           }
-        ]
+        ],
+        workingHours: [{
+          day: { type: String },
+          // @TODO change types to string for now
+          opening: { type: Date, default: dateIstanbul },
+          closing: { type: Date, default: dateIstanbul },
+          interval: { type: Number }
+        }]
       }
     ],
+    businessWorkingHours: [{
+      day: { type: String },
+      // @TODO change types to string for now
+      opening: { type: Date, default: dateIstanbul },
+      closing: { type: Date, default: dateIstanbul },
+      interval: { type: Number }
+    }],
     comments: [
       {
         commentOwner: {
@@ -55,7 +72,9 @@ const businessSchema = new Schema(
           required: true
         },
         date: {
+          // @TODO change types to string for now
           type: Date,
+          default: dateIstanbul,
           required: true
         }
       }

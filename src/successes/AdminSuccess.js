@@ -1,65 +1,63 @@
 const AdminSuccess = {};
 
-// TODO Updated status Code should be 200
-
-AdminSuccess.sectorCreated = () => ({
+AdminSuccess.SectorCreated = () => ({
   statusCode: 201,
   message: "Sektör başarıyla oluşturuldu"
 });
 
-AdminSuccess.sectorsListed = () => ({
+AdminSuccess.SectorsListed = () => ({
   statusCode: 200,
   message: "Sektörler başarıyla listelendi"
 });
 
-AdminSuccess.sectorUpdated = () => ({
-  statusCode: 201,
+AdminSuccess.SectorUpdated = () => ({
+  statusCode: 200,
   message: "Sektör başarıyla güncellendi"
 });
 
-AdminSuccess.sectorDeleted = () => ({
+AdminSuccess.SectorDeleted = () => ({
   statusCode: 201,
   message: "Sektör başarıyla silindi"
 });
 
-AdminSuccess.businessTypeCreated = () => ({
+AdminSuccess.BusinessTypeCreated = () => ({
   statusCode: 201,
   message: "İşyeri tipi başarıyla oluşturuldu"
 });
 
-AdminSuccess.businessTypeListed = () => ({
+AdminSuccess.BusinessTypeListed = () => ({
   statusCode: 200,
-  message: "İşyeri tipleri listelendi"
+  message: "İşyeri tipleri başarıyla listelendi"
 });
 
-AdminSuccess.businessTypeUpdated = () => ({
-  statusCode: 201,
-  message: "İşyeri tipi güncellendi"
-});
-
-AdminSuccess.businessTypeDeleted = () => ({
-  statusCode: 201,
-  message: "İşyeri tipi silindi"
-});
-
-AdminSuccess.serviceCreated = () => ({
-  statusCode: 201,
-  message: "Servis oluşturuldu"
-});
-
-AdminSuccess.servicesListedByBusiness = () => ({
+AdminSuccess.BusinessTypeUpdated = () => ({
   statusCode: 200,
-  message: "İşyeri tipine göre servisler listelendi"
+  message: "İşyeri tipi başarıyla güncellendi"
 });
 
-AdminSuccess.serviceUpdated = () => ({
+AdminSuccess.BusinessTypeDeleted = () => ({
   statusCode: 201,
-  message: "Servis güncellendi"
+  message: "İşyeri tipi başarıyla silindi"
 });
 
-AdminSuccess.serviceDeleted = () => ({
+AdminSuccess.ServiceCreated = () => ({
   statusCode: 201,
-  message: "Servis silindi"
+  message: "Servis başarıyla oluşturuldu"
+});
+
+AdminSuccess.ServicesListedByBusiness = () => ({
+  statusCode: 200,
+  message: "İşyeri tipine göre servisler başarıyla listelendi"
+});
+
+AdminSuccess.ServiceUpdated = () => ({
+  statusCode: 200,
+  message: "Servis başarıyla güncellendi"
+});
+
+AdminSuccess.ServiceDeleted = () => ({
+  statusCode: 201,
+  message: "Servis başarıyla silindi"
 });
 
 module.exports = AdminSuccess;
