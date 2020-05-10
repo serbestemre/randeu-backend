@@ -4,8 +4,13 @@
   "description": "An application that brings variety of businesses and their customers, together to improve their appointment process",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index",
-    "eslint": "eslint ."
+    "start": "nodemon src/index.js",
+    "eslint": "eslint .",
+    "dev": "nodemon src/index.js",
+    "test": "jest --watchAll --runInBand"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "repository": {
     "type": "git",
@@ -18,23 +23,31 @@
   },
   "homepage": "https://github.com/serbestemre/personal-appointment-assistant#readme",
   "dependencies": {
+    "@hapi/joi": "^17.1.0",
+    "@hapi/joi-date": "^2.0.1",
+    "@sendgrid/mail": "^7.0.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-validator": "^6.4.0",
+    "ioredis": "^4.16.1",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.28",
     "mongoose": "^5.7.13",
     "passport": "^0.4.1",
     "passport-facebook-token": "^3.3.0",
     "passport-google-plus-token": "^2.1.0",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
-    "prettier": "^1.19.1"
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1",
+    "supertest": "^4.0.2"
   }
 }

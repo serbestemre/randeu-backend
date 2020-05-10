@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
+const CONSTANTS = require("../constants");
+
+const Schema = mongoose.Schema;
+
 const userSchema = new mongoose.Schema(
   {
     method: {
@@ -8,55 +12,38 @@ const userSchema = new mongoose.Schema(
       enum: ["local", "google", "facebook"],
       required: true
     },
-    local: {
-      name: {
-        type: String
-      },
-      surname: {
-        type: String
-      },
-      email: {
-        type: String
-      },
-      password: {
-        type: String
-      },
-      passwordCheck: {
-        type: String
-      },
-      birthday: {
-        type: Date
-      },
-      tokens: [
-        {
-          token: {
-            type: String,
-            required: true
-          }
-        }
-      ]
-    },
-    google: {
-      id: {
-        type: String
-      },
-      email: {
-        type: String
-      },
-      name: {
-        type: String
-      },
-      surname: {
-        type: String
+    roles: [
+      {
+        type: Number,
+        enum: [...Object.values(CONSTANTS.ROLES)]
       }
-    },
-    facebook: {
-      id: {
-        type: String
-      },
-      email: {
-        type: String
+    ],
+    fullName: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String },
+    birthday: { type: Date },
+    id: { type: String },
+    ownedBusinesses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Business"
       }
+    ],
+    workingBusinesses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Business"
+      }
+    ],
+    appointments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Appointment"
+      }
+    ],
+    isActive: {
+      type: Boolean,
+      default: false
     }
   },
   {
@@ -76,62 +63,15 @@ userSchema.methods.toJSON = function() {
 };
 
 // eslint-disable-next-line func-names
-// userSchema.methods.generateAuthToken = async function() {
-//   const user = this;
-//   const token = jwt.sign(
-//     { _id: user._id.toString() },
-//     process.env.JWT_SECRET_KEY
-//   );
-
-//   user.local.tokens = user.local.tokens.concat({ token });
-//   await user.save();
-
-//   return token;
-// };
-
-// eslint-disable-next-line func-names
 userSchema.methods.isValidPassword = async function(newPassword) {
   try {
-    console.log("this.local.password", this.local.password);
+    console.log("this.password", this.password);
     console.log("newPassword", newPassword);
-    return await bcrypt.compare(newPassword, this.local.password);
+    return await bcrypt.compare(newPassword, this.password);
   } catch (error) {
     throw new Error(error);
   }
 };
-
-// userSchema.statics.findByCredentials = async (email, password) => {
-//   // eslint-disable-next-line no-use-before-define
-//   const user = await User.findOne({ 'local.email': email });
-
-//   if (!user) {
-//     throw new Error('Unable to login user');
-//   }
-
-//   const isMatch = await bcrypt.compare(password, user.local.password);
-
-//   if (!isMatch) {
-//     throw new Error('Unable to login');
-//   }
-
-//   return user;
-// };
-
-// Hash the plain text password before saving
-// eslint-disable-next-line func-names
-
-userSchema.pre("save", async function(next) {
-  try {
-    if (this.method !== "local") next();
-    // Generate a password hash(salt + hash)
-    const passwordHash = await bcrypt.hash(this.local.password, 8);
-    // Re-assign hashed version over original, plain text password
-    this.local.password = passwordHash;
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
 
 const User = mongoose.model("User", userSchema);
 
