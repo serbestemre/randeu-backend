@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "An application that brings variety of businesses and their customers, together to improve their appointment process",
   "main": "index.js",
+  "engines": {
+    "node": "12.16.1"
+  },
   "scripts": {
-    "start": "nodemon src/index.js",
+    "start": "node src/index.js",
     "eslint": "eslint .",
     "dev": "nodemon src/index.js",
     "test": "jest --watchAll --runInBand"
