@@ -184,6 +184,7 @@ exports.createBusinessType = async (req, res) => {
 };
 
 exports.getBusinessTypesBySector = async (req, res) => {
+  console.log("ATTEMPTED TO GET BUSINESS TYPES");
   const _id = req.params.sectorId;
   try {
     const businessTypeList = await BusinessTypeService.getBusinessTypeBySectorService(_id);

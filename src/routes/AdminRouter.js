@@ -17,11 +17,9 @@ router.post(
   adminController.createSector
 );
 
-// Get all sector list
+
 router.get(
   "/sectors",
-  verifyToken,
-  roleChecker([CONSTANTS.ROLES.BUSINESS_OWNER, CONSTANTS.ROLES.SUPER_USER]),
   adminController.getSectors
 );
 
@@ -65,8 +63,6 @@ router.delete(
 
 router.get(
   "/businesstypes/:sectorId",
-  verifyToken,
-  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.getBusinessTypesBySector
 );
 
@@ -80,7 +76,6 @@ router.post(
 
 router.get(
   "/services/:businessTypeId",
-  verifyToken,
   roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.getServiceListByBusiness
 );
