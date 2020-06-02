@@ -5,7 +5,7 @@ const UserDataAccess = require("../dataAccess/User");
 const AuthError = require("../errors/AuthError");
 const Email = require("../helpers/Email");
 
-const redis = new Redis(); // redis server burda mı çalıştırılmalı
+const redis = new Redis(process.env.REDIS_URL); // redis server burda mı çalıştırılmalı
 
 exports.registerService = async (fullName, email, password, passwordCheck) => {
 // check if there any user with the same email
