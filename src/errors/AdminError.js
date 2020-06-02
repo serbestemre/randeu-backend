@@ -3,6 +3,8 @@ const CustomError = require("../helpers/CustomError");
 
 AdminError.BusinessTypeNotFound = () => new CustomError(404, "İş tipi bulunamadı");
 
+AdminError.BusinessTypesNotFound = () => new CustomError(404, "İş tipleri listelenemedi");
+
 AdminError.BusinessTypeNotFoundByGivenSector = () => new CustomError(
   404,
   "Aranan sektöre göre iş yeri tipi bulamadı"
@@ -22,5 +24,7 @@ AdminError.SectorAlreadyExists = () => new CustomError(403, "Sektör zaten kayı
 AdminError.SectorNotFound = () => new CustomError(404, "Sektör bulunamadı");
 
 AdminError.ServiceNotFound = () => new CustomError(404, "Servis bulunamadı");
+
+AdminError.ServicesNotFound = () => new CustomError(404, "Servisler listelenemedi");
 
 module.exports = AdminError;

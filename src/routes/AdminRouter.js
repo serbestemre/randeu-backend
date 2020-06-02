@@ -66,6 +66,8 @@ router.get(
   adminController.getBusinessTypesBySector
 );
 
+router.get("/businesstypes", adminController.getAllBusinessTypes);
+
 router.post(
   "/service",
   joiValidator(adminSchema.createService),
@@ -76,9 +78,10 @@ router.post(
 
 router.get(
   "/services/:businessTypeId",
-  roleChecker([CONSTANTS.ROLES.SUPER_USER]),
   adminController.getServiceListByBusiness
 );
+
+router.get("/services", adminController.getAllServices);
 
 router.put(
   "/service/:serviceId",

@@ -3,6 +3,7 @@ if (process.env.NODE_ENV === "test")
 else require("dotenv").config({ path: ".env.dev" });
 
 const express = require("express");
+const helmet = require("helmet");
 require("./db/mongoose");
 
 const authRouter = require("./routes/AuthRouter");
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use(helmet());
 app.use("/", authRouter);
 app.use("/user", userRouter);
 app.use("/admin", adminRouter);

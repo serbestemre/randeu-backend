@@ -7,19 +7,31 @@ exports.createBusinessTypeService = async (sector, businessTypeName) => {
   const searchedBusinessTypeName = await BusinessTypeDataAccess
     .findBusinessTypeByNameDB({ businessTypeName });
 
-  if (!searchedSector)
+  if (!searchedSector) {
     throw AdminError.SectorNotFound();
+  }
 
-  if (searchedBusinessTypeName)
+  if (searchedBusinessTypeName) {
     throw AdminError.BusinessTypeAlreadyExists();
+  }
 
   return BusinessTypeDataAccess.insertOneBusinessTypeDB(searchedSector, businessTypeName);
 };
 
+exports.getAllBusinessTypes = async () => {
+  const businessTypes = await BusinessTypeDataAccess.findAllBusinessTypesDB();
+  if (!businessTypes) {
+    throw AdminError.BusinessTypesNotFound();
+  }
+
+  return businessTypes;
+};
+
 exports.getBusinessTypeBySectorService = async id => {
   const businessTypeList = await BusinessTypeDataAccess.findBusinessTypeDB(id);
-  if (!businessTypeList)
+  if (!businessTypeList) {
     throw AdminError.BusinessTypeNotFoundByGivenSector();
+  }
 
   return businessTypeList;
 };
@@ -27,11 +39,13 @@ exports.getBusinessTypeBySectorService = async id => {
 exports.updateBusinessTypeService = async (id, businessTypeName, sector) => {
   const businessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(id);
 
-  if (!businessType)
+  if (!businessType) {
     throw AdminError.BusinessTypeNotFound();
+  }
 
-  if (businessType.businessTypeName === businessTypeName)
+  if (businessType.businessTypeName === businessTypeName) {
     throw AdminError.BusinessTypeAlreadyExists();
+  }
 
   return BusinessTypeDataAccess.updateOneBusinessTypeDB(businessType, businessTypeName, sector);
 };
@@ -39,8 +53,9 @@ exports.updateBusinessTypeService = async (id, businessTypeName, sector) => {
 exports.deleteBusinessTypeService = async id => {
   const businessType = await BusinessTypeDataAccess.findBusinessTypeByIdDB(id);
 
-  if (!businessType)
+  if (!businessType) {
     return AdminError.BusinessTypeNotFound();
+  }
 
   return BusinessTypeDataAccess.deleteBusinessTypeDB(id, businessType);
 };

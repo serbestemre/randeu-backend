@@ -30,6 +30,11 @@ AdminSuccess.BusinessTypeListed = () => ({
   message: "İşyeri tipleri başarıyla listelendi"
 });
 
+AdminSuccess.BusinessTypesListed = () => ({
+  statusCode: 200,
+  message: "Tüm İşyeri tipleri başarıyla listelendi"
+});
+
 AdminSuccess.BusinessTypeUpdated = () => ({
   statusCode: 200,
   message: "İşyeri tipi başarıyla güncellendi"
@@ -48,6 +53,11 @@ AdminSuccess.ServiceCreated = () => ({
 AdminSuccess.ServicesListedByBusiness = () => ({
   statusCode: 200,
   message: "İşyeri tipine göre servisler başarıyla listelendi"
+});
+
+AdminSuccess.ServicesListed = () => ({
+  statusCode: 200,
+  message: "Tüm servisler başarıyla listelendi"
 });
 
 AdminSuccess.ServiceUpdated = () => ({
