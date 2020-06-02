@@ -23,6 +23,7 @@ exports.createService = async (req, res) => {
     if (error instanceof CustomError)
       return Response.withError(res, error);
 
+
     if (error instanceof CastError) {
       error.message = "İşyeri tipleri listelenemedi!";
       Object.assign(error, { statusCode: 400 });
@@ -44,6 +45,7 @@ exports.getServiceListByBusiness = async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
+
 
     if (error instanceof CastError) {
       // eslint-disable-next-line operator-linebreak
@@ -71,6 +73,8 @@ exports.updateService = async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
+
+
     if (error instanceof CastError) {
       error.message = "Güncellenmek istenen service id hatalı";
       Object.assign(error, { statusCode: 400 });
@@ -93,6 +97,8 @@ exports.deleteService = async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
+
+
     Response.withError(res, CommonError.serverError());
   }
 };
@@ -117,6 +123,7 @@ exports.getSectors = async (req, res) => {
     if (error instanceof CustomError)
       return Response.withError(res, error);
 
+
     Response.withError(res, CommonError.serverError);
   }
 };
@@ -132,6 +139,8 @@ exports.updateSector = async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
+
+
     if (error instanceof CastError) {
       error.message = "Güncellenmek istenen sektör id hatalı";
       Object.assign(error, { statusCode: 400 });
@@ -150,6 +159,8 @@ exports.deleteSector = async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
+
+
     if (error instanceof CastError) {
       error.message = "Güncellenmek istenen sektör id hatalı";
       Object.assign(error, { statusCode: 400 });
@@ -173,6 +184,7 @@ exports.createBusinessType = async (req, res) => {
     if (error instanceof CustomError)
       return Response.withError(res, error);
 
+
     if (error instanceof CastError) {
       error.message = "Güncellenmek istenen sektör id hatalı";
       Object.assign(error, { statusCode: 400 });
@@ -183,8 +195,55 @@ exports.createBusinessType = async (req, res) => {
   }
 };
 
+exports.getAllServices = async (req, res) => {
+  try {
+    const servicesList = await ServiceService.getAllServices();
+
+    Response.success(
+      res,
+      AdminSuccess.ServicesListed(),
+      { servicesList }
+    );
+  } catch (error) {
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
+
+    if (error instanceof CastError) {
+      error.message = "İş tipleri listelenemedi çünkü sektör id değeri hatalı";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
+exports.getAllBusinessTypes = async (req, res) => {
+  try {
+    const businessTypesList = await BusinessTypeService.getAllBusinessTypes();
+
+    Response.success(
+      res,
+      AdminSuccess.BusinessTypesListed(),
+      { businessTypesList }
+    );
+  } catch (error) {
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
+
+
+    if (error instanceof CastError) {
+      error.message = "İş tipleri listelenemedi çünkü sektör id değeri hatalı";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
+
 exports.getBusinessTypesBySector = async (req, res) => {
-  console.log("ATTEMPTED TO GET BUSINESS TYPES");
   const _id = req.params.sectorId;
   try {
     const businessTypeList = await BusinessTypeService.getBusinessTypeBySectorService(_id);
@@ -197,6 +256,7 @@ exports.getBusinessTypesBySector = async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
+
 
     if (error instanceof CastError) {
       error.message = "İş tipleri listelenemedi çünkü sektör id değeri hatalı";
@@ -228,6 +288,7 @@ exports.updateBusinessType = async (req, res) => {
     if (error instanceof CustomError)
       return Response.withError(res, error);
 
+
     if (error instanceof CastError) {
       error.message = "Güncellenmek istenen iş tipinin id değeri hatalı";
       Object.assign(error, { statusCode: 400 });
@@ -252,6 +313,8 @@ exports.deleteBusinessType = async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
+
+
     console.log(error);
     Response.withError(res, CommonError.serverError());
   }

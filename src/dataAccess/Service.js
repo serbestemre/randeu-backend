@@ -4,6 +4,7 @@ exports.insertManySectorsDB = async services => Service.insertMany(services);
 
 exports.findServiceDB = async serviceName => Service.findOne(serviceName);
 
+exports.findAllServicesDB = async () => Service.find();
 
 exports.findServiceListByBusinessTypeDB = async businessType => Service.find({ businessType });
 
