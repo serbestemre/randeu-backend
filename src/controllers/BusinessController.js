@@ -69,7 +69,25 @@ exports.profile = async (req, res) => {
 
     const business = await BusinessService.profileService(businessId.trim());
 
-    Response.success(res, BusinessSuccess.businessListed(), business);
+    Response.success(res, BusinessSuccess.businessProfileListed(), business);
+  } catch (error) {
+    if (error instanceof CustomError) return Response.withError(res, error);
+    if (error instanceof CastError) {
+      error.message = "Görüntülenmek istenen iş yeri id değeri hatalı. "
+        + "Lütfen iş yeri Id değerlerini doğru giriniz.";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
+exports.getBusinessList = async (req, res) => {
+  try {
+    const businessList = await BusinessService.getBusinessList();
+
+    Response.success(res, BusinessSuccess.businessesListed(), { businessList });
   } catch (error) {
     if (error instanceof CustomError) return Response.withError(res, error);
     if (error instanceof CastError) {

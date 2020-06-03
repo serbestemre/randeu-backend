@@ -10,9 +10,14 @@ BusinessSuccess.updatedBusiness = () => ({
   message: "İş yeri güncellendi"
 });
 
-BusinessSuccess.businessListed = () => ({
+BusinessSuccess.businessProfileListed = () => ({
   statusCode: 200,
   message: "İş yeri profili başarıyla listelendi"
+});
+
+BusinessSuccess.businessesListed = () => ({
+  statusCode: 200,
+  message: "Tüm işyerleri başarıyla listelendi."
 });
 
 BusinessSuccess.businessDeleted = () => ({

@@ -23,14 +23,17 @@ exports.createBusinessService = async (
   if (!businessOwner)
     throw BusinessError.businessOwnerNotFound();
 
+
   const doesSectorExist = await SectorDataAccess.findSectorByIdDB(sector);
   if (!doesSectorExist)
     throw BusinessError.sectorNotFound();
+
 
   const doesBusinessTypeExist = await BusinessTypeDataAccess.findBusinessTypeByIdDB(businessType);
 
   if (!doesBusinessTypeExist)
     throw BusinessError.businessTypeNotFound();
+
 
   const newBusiness = await BusinessDataAccess.insertOneBusinessDB(
     businessName, address, sector, businessType, businessOwner
@@ -41,8 +44,10 @@ exports.createBusinessService = async (
   if (!businessOwner.roles.includes(CONSTANTS.ROLES.EMPLOYEE))
     businessOwner.roles.push(CONSTANTS.ROLES.EMPLOYEE);
 
+
   if (!businessOwner.roles.includes(CONSTANTS.ROLES.BUSINESS_OWNER))
     businessOwner.roles.push(CONSTANTS.ROLES.BUSINESS_OWNER);
+
 
   await UserDataAccess.updateUserRolesDB(businessOwnerId, businessOwner.roles);
 
@@ -69,11 +74,13 @@ exports.updateBusinessService = async (updatingBusiness,
   if (!doesSectorExist)
     throw BusinessError.sectorNotFound();
 
+
   const doesBusinessTypeExist = await BusinessType.findById(
     updatedBusinessType
   );
   if (!doesBusinessTypeExist)
     throw BusinessError.businessTypeNotFound();
+
 
   const business = await BusinessDataAccess.findBusinessByIdDB(
     updatingBusiness
@@ -92,6 +99,7 @@ exports.deleteBusinessService = async businessId => {
   if (!business)
     throw BusinessError.businessNotFound();
 
+
   return BusinessDataAccess.deleteOneDB(business);
 };
 
@@ -104,12 +112,23 @@ exports.profileService = async businessId => {
   return business;
 };
 
+
+exports.getBusinessList = async () => {
+  const businessList = await BusinessDataAccess.getBusinessListDB();
+
+  if (!businessList)
+    throw BusinessError.businessListNotListed();
+
+  return businessList;
+};
+
 exports.hireEmployeeService = async (userId, businessId) => {
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
   const user = await UserDataAccess.findUserByIdDB(userId);
 
   if (!business)
     throw BusinessError.businessNotFound();
+
 
   if (!user) throw AuthError.UserNotFound();
 
@@ -120,8 +139,10 @@ exports.hireEmployeeService = async (userId, businessId) => {
   if (isEmployed)
     throw BusinessError.employeeAlreadyExists();
 
+
   if (!user.roles.includes(CONSTANTS.ROLES.EMPLOYEE))
     user.roles.push(CONSTANTS.ROLES.EMPLOYEE);
+
 
   await UserDataAccess.updateUserRolesDB(userId, user.roles);
 
@@ -141,6 +162,7 @@ exports.dischargeEmployeeService = async (userId, businessId) => {
   if (!business)
     throw BusinessError.businessNotFound();
 
+
   if (!user) throw AuthError.UserNotFound();
 
   const isEmployed = business.employeeList.find(
@@ -149,6 +171,7 @@ exports.dischargeEmployeeService = async (userId, businessId) => {
 
   if (!isEmployed)
     throw BusinessError.employeeNotFound();
+
 
   user.roles.remove(CONSTANTS.ROLES.EMPLOYEE);
   business.employeeList.remove(user);
@@ -163,6 +186,7 @@ exports.assignService = async (serviceId, employeeId, businessId, price, duratio
   if (!business)
     throw BusinessError.businessNotFound();
 
+
   const service = await ServiceDataAccess.findServiceByIdDB(serviceId);
 
   const foundEmployee = business.employeeList.find(
@@ -173,6 +197,7 @@ exports.assignService = async (serviceId, employeeId, businessId, price, duratio
   if (!foundEmployee)
     throw BusinessError.employeeNotFound();
 
+
   // Bu iş tipi belirtilen çalışan için daha önceden tanımlanmış mı?
   const doesServiceProviding = foundEmployee.providingServices.find(
     providignService =>
@@ -181,6 +206,7 @@ exports.assignService = async (serviceId, employeeId, businessId, price, duratio
 
   if (doesServiceProviding)
     throw BusinessError.serviceAlreadyProviding();
+
 
   foundEmployee.providingServices.push({
     service: service._id,
@@ -197,12 +223,14 @@ exports.removeService = async (businessId, employeeId, serviceId) => {
   if (!business)
     throw BusinessError.businessNotFound();
 
+
   const employee = business.employeeList.find(
     emp => emp._id.toString() === employeeId
   );
 
   if (!employee)
     throw BusinessError.employeeNotFound();
+
 
   const doesServiceExist = await ServiceDataAccess.findServiceByIdDB(
     serviceId
@@ -211,6 +239,7 @@ exports.removeService = async (businessId, employeeId, serviceId) => {
   if (!doesServiceExist)
     throw AdminError.serviceNotFound();
 
+
   const removingService = employee.providingServices.find(
     providingService =>
       providingService.service.toString() === serviceId.toString()
@@ -218,6 +247,7 @@ exports.removeService = async (businessId, employeeId, serviceId) => {
 
   if (!removingService)
     throw BusinessError.serviceNotProvided();
+
 
   employee.providingServices.remove(removingService);
 

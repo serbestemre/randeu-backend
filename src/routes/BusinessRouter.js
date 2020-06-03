@@ -24,6 +24,9 @@ router.put(
   businessController.updateBusiness
 );
 
+router.get("/businessList",
+  businessController.getBusinessList);
+
 router.get(
   "/profile/:businessId",
   verifyToken,

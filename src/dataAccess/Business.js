@@ -11,6 +11,8 @@ exports.updateServiceListDB = async (_id, serviceList) => {
   Business.updateOne({ _id }, { $set: { serviceList } });
 };
 
+exports.getBusinessListDB = async () => Business.find();
+
 exports.insertOneBusinessDB = async (
   businessName, address, sector, businessType, businessOwner) => {
   const resultBusiness = Business.create({
