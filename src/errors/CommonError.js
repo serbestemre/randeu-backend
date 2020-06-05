@@ -8,7 +8,7 @@ CommonError.serverError = error => ({
 
 CommonError.validationError = data => ({
   statusCode: 400,
-  message: "Validation Error",
+  message: data.details[0].message,
   data
 });
 

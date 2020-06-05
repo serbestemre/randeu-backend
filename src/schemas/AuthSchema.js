@@ -6,8 +6,9 @@ module.exports = {
       .required()
       .empty()
       .messages({
-        "string.base": "Tam ad alanı yazı tipinde olmalı",
-        "string.empty": "Tam ad alanı boş bırakılamaz"
+        "string.base": "Ad & Soyad alanı yazı tipinde olmalı",
+        "string.empty": "Ad & Soyad alanı boş bırakılamaz",
+        "any.required": "Ad & Soyad alanı boş bırakılamaz"
       }),
     email: Joi.string()
       .email()
@@ -16,21 +17,26 @@ module.exports = {
       .messages({
         "string.base": "Email alanı yazı tipinde olmalı",
         "string.empty": "Email alanı boş bırakılamaz",
-        "string.email": "Lütfen geçerli email giriniz"
+        "string.email": "Lütfen geçerli email giriniz",
+        "any.required": "Email alanı boş bırakılamaz"
+
       }),
     password: Joi.string()
       .min(6)
       .required()
       .messages({
         "string.empty": "Şifre alanı boş bırakılamaz",
-        "string.min": "Şifre en az 6 karakter olmalı"
+        "string.min": "Şifre en az 6 karakter olmalı",
+        "any.required": "Şifre alanı boş bırakılamaz"
+
       }),
     passwordCheck: Joi.string()
       .min(6)
       .required()
       .messages({
         "string.empty": "Şifre tekrar alanı boş bırakılamaz",
-        "string.min": "Şifre tekrar alanı en az 6 karakter olmalı"
+        "string.min": "Şifre (Tekrar) alanı en az 6 karakter olmalı",
+        "any.required": "Şifre (Tekrar) alanı boş bırakılamaz"
       })
   }),
   login: Joi.object({
@@ -40,14 +46,16 @@ module.exports = {
       .messages({
         "string.base": "Email alanı yazı tipinde olmalı",
         "string.empty": "Email alanı boş bırakılamaz",
-        "string.email": "Lütfen geçerli email giriniz"
+        "string.email": "Lütfen geçerli email giriniz",
+        "any.required": "Email alanı boş bırakılamaz"
       }),
     password: Joi.string()
       .min(6)
       .required()
       .messages({
         "string.empty": "Şifre alanı boş bırakılamaz",
-        "string.min": "Şifre en az 6 karakter olmalı"
+        "string.min": "Şifre en az 6 karakter olmalı",
+        "any.required": "Şifre alanı boş bırakılamaz"
       })
   }),
   reSendActivationLink: Joi.object({
@@ -57,7 +65,8 @@ module.exports = {
       .messages({
         "string.base": "Email alanı yazı tipinde olmalı",
         "string.empty": "Email alanı boş bırakılamaz",
-        "string.email": "Lütfen geçerli email giriniz"
+        "string.email": "Lütfen geçerli email giriniz",
+        "any.required": "Email alanı boş bırakılamaz"
       })
   })
 };

@@ -1,5 +1,8 @@
 const Joi = require("@hapi/joi");
 
+// TODO required olarak tanımlanan alanlar için
+//  "any.required": " hata mesajı tanımla"
+
 module.exports = {
   createBusiness: Joi.object({
     businessName: Joi.string()
