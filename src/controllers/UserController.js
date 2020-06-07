@@ -7,7 +7,7 @@ const CommonError = require("../errors/CommonError");
 const Response = require("../helpers/Response");
 
 exports.profile = async (req, res) => {
-  const { userId } = req.params;
+  const { userId } = req.userData;
 
   try {
     const user = await UserService.profileService(userId.trim());

@@ -7,6 +7,9 @@ AuthError.UserAlreadyExists = () =>
 AuthError.UserNotFound = () => new CustomError(404,
   "Kullanıcı bulunamadı");
 
+AuthError.WrongPasswordorEmail = () => new CustomError(400,
+  "Hatalı email adresi veya şifre");
+
 AuthError.UserAccountIsAlreadyActivated = () => new CustomError(400,
   "Bu kullanıcı daha önce zaten aktif edilmiş");
 

@@ -1,11 +1,27 @@
 const { v4 } = require("uuid");
 const Redis = require("ioredis");
 const bcrypt = require("bcryptjs");
+const JWT = require("jsonwebtoken");
+
 const UserDataAccess = require("../dataAccess/User");
 const AuthError = require("../errors/AuthError");
 const Email = require("../helpers/Email");
 
 const redis = new Redis(process.env.REDIS_URL); // redis server burda mı çalıştırılmalı
+
+
+const signToken = user =>
+  JWT.sign(
+    {
+      iss: "Randeu",
+      sub: user.id,
+      iat: new Date().getTime(), // current time
+      roles: user.roles,
+      userId: user._id,
+      exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
+    },
+    process.env.JWT_SECRET_KEY
+  );
 
 exports.registerService = async (fullName, email, password, passwordCheck) => {
 // check if there any user with the same email
@@ -26,6 +42,24 @@ exports.registerService = async (fullName, email, password, passwordCheck) => {
   const userId = user._id.toString();
   await this.createActivationLinkService(userId, user.email);
   return user;
+};
+
+exports.loginService = async (email, password) => {
+  const user = await UserDataAccess.findUserByEmailDB(email);
+
+  console.log("user?: ", user)
+  if (!user)
+    throw AuthError.WrongPasswordorEmail();
+
+  const isMatch = await user.isValidPassword(password);
+
+  console.log("isMatch?", isMatch);
+  if (!isMatch)
+    throw AuthError.WrongPasswordorEmail();
+
+const token = signToken(user);
+
+  return token;
 };
 
 exports.createActivationLinkService = async (userId, email) => {
