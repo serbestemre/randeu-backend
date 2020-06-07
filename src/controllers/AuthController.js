@@ -64,8 +64,18 @@ exports.activateUserAccount = async (req, res) => {
 
 exports.login = async (req, res) => {
   // TODO Check user.isActivate ?
-  const token = signToken(req.user);
-  Response.success(res, 200, { token }, "User logged in successfully.");
+  try {
+    const { email, password } = req.body;
+
+    const token = await AuthService.loginService(email, password);
+
+    Response.success(res, 200, { token }, AuthSuccess.UserLoggedin());
+  } catch (error) {
+    if (error instanceof CustomError)
+      return Response.withError(res, error);
+
+    Response.withError(res, CommonError.serverError());
+  }
 };
 
 exports.googleOAuth = async (req, res) => {

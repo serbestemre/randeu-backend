@@ -10,7 +10,6 @@ const auth = require("../middleware/Auth");
 
 const router = new express.Router();
 
-const passportSigIn = Passport.authenticate("local", { session: false });
 const passportGoogle = Passport.authenticate("googleToken", { session: false });
 const passportFacebook = Passport.authenticate("facebookToken", {
   session: false
@@ -24,7 +23,6 @@ router.post(
 router.post(
   "/login",
   JoiValidator(AuthSchema.login),
-  passportSigIn,
   AuthController.login
 );
 router.post(

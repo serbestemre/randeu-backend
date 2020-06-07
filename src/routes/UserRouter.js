@@ -8,7 +8,7 @@ const router = new express.Router({ mergeParams: true });
 
 
 router.get(
-  "/profile/:userId",
+  "/profile/",
   verifyToken,
   RoleChecker([CONSTANTS.ROLES.USER]),
   userController.profile
