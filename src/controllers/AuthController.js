@@ -63,7 +63,6 @@ exports.activateUserAccount = async (req, res) => {
 
 
 exports.login = async (req, res) => {
-  // TODO Check user.isActivate ?
   try {
     const { email, password } = req.body;
 
