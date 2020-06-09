@@ -74,6 +74,8 @@ exports.createActivationLinkService = async (userId, email) => {
 };
 
 exports.reSendActivationLinkService = async (email) => {
+
+  // TODO send if there no key exist in REDIS
   const user = await UserDataAccess.findUserByEmailDB(email);
   if (!user) throw AuthError.UserNotFound();
 

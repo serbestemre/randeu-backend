@@ -10,6 +10,11 @@ BusinessSuccess.updatedBusiness = () => ({
   message: "İş yeri güncellendi"
 });
 
+BusinessSuccess.businesslistedByBusinessType = () => ({
+  statusCode: 200,
+  message: "İşyerleri, aranan işyeri tipine göre başarıyla listelendi"
+});
+
 BusinessSuccess.businessProfileListed = () => ({
   statusCode: 200,
   message: "İş yeri profili başarıyla listelendi"
