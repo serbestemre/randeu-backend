@@ -9,8 +9,7 @@ const Email = require("../helpers/Email");
 
 const redis = new Redis(process.env.REDIS_URL); // redis server burda mı çalıştırılmalı
 
-
-const signToken = user =>
+const signToken = (user) =>
   JWT.sign(
     {
       iss: "Randeu",
@@ -18,24 +17,28 @@ const signToken = user =>
       iat: new Date().getTime(), // current time
       roles: user.roles,
       userId: user._id,
-      exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
+      exp: new Date().setDate(new Date().getDate() + 1), // current time + 1 day ahead
     },
     process.env.JWT_SECRET_KEY
   );
 
 exports.registerService = async (fullName, email, password, passwordCheck) => {
-// check if there any user with the same email
+  // check if there any user with the same email
   const foundUser = await UserDataAccess.findUserByEmailDB(email);
 
-  if (password !== passwordCheck)
-    throw AuthError.PasswordsNotMatch();
+  if (password !== passwordCheck) throw AuthError.PasswordsNotMatch();
 
-  if (foundUser)
-    throw AuthError.UserAlreadyExists();
+  if (foundUser) throw AuthError.UserAlreadyExists();
 
   const hashedPassword = await bcrypt.hash(password, 8);
 
-  const user = await UserDataAccess.insertOneUserDB("local", fullName, [1], email, hashedPassword);
+  const user = await UserDataAccess.insertOneUserDB(
+    "local",
+    fullName,
+    [1],
+    email,
+    hashedPassword
+  );
 
   Email.sendWelcomeEmailToUser(email, fullName);
 
@@ -47,17 +50,15 @@ exports.registerService = async (fullName, email, password, passwordCheck) => {
 exports.loginService = async (email, password) => {
   const user = await UserDataAccess.findUserByEmailDB(email);
 
-  console.log("user?: ", user)
-  if (!user)
-    throw AuthError.WrongPasswordorEmail();
+  if (!user.isActive) throw AuthError.UserNotActive();
+
+  if (!user) throw AuthError.WrongPasswordorEmail();
 
   const isMatch = await user.isValidPassword(password);
 
-  console.log("isMatch?", isMatch);
-  if (!isMatch)
-    throw AuthError.WrongPasswordorEmail();
+  if (!isMatch) throw AuthError.WrongPasswordorEmail();
 
-const token = signToken(user);
+  const token = signToken(user);
 
   return token;
 };
@@ -72,14 +73,11 @@ exports.createActivationLinkService = async (userId, email) => {
   Email.sendActivationEmailToUser(userId, email, activationLink);
 };
 
-
-exports.reSendActivationLinkService = async email => {
+exports.reSendActivationLinkService = async (email) => {
   const user = await UserDataAccess.findUserByEmailDB(email);
-  if (!user)
-    throw AuthError.UserNotFound();
+  if (!user) throw AuthError.UserNotFound();
 
-  if (user.isActive)
-    throw AuthError.UserAccountIsAlreadyActivated();
+  if (user.isActive) throw AuthError.UserAccountIsAlreadyActivated();
 
   const userId = user._id.toString();
   const uuid = v4();
@@ -91,20 +89,15 @@ exports.reSendActivationLinkService = async email => {
   Email.sendActivationEmailToUser(userId, email, activationLink);
 };
 
-exports.activateUserAccountService = async uuid => {
+exports.activateUserAccountService = async (uuid) => {
   const userId = await redis.get(uuid);
 
-  if (!userId)
-    throw AuthError.ActivationLinkExpired();
+  if (!userId) throw AuthError.ActivationLinkExpired();
 
   const user = await UserDataAccess.findUserByIdDB(userId);
 
-  if (!user)
-    throw AuthError.UserNotFound();
+  if (!user) throw AuthError.UserNotFound();
 
-
-  if (user.isActive)
-    throw AuthError.UserAccountIsAlreadyActivated();
-  else
-    await UserDataAccess.activateUserProfileDB(userId);
+  if (user.isActive) throw AuthError.UserAccountIsAlreadyActivated();
+  else await UserDataAccess.activateUserProfileDB(userId);
 };
