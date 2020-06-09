@@ -104,7 +104,7 @@ exports.getBusinessList = async (req, res) => {
 exports.businesslistByBusinessType = async (req, res) => {
   try {
     const { businessTypeName } = req.body;
-
+    console.log("searched key word: ", businessTypeName);
     const businesslist = await BusinessService.businesslistByBusinessType(businessTypeName.trim());
 
     console.log(businesslist)
