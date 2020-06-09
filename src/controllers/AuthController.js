@@ -66,7 +66,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const token = await AuthService.loginService(email, password);
+    const token = await AuthService.loginService(email.trim().tolowerCase(), password.trim().tolowerCase());
 
     Response.success(res, 200, { token }, AuthSuccess.UserLoggedin());
   } catch (error) {

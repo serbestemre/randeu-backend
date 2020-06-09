@@ -122,6 +122,15 @@ exports.getBusinessList = async () => {
   return businessList;
 };
 
+exports.businesslistByBusinessType = async businessTypeName => {
+  const businesslist = await BusinessDataAccess.businesslistByBusinessTypeDB(businessTypeName);
+
+  if (!businesslist || businesslist.length === 0)
+    throw BusinessError.businesslistNotListedByBusinessType();
+
+  return businesslist;
+};
+
 exports.hireEmployeeService = async (userId, businessId) => {
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
   const user = await UserDataAccess.findUserByIdDB(userId);
