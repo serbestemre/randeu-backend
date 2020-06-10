@@ -65,11 +65,14 @@ exports.activateUserAccount = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    const token = await AuthService.loginService(email.trim().tolowerCase(), password.trim().tolowerCase());
+    let tempEmail = email.toString();
+    tempEmail = tempEmail.toLowerCase().trim();
+   
+    const token = await AuthService.loginService(tempEmail, password.trim());
 
     Response.success(res, 200, { token }, AuthSuccess.UserLoggedin());
   } catch (error) {
+    console.log(error)
     if (error instanceof CustomError)
       return Response.withError(res, error);
 
