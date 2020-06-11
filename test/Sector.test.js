@@ -16,3 +16,13 @@ test("Should create a Sector", async () => {
     })
     .expect(201);
 });
+
+
+test("Should not create a Sector without admin role", async () => {
+  await request(app)
+    .post("/admin/sector")
+    .send({
+      sectorName: "Yeni Sektör2"
+    })
+    .expect(403);
+});
