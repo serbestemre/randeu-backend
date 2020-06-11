@@ -32,3 +32,16 @@ test("Should create a business", async () => {
     })
     .expect(201);
 });
+
+test("Should not create a business unauthenticated user", async () => {
+  await request(app)
+    .post("/business/register")
+    .send({
+      businessName: "Yeni iş yerim",
+      address: "İş yeri adresi",
+      sector: SectorMock.sectorPersonalCare._id,
+      businessType: BusinessTypeMock.businessTypeKuafor._id,
+      businessOwnerId: UserMock.userOne._id
+    })
+    .expect(403);
+});

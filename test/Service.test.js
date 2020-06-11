@@ -26,3 +26,13 @@ test("Should create a service", async () => {
     })
     .expect(201);
 });
+
+test("Should not create a service without admin role", async () => {
+  await request(app)
+    .post("/admin/service")
+    .send({
+      serviceName: "Kuaför Örnek Hizmet2",
+      businessType: BusinessTypeMock.businessTypeKuafor._id
+    })
+    .expect(403);
+});
