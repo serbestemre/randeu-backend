@@ -3,7 +3,8 @@ const Business = require("../models/Business");
 exports.insertManyBusinessDB = async businesses =>
   Business.insertMany(businesses);
 
-exports.findBusinessByIdDB = async businessId => Business.findById(businessId);
+exports.findBusinessByIdDB = async businessId =>
+  Business.findById(businessId);
 
 exports.deleteOneDB = async business => Business.deleteOne(business);
 
@@ -14,7 +15,12 @@ exports.updateServiceListDB = async (_id, serviceList) => {
 exports.getBusinessListDB = async () => Business.find();
 
 exports.insertOneBusinessDB = async (
-  businessName, address, sector, businessType, businessOwner) => {
+  businessName,
+  address,
+  sector,
+  businessType,
+  businessOwner
+) => {
   const resultBusiness = Business.create({
     businessName,
     address,
@@ -26,8 +32,14 @@ exports.insertOneBusinessDB = async (
   console.log(resultBusiness);
 };
 
-exports.updateOneBusinessDB = async (business, updatedBusinessName, updatedAddress,
-  updatedSector, updatedBusinessType, updatedBusinessOwner) => {
+exports.updateOneBusinessDB = async (
+  business,
+  updatedBusinessName,
+  updatedAddress,
+  updatedSector,
+  updatedBusinessType,
+  updatedBusinessOwner
+) => {
   business.businessName = updatedBusinessName;
   business.address = updatedAddress;
   business.sector = updatedSector;
@@ -37,8 +49,30 @@ exports.updateOneBusinessDB = async (business, updatedBusinessName, updatedAddre
   return business.save();
 };
 
-exports.deleteManyBusinessDB = async () =>
-  Business.deleteMany();
+exports.deleteManyBusinessDB = async () => Business.deleteMany();
+
+exports.businesslistByBusinessTypeDB = async businessTypeName =>
+  Business.aggregate([
+    {
+      $lookup: {
+        from: "businesstypes",
+        localField: "businessType",
+        foreignField: "_id",
+        as: "businessTypeName"
+      }
+    },
+    {
+      $project: {
+        "businessTypeName._id": 0,
+        "businessTypeName.sector": 0
+      }
+    },
+    {
+      $match: {
+        "businessTypeName.businessTypeName": { $in: [businessTypeName] }
+      }
+    }
+  ]);
 
 // exports.addEmployeeToTheBusinessDB = async (_id, employee) => {
 //   Business.updateOne({ _id }, { $push: { 'employeeList.employee': employee._id } });

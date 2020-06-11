@@ -34,6 +34,8 @@ router.get(
   businessController.profile
 );
 
+router.post("/businesslist-by-businesstype", businessController.businesslistByBusinessType);
+
 router.delete(
   "/profile/delete/:businessId",
   verifyToken,
