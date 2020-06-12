@@ -20,3 +20,13 @@ test("Should create a BusinessType", async () => {
     })
     .expect(201);
 });
+
+test("Should not create a BusinessType without admin role", async () => {
+  await request(app)
+    .post("/admin/businesstype")
+    .send({
+      businessTypeName: "Kuaför Örnek İş Tipi2",
+      sector: SectorMock.sectorPersonalCare._id
+    })
+    .expect(403);
+});

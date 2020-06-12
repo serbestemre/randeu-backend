@@ -2,7 +2,7 @@ const AuthError = {};
 const CustomError = require("../helpers/CustomError");
 
 AuthError.UserAlreadyExists = () =>
-  new CustomError(403, "Bu mail adresi ile zaten daha önce kayıt olunmuş");
+  new CustomError(400, "Bu mail adresi ile zaten daha önce kayıt olunmuş");
 
 AuthError.UserNotFound = () => new CustomError(404, "Kullanıcı bulunamadı");
 

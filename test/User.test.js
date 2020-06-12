@@ -28,5 +28,5 @@ test("Should NOT Create the existing user", async () => {
       password: "123456",
       passwordCheck: "123456"
     })
-    .expect(403);
+    .expect(400);
 });
