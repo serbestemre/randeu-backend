@@ -12,21 +12,21 @@ test("Should create a user", async () => {
     .post("/register")
     .send({
       fullName: "Emre Serbest",
-      email: "emre2@gmail.com",
+      email: "emre@test.com",
       password: "123456",
       passwordCheck: "123456"
     })
     .expect(200);
 });
 
-test("Should NOT Create the existing user", async () => {
+test("Should NOT Create  user with invalid password", async () => {
   await request(app)
     .post("/register")
     .send({
-      fullName: UserMock.userOne.fullName,
-      email: UserMock.userOne.email,
-      password: "123456",
-      passwordCheck: "123456"
+      fullName: "Sercan Kavdır",
+      email: "sercan@test.com",
+      password: "123",
+      passwordCheck: "123"
     })
     .expect(400);
 });
