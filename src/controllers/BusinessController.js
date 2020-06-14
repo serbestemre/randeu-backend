@@ -129,6 +129,20 @@ exports.businesslistByService = async (req, res) => {
   }
 };
 
+exports.businesslistByName = async (req, res) => {
+  try {
+    const {businessName} = req.body;
+
+  const businesslist = await BusinessService.businesslistByName(businessName.trim());
+    Response.success(res, BusinessSuccess.businesslistedByBusinessType(), businesslist);
+
+  }catch(error) {
+    if (error instanceof CustomError) return Response.withError(res, error);
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+}
+
 exports.deleteBusiness = async (req, res) => {
   try {
     const { businessId } = req.params;

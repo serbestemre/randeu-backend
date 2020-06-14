@@ -37,6 +37,8 @@ router.post("/businesslist-by-businesstype", businessController.businesslistByBu
 
 router.post("/businesslist-by-service", businessController.businesslistByService);
 
+router.post("/businesslist-by-name", businessController.businesslistByName);
+
 router.delete(
   "/profile/delete/:businessId",
   verifyToken,
