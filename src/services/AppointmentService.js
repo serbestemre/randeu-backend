@@ -12,22 +12,26 @@ exports.requestAppointmentService = async (
   businessId,
   employeeId,
   serviceId,
-  date
+  startDate,
+  endDate
 ) => {
   const customer = await UserDataAccess.findUserByIdDB(customerId);
 
   if (!customer)
     throw AppointmentError.CustomerNotFound();
 
+
   const employee = await UserDataAccess.findUserByIdDB(employeeId);
 
   if (!employee)
     throw AppointmentError.EmployeeNotFound();
 
+
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
 
   if (!business)
     throw BusinessError.businessNotFound();
+
 
   const foundEmployee = business.employeeList.find(
     obj => obj.employee.toString() === employeeId
@@ -36,9 +40,11 @@ exports.requestAppointmentService = async (
   if (!foundEmployee)
     throw BusinessError.employeeNotWorking();
 
+
   const service = await ServiceDataAccess.findServiceByIdDB(serviceId);
   if (!service)
     throw AdminError.ServiceNotFound();
+
 
   console.log("Employee: ", foundEmployee);
   const isProviding = await foundEmployee.providingServices.find(obj =>
@@ -47,44 +53,53 @@ exports.requestAppointmentService = async (
   if (!isProviding)
     throw BusinessError.ServiceNotProviding();
 
-  // @TODO check if date is okay for the employeeWorkingHours
-  // const newDate = new Date(date);
 
-  const day = moment(date).format("L");
-  const hour = moment(date).format("HH:mm");
-  console.log("HPPUR ", hour);
+  // @TODO check if date is okay for the employeeWorkingHours
+  const newDate = new Date(date);
+
+  const start = moment(startDate)
+    .format("YYYY-MM-DD HH:mm");
+  const end = moment(endDate)
+    .format("YYYY-MM-DD HH:mm");
   const appointment = await AppointmentDataAccess
     .employeeAppointmentScheduleDB(day, hour, employeeId, businessId);
 
   if (appointment.length)
     throw AppointmentError.EmployeeIsNotAvailable();
 
-  return AppointmentDataAccess.insertOneRequestAppointmentDB(
+
+  AppointmentDataAccess.insertOneRequestAppointmentDB(
     customerId,
     businessId,
     employeeId,
     serviceId,
-    day,
-    hour
+    startDate,
+    endDate
   );
 };
-
-exports.getCalendar = async (businessId, date) => {
+exports.getCalendar = async (businessId, startingDate) => {
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
-  const day = moment(date).format("L");
+  const startDate = moment(startingDate)
+    .format("YYYY-MM-DD 00:00");
+  const endDate = moment(startDate)
+    .add(8, 'days')
+    .format("YYYY-MM-DD 23:59");
 
   if (!business)
     throw BusinessError.businessNotFound();
 
-  return AppointmentDataAccess.businessAppointmentScheduleDB(day, businessId);
+
+  return AppointmentDataAccess.businessAppointmentScheduleDB(startDate, endDate, businessId);
 };
 
 exports.getEmployeeCalendar = async (businessId, date, employee) => {
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
-  const day = moment(date).format("L");
+  const day = moment(date)
+    .format("L");
 
   if (!business)
     throw BusinessError.businessNotFound();
+
 
   // TODO move foundEmployee function to a service
   const foundEmployee = business.employeeList.find(
@@ -93,6 +108,7 @@ exports.getEmployeeCalendar = async (businessId, date, employee) => {
 
   if (!foundEmployee)
     throw BusinessError.employeeNotWorking();
+
 
   return AppointmentDataAccess.businessAppointmentScheduleByEmployeeDB(day, businessId, employee);
 };

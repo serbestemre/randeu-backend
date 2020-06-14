@@ -11,13 +11,10 @@ const AppointmentController = require("../controllers/AppointmentController");
 
 router.post(
   "/request",
-  joiValidator(appointmentSchema.request),
-  verifyToken,
-  roleChecker([CONSTANTS.ROLES.USER]),
   AppointmentController.requestAppointment
 );
 
-router.get(
+router.post(
   "/businessCalendar",
   AppointmentController.businessCalendar
 );

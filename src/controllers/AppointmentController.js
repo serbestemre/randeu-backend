@@ -8,8 +8,9 @@ const CommonError = require("../errors/CommonError");
 
 exports.requestAppointment = async (req, res) => {
   const {
-    customerId, businessId, employeeId, serviceId, date
+    customerId, businessId, employeeId, serviceId, startDate, endDate
   } = req.body;
+
 
   try {
     const appointment = await AppointmentService.requestAppointmentService(
@@ -17,8 +18,11 @@ exports.requestAppointment = async (req, res) => {
       businessId.trim(),
       employeeId.trim(),
       serviceId.trim(),
-      date
+      startDate,
+      endDate
     );
+
+
 
     Response.success(res, AppointmentSuccess.appointmentRequest(), appointment);
   } catch (error) {
@@ -39,12 +43,13 @@ exports.requestAppointment = async (req, res) => {
 
 
 exports.businessCalendar = async (req, res) => {
-  const { businessId, date } = req.body;
+  const { businessId, startDate } = req.body;
 
+  console.log("is coming?")
   try {
     const calendar = await AppointmentService.getCalendar(
       businessId.trim(),
-      date
+      startDate,
     );
 
     Response.success(res, AppointmentSuccess.CalendarListed(), calendar);
