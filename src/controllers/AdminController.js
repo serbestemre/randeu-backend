@@ -230,8 +230,6 @@ exports.getAllBusinessTypes = async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError)
       return Response.withError(res, error);
-
-
     if (error instanceof CastError) {
       error.message = "İş tipleri listelenemedi çünkü sektör id değeri hatalı";
       Object.assign(error, { statusCode: 400 });

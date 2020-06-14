@@ -12,19 +12,14 @@ const AppointmentController = require("../controllers/AppointmentController");
 router.post(
   "/request",
   joiValidator(appointmentSchema.request),
-  verifyToken,
-  roleChecker([CONSTANTS.ROLES.USER]),
   AppointmentController.requestAppointment
 );
 
-router.get(
-  "/businessCalendar",
-  AppointmentController.businessCalendar
-);
+router.get("/businessCalendar", AppointmentController.businessCalendar);
 
 router.get(
   "/businessCalendar/:employeeId",
   AppointmentController.employeeCalendar
-)
+);
 
 module.exports = router;

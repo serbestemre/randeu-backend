@@ -30,7 +30,6 @@ router.get("/businessList",
 router.get(
   "/profile/:businessId",
   verifyToken,
-  roleChecker([CONSTANTS.ROLES.EMPLOYEE, CONSTANTS.ROLES.BUSINESS_OWNER]),
   businessController.profile
 );
 
