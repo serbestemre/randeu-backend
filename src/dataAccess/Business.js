@@ -51,6 +51,7 @@ exports.updateOneBusinessDB = async (
 
 exports.deleteManyBusinessDB = async () => Business.deleteMany();
 
+// TODO Optimize and populate the query
 exports.businesslistByBusinessTypeDB = async businessTypeName =>
   Business.aggregate([
     {
@@ -74,6 +75,27 @@ exports.businesslistByBusinessTypeDB = async businessTypeName =>
     }
   ]);
 
-// exports.addEmployeeToTheBusinessDB = async (_id, employee) => {
-//   Business.updateOne({ _id }, { $push: { 'employeeList.employee': employee._id } });
-// };
+
+// TODO Optimize and populate the query
+exports.businesslistByServiceDB = async serviceName => Business.aggregate([
+  {
+    $lookup: {
+      from: 'services',
+      localField: 'employeeList.providingServices.service',
+      foreignField: '_id',
+      as: 'providingServices'
+    }
+  },
+  {
+    $project: {
+      "providingServices._id": 0,
+      "providingServices.businessType": 0,
+      "providingServices.__v": 0
+    }
+  },
+  {
+    $match: {
+      "providingServices.serviceName": serviceName
+    }
+  }
+]);
