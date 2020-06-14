@@ -31,6 +31,8 @@ exports.insertOneBusinessDB = async (
   });
   console.log(resultBusiness);
 };
+// TODO Case insensetive refactoring
+exports.businesslistByName = async businessName => Business.find({ businessName: { $regex: `.*${businessName}*` } });
 
 exports.updateOneBusinessDB = async (
   business,
@@ -51,6 +53,8 @@ exports.updateOneBusinessDB = async (
 
 exports.deleteManyBusinessDB = async () => Business.deleteMany();
 
+// TODO Optimize and populate the query
+// TODO Case insensetive refactoring
 exports.businesslistByBusinessTypeDB = async businessTypeName =>
   Business.aggregate([
     {
@@ -74,6 +78,28 @@ exports.businesslistByBusinessTypeDB = async businessTypeName =>
     }
   ]);
 
-// exports.addEmployeeToTheBusinessDB = async (_id, employee) => {
-//   Business.updateOne({ _id }, { $push: { 'employeeList.employee': employee._id } });
-// };
+
+// TODO Optimize and populate the query
+// TODO Case insensetive refactoring
+exports.businesslistByServiceDB = async serviceName => Business.aggregate([
+  {
+    $lookup: {
+      from: 'services',
+      localField: 'employeeList.providingServices.service',
+      foreignField: '_id',
+      as: 'providingServices'
+    }
+  },
+  {
+    $project: {
+      "providingServices._id": 0,
+      "providingServices.businessType": 0,
+      "providingServices.__v": 0
+    }
+  },
+  {
+    $match: {
+      "providingServices.serviceName": serviceName
+    }
+  }
+]);

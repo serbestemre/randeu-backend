@@ -5,25 +5,46 @@ exports.insertOneRequestAppointmentDB = async (
   business,
   employee,
   service,
-  day,
-  hour
+  startDate,
+  endDate
 ) =>
   Appointment.create({
     customer,
     business,
     employee,
     service,
-    day,
-    hour
+    startDate,
+    endDate
   });
 
 exports.employeeAppointmentScheduleDB = async (day, hour, employee, business) =>
   Appointment.find({
-    day, hour, employee, business
+    day,
+    hour,
+    employee,
+    business
   });
 
-exports.businessAppointmentScheduleDB = async (day, business) =>
-  Appointment.find({ day, business });
+exports.businessAppointmentScheduleDB = async (
+  startDate,
+  endDate,
+  business
+) => {
+  return Appointment.find({
+    $and: [
+      {
+        startDate: {
+          $gte: startDate,
+          $lte: endDate
+        }
+      },
+      { businessId: business.id }
+    ]
+  });
+};
 
-exports.businessAppointmentScheduleByEmployeeDB = async (day, business, employee) =>
-  Appointment.find({ day, business, employee });
+exports.businessAppointmentScheduleByEmployeeDB = async (
+  day,
+  business,
+  employee
+) => Appointment.find({ day, business, employee });

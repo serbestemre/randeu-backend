@@ -8,7 +8,13 @@ BusinessError.businessListNotListed = () => new CustomError(400,
   "İşyerleri listelenemedi.");
 
 BusinessError.businesslistNotListedByBusinessType = () => new CustomError(400,
-  "Belirtilen kritere göre işyerleri listelenemedi. Lütfen farklı bir filtreleme yönetim deneyin");
+  "Belirtilen işyeri tipine göre işyerleri listelenemedi. Lütfen farklı bir filtreleme yönetim deneyin");
+
+BusinessError.businesslistNotListedByService = () => new CustomError(400,
+  "Belirtilen hizmete göre işyerleri listelenemedi. Lütfen farklı bir filtreleme yönetim deneyin");
+
+BusinessError.businesslistNotListedByName = () => new CustomError(400,
+  "Belirtilen işyeri adına göre işyerleri listelenemedi. Lütfen farklı bir filtreleme yönetim deneyin");
 
 BusinessError.sectorNotFound = () => new CustomError(404,
   "Sektör bulunamadı");

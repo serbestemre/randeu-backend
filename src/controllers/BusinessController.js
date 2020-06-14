@@ -107,7 +107,7 @@ exports.businesslistByBusinessType = async (req, res) => {
     console.log("searched key word: ", businessTypeName);
     const businesslist = await BusinessService.businesslistByBusinessType(businessTypeName.trim());
 
-    console.log(businesslist)
+    console.log(businesslist);
     Response.success(res, BusinessSuccess.businesslistedByBusinessType(), businesslist);
   } catch (error) {
     if (error instanceof CustomError) return Response.withError(res, error);
@@ -115,6 +115,33 @@ exports.businesslistByBusinessType = async (req, res) => {
     Response.withError(res, CommonError.serverError());
   }
 };
+
+exports.businesslistByService = async (req, res) => {
+  try {
+    const { serviceName } = req.body;
+    console.log("fetcing buss list by service Name:", serviceName);
+    const businesslist = await BusinessService.businesslistByService(serviceName.trim());
+    Response.success(res, BusinessSuccess.businesslistedByBusinessType(), businesslist);
+  } catch (error) {
+    if (error instanceof CustomError) return Response.withError(res, error);
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
+exports.businesslistByName = async (req, res) => {
+  try {
+    const {businessName} = req.body;
+
+  const businesslist = await BusinessService.businesslistByName(businessName.trim());
+    Response.success(res, BusinessSuccess.businesslistedByBusinessType(), businesslist);
+
+  }catch(error) {
+    if (error instanceof CustomError) return Response.withError(res, error);
+    console.log(error);
+    Response.withError(res, CommonError.serverError());
+  }
+}
 
 exports.deleteBusiness = async (req, res) => {
   try {
