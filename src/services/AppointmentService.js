@@ -55,20 +55,19 @@ exports.requestAppointmentService = async (
 
 
   // @TODO check if date is okay for the employeeWorkingHours
-  const newDate = new Date(date);
 
   const start = moment(startDate)
     .format("YYYY-MM-DD HH:mm");
   const end = moment(endDate)
     .format("YYYY-MM-DD HH:mm");
   const appointment = await AppointmentDataAccess
-    .employeeAppointmentScheduleDB(day, hour, employeeId, businessId);
+    .employeeAppointmentScheduleDB(start, end, employeeId, businessId);
 
   if (appointment.length)
     throw AppointmentError.EmployeeIsNotAvailable();
 
 
-  AppointmentDataAccess.insertOneRequestAppointmentDB(
+  await AppointmentDataAccess.insertOneRequestAppointmentDB(
     customerId,
     businessId,
     employeeId,
@@ -81,13 +80,12 @@ exports.getCalendar = async (businessId, startingDate) => {
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
   const startDate = moment(startingDate)
     .format("YYYY-MM-DD 00:00");
-  const endDate = moment(startDate)
+  const endDate = moment(startingDate)
     .add(8, 'days')
     .format("YYYY-MM-DD 23:59");
 
   if (!business)
     throw BusinessError.businessNotFound();
-
 
   return AppointmentDataAccess.businessAppointmentScheduleDB(startDate, endDate, businessId);
 };

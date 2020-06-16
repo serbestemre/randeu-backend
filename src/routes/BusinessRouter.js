@@ -16,6 +16,9 @@ router.post(
   businessController.createBusiness
 );
 
+router.post("/employeelist",
+  businessController.employeeList);
+
 router.put(
   "/profile/update/:businessId",
   joiValidator(businessSchema.updateBusiness),

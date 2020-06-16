@@ -10,6 +10,15 @@ const AdminError = require("../errors/AdminError");
 const CONSTANTS = require("../constants");
 const Email = require("../helpers/Email");
 
+exports.employeeListService = async businessId => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+  return BusinessDataAccess.findEmployeeListDB(businessId);
+};
+
 
 exports.createBusinessService = async (
   businessName,

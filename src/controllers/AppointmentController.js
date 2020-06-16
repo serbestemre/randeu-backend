@@ -14,10 +14,10 @@ exports.requestAppointment = async (req, res) => {
 
   try {
     const appointment = await AppointmentService.requestAppointmentService(
-      customerId.trim(),
-      businessId.trim(),
-      employeeId.trim(),
-      serviceId.trim(),
+      customerId,
+      businessId,
+      employeeId,
+      serviceId,
       startDate,
       endDate
     );
@@ -49,7 +49,7 @@ exports.businessCalendar = async (req, res) => {
   try {
     const calendar = await AppointmentService.getCalendar(
       businessId.trim(),
-      startDate,
+      startDate
     );
 
     Response.success(res, AppointmentSuccess.CalendarListed(), calendar);

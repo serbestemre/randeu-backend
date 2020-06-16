@@ -28,20 +28,19 @@ exports.employeeAppointmentScheduleDB = async (day, hour, employee, business) =>
 exports.businessAppointmentScheduleDB = async (
   startDate,
   endDate,
-  business
-) => {
-  return Appointment.find({
-    $and: [
-      {
-        startDate: {
-          $gte: startDate,
-          $lte: endDate
-        }
-      },
-      { businessId: business.id }
-    ]
-  });
-};
+  id
+) => Appointment.find({
+  $and: [
+    {
+      startDate: {
+        $gte: startDate,
+        $lte: endDate
+      }
+    },
+    { business: id }
+  ]
+});
+
 
 exports.businessAppointmentScheduleByEmployeeDB = async (
   day,
