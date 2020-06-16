@@ -10,6 +10,25 @@ const AdminError = require("../errors/AdminError");
 const CONSTANTS = require("../constants");
 const Email = require("../helpers/Email");
 
+exports.employeeListService = async businessId => {
+  const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
+
+  if (!business)
+    throw BusinessError.businessNotFound();
+
+
+  return BusinessDataAccess.findEmployeeListDB(businessId);
+};
+
+exports.providingServiceListService = async businessId => {
+  const providingServiceList = await
+  BusinessDataAccess.fetchProvidingServiceListDB(businessId);
+
+  if (!providingServiceList)
+    throw BusinessError.providingServiceListNotFound();
+
+  return providingServiceList;
+};
 
 exports.createBusinessService = async (
   businessName,
@@ -109,6 +128,7 @@ exports.profileService = async businessId => {
   if (!business)
     throw BusinessError.businessNotFound();
 
+
   return business;
 };
 
@@ -119,6 +139,7 @@ exports.getBusinessList = async () => {
   if (!businessList)
     throw BusinessError.businessListNotListed();
 
+
   return businessList;
 };
 
@@ -128,6 +149,7 @@ exports.businesslistByBusinessType = async businessTypeName => {
   if (!businesslist || businesslist.length === 0)
     throw BusinessError.businesslistNotListedByBusinessType();
 
+
   return businesslist;
 };
 
@@ -136,6 +158,7 @@ exports.businesslistByService = async serviceName => {
   if (!businessList || businessList.length === 0)
     throw BusinessError.businesslistNotListedByService();
 
+
   return businessList;
 };
 
@@ -143,6 +166,7 @@ exports.businesslistByName = async businessName => {
   const businessList = await BusinessDataAccess.businesslistByName(businessName);
   if (!businessList || businessList.length === 0)
     throw BusinessError.businesslistNotListedByName();
+
 
   return businessList;
 };

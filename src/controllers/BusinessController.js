@@ -30,6 +30,43 @@ exports.createBusiness = async (req, res) => {
   }
 };
 
+exports.providingServiceList = async (req, res) => {
+  try {
+    const { businessId } = req.body;
+
+    const providingServiceList = await BusinessService.providingServiceListService(businessId);
+
+    Response.success(res, BusinessSuccess.employeeProvidingServicesListed(), providingServiceList);
+  } catch (error) {
+    if (error instanceof CustomError);
+    return Response.withError(res, error);
+    if (error instanceof CastError) {
+      error.message = "İş yeri güncellenemedi!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
+exports.employeeList = async (req, res) => {
+  try {
+    const { businessId } = req.body;
+
+    const employeeList = await BusinessService.employeeListService(businessId);
+    Response.success(res, BusinessSuccess.employeeListFound(), employeeList);
+  } catch (error) {
+    if (error instanceof CustomError);
+    return Response.withError(res, error);
+    if (error instanceof CastError) {
+      error.message = "İş yeri güncellenemedi!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
 // TODO get working hours for business will be implemented
 
 exports.updateBusiness = async (req, res) => {
@@ -131,17 +168,16 @@ exports.businesslistByService = async (req, res) => {
 
 exports.businesslistByName = async (req, res) => {
   try {
-    const {businessName} = req.body;
+    const { businessName } = req.body;
 
-  const businesslist = await BusinessService.businesslistByName(businessName.trim());
+    const businesslist = await BusinessService.businesslistByName(businessName.trim());
     Response.success(res, BusinessSuccess.businesslistedByBusinessType(), businesslist);
-
-  }catch(error) {
+  } catch (error) {
     if (error instanceof CustomError) return Response.withError(res, error);
     console.log(error);
     Response.withError(res, CommonError.serverError());
   }
-}
+};
 
 exports.deleteBusiness = async (req, res) => {
   try {

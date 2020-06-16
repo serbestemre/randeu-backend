@@ -1,4 +1,7 @@
+const mongoose = require("mongoose");
 const Business = require("../models/Business");
+
+const ObjectId = mongoose.Types.ObjectId;
 
 exports.insertManyBusinessDB = async businesses =>
   Business.insertMany(businesses);
@@ -74,6 +77,55 @@ exports.businesslistByBusinessTypeDB = async businessTypeName =>
     {
       $match: {
         "businessTypeName.businessTypeName": { $in: [businessTypeName] }
+      }
+    }
+  ]);
+
+exports.fetchProvidingServiceListDB = async businessId =>
+  Business.aggregate([
+    {
+      $match: {
+        _id: ObjectId(businessId)
+      }
+    },
+    {
+      $lookup: {
+        from: 'services',
+        localField: 'employeeList.providingServices.service',
+        foreignField: '_id',
+        as: 'populatedProvidingServices'
+      }
+    }
+  ]);
+
+exports.findEmployeeListDB = async businessId =>
+  Business.aggregate([
+    {
+      $match: {
+        _id: ObjectId(businessId)
+      }
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'employeeList.employee',
+        foreignField: '_id',
+        as: 'populatedEmployeeList'
+      }
+    },
+    {
+      $project: {
+        "populatedEmployeeList.roles": 0,
+        "populatedEmployeeList.method": 0,
+        "populatedEmployeeList.isActive": 0,
+        "populatedEmployeeList.workingBusinesses": 0,
+        "populatedEmployeeList.appointments": 0,
+        "populatedEmployeeList.ownedBusinesses": 0,
+        "populatedEmployeeList.email": 0,
+        "populatedEmployeeList.password": 0,
+        "populatedEmployeeList.createdAt": 0,
+        "populatedEmployeeList.updatedAt": 0,
+        "populatedEmployeeList.__v": 0
       }
     }
   ]);
