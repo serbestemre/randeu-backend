@@ -15,6 +15,11 @@ BusinessSuccess.employeeListFound = () => ({
   message: "İşyerinin çalışanları başarıyla listelendi."
 });
 
+BusinessSuccess.employeeProvidingServicesListed = () => ({
+  statusCode: 200,
+  message: "Belirtilen çalışanın sağladığı servisler başarıyla listelendi."
+});
+
 BusinessSuccess.businesslistedByBusinessType = () => ({
   statusCode: 200,
   message: "İşyerleri, aranan işyeri tipine göre başarıyla listelendi"

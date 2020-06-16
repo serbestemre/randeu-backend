@@ -4,6 +4,9 @@ const CustomError = require("../helpers/CustomError");
 BusinessError.businessNotFound = () => new CustomError(400,
   "Aranan iş yeri bulunamadı");
 
+BusinessError.providingServiceListNotFound = () => new CustomError(400,
+  "Aranan çalışana göre sağlanan servis listesi bulunamadı");
+
 BusinessError.businessListNotListed = () => new CustomError(400,
   "İşyerleri listelenemedi.");
 

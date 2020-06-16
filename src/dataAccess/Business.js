@@ -81,6 +81,23 @@ exports.businesslistByBusinessTypeDB = async businessTypeName =>
     }
   ]);
 
+exports.fetchProvidingServiceListDB = async businessId =>
+  Business.aggregate([
+    {
+      $match: {
+        _id: ObjectId(businessId)
+      }
+    },
+    {
+      $lookup: {
+        from: 'services',
+        localField: 'employeeList.providingServices.service',
+        foreignField: '_id',
+        as: 'populatedProvidingServices'
+      }
+    }
+  ]);
+
 exports.findEmployeeListDB = async businessId =>
   Business.aggregate([
     {
@@ -98,7 +115,6 @@ exports.findEmployeeListDB = async businessId =>
     },
     {
       $project: {
-        "populatedEmployeeList._id": 0,
         "populatedEmployeeList.roles": 0,
         "populatedEmployeeList.method": 0,
         "populatedEmployeeList.isActive": 0,

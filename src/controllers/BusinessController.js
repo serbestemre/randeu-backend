@@ -30,6 +30,25 @@ exports.createBusiness = async (req, res) => {
   }
 };
 
+exports.providingServiceList = async (req, res) => {
+  try {
+    const { businessId } = req.body;
+
+    const providingServiceList = await BusinessService.providingServiceListService(businessId);
+
+    Response.success(res, BusinessSuccess.employeeProvidingServicesListed(), providingServiceList);
+  } catch (error) {
+    if (error instanceof CustomError);
+    return Response.withError(res, error);
+    if (error instanceof CastError) {
+      error.message = "İş yeri güncellenemedi!";
+      Object.assign(error, { statusCode: 400 });
+      return Response.withError(res, error);
+    }
+    Response.withError(res, CommonError.serverError());
+  }
+};
+
 exports.employeeList = async (req, res) => {
   try {
     const { businessId } = req.body;
