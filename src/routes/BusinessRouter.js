@@ -29,7 +29,6 @@ router.get("/businessList",
 
 router.get(
   "/profile/:businessId",
-  verifyToken,
   businessController.profile
 );
 
