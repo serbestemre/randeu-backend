@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema(
     ],
     appointments: [
       {
-        businessName: {
+        title: {
           type: String
         },
         startDate: {
