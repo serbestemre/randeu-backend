@@ -75,6 +75,17 @@ exports.requestAppointmentService = async (
     startDate,
     endDate
   );
+
+  const userAppointmentData = {
+    businessName: business.businessName,
+    startDate,
+    endDate
+  };
+
+  customer.appointments.push(userAppointmentData);
+  customer.save();
+
+  // const res = await UserDataAccess.insertAppointmentUserProfileDB(customerId, userAppointmentData);
 };
 exports.getCalendar = async (businessId, startingDate) => {
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);

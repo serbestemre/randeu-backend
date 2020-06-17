@@ -37,8 +37,15 @@ const userSchema = new mongoose.Schema(
     ],
     appointments: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Appointment"
+        businessName: {
+          type: String
+        },
+        startDate: {
+          type: Date
+        },
+        endDate: {
+          type: Date
+        }
       }
     ],
     isActive: {
