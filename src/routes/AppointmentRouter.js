@@ -16,7 +16,7 @@ router.post(
 
 router.post(
   "/businessCalendar",
-  joiValidator(appointmentSchema.getBusinessCalendar),
+  // joiValidator(appointmentSchema.getBusinessCalendar),
   AppointmentController.businessCalendar
 );
 
