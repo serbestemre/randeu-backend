@@ -35,7 +35,10 @@ exports.insertOneBusinessDB = async (
   console.log(resultBusiness);
 };
 // TODO Case insensetive refactoring
-exports.businesslistByName = async businessName => Business.find({ businessName: { $regex: `.*${businessName}*` } });
+exports.businesslistByName = async businessName => {
+  const result = Business.find({ businessName: { $regex: `.*${businessName}*` } }).populate('businessOwnerList.businessOwner');
+  return result;
+};
 
 exports.updateOneBusinessDB = async (
   business,
@@ -72,6 +75,14 @@ exports.businesslistByBusinessTypeDB = async businessTypeName =>
       $project: {
         "businessTypeName._id": 0,
         "businessTypeName.sector": 0
+      }
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'businessOwnerList.businessOwner',
+        foreignField: '_id',
+        as: 'populatedBusinessOwners'
       }
     },
     {
@@ -113,6 +124,7 @@ exports.findEmployeeListDB = async businessId =>
         as: 'populatedEmployeeList'
       }
     },
+
     {
       $project: {
         "populatedEmployeeList.roles": 0,
@@ -140,6 +152,14 @@ exports.businesslistByServiceDB = async serviceName => Business.aggregate([
       localField: 'employeeList.providingServices.service',
       foreignField: '_id',
       as: 'providingServices'
+    }
+  },
+  {
+    $lookup: {
+      from: 'users',
+      localField: 'businessOwnerList.businessOwner',
+      foreignField: '_id',
+      as: 'populatedBusinessOwners'
     }
   },
   {

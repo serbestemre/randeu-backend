@@ -78,7 +78,7 @@ exports.requestAppointmentService = async (
   );
 
   const userAppointmentData = {
-    businessName: business.businessName,
+    title: `${business.businessName} ~ ${service.serviceName}`,
     startDate,
     endDate
   };
@@ -93,7 +93,7 @@ exports.getCalendar = async (businessId, startingDate) => {
   const startDate = moment(startingDate)
     .format("YYYY-MM-DD 00:00");
   const endDate = moment(startingDate)
-    .add(8, 'days')
+    .add(31, 'days')
     .format("YYYY-MM-DD 23:59");
 
   // const isValidDate = moment(startingDate, "YYYY-MM-DD HH:mm", true).isValid();
