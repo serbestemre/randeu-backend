@@ -42,5 +42,9 @@ module.exports = {
         "string.pattern.base": "Servis alanı standartlara uygun değil"
       }),
     date: Joi.string()
+  }),
+  getBusinessCalendar: Joi.object({
+    businessId: Joi.string().required(),
+    startDate: Joi.string().required().empty()
   })
 };

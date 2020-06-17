@@ -60,8 +60,9 @@ exports.requestAppointmentService = async (
     .format("YYYY-MM-DD HH:mm");
   const end = moment(endDate)
     .format("YYYY-MM-DD HH:mm");
+
   const appointment = await AppointmentDataAccess
-    .employeeAppointmentScheduleDB(start, end, employeeId, businessId);
+    .employeeAppointmentScheduleDB(customerId, start, end, employeeId, businessId);
 
   if (appointment.length)
     throw AppointmentError.EmployeeIsNotAvailable();
@@ -75,6 +76,17 @@ exports.requestAppointmentService = async (
     startDate,
     endDate
   );
+
+  const userAppointmentData = {
+    businessName: business.businessName,
+    startDate,
+    endDate
+  };
+
+  customer.appointments.push(userAppointmentData);
+  customer.save();
+
+  // const res = await UserDataAccess.insertAppointmentUserProfileDB(customerId, userAppointmentData);
 };
 exports.getCalendar = async (businessId, startingDate) => {
   const business = await BusinessDataAccess.findBusinessByIdDB(businessId);
@@ -83,6 +95,10 @@ exports.getCalendar = async (businessId, startingDate) => {
   const endDate = moment(startingDate)
     .add(8, 'days')
     .format("YYYY-MM-DD 23:59");
+
+  // const isValidDate = moment(startingDate, "YYYY-MM-DD HH:mm", true).isValid();
+  // if (!isValidDate)
+  //   throw AppointmentError.invalidDateFormat();
 
   if (!business)
     throw BusinessError.businessNotFound();

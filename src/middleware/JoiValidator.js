@@ -8,7 +8,6 @@ function validateBodyScheme(schema) {
       const value = await schema.validateAsync(req.body);
       next();
     } catch (err) {
-      console.log("JOI VALIDATON ERROR: ", err);
       return response.withError(res, commonError.validationError(err));
     }
   };

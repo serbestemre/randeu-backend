@@ -6,6 +6,12 @@ exports.insertOneUserDB = async (method, fullName, roles, email, password) =>
   });
 
 
+exports.insertAppointmentUserProfileDB = async (
+  _id, appointment
+) =>
+  User.updateOne({ _id }, { $push: { appointments: appointment } });
+
+
 exports.insertManyUsersDB = async users => User.insertMany(users);
 
 exports.findUserByEmailDB = async email => User.findOne({ email });

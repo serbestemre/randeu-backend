@@ -54,15 +54,7 @@ exports.businessCalendar = async (req, res) => {
 
     Response.success(res, AppointmentSuccess.CalendarListed(), calendar);
   } catch (error) {
-    if (error instanceof CustomError)
-      return Response.withError(res, error);
-
-
-    if (error instanceof CastError) {
-      error.message = "Bir çok şey ters gittti!";
-      Object.assign(error, { statusCode: 400 });
-      return Response.withError(res, error);
-    }
+    if (error instanceof CustomError) return Response.withError(res, error);
     console.log(error);
     Response.withError(res, CommonError.serverError());
   }
