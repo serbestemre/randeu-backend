@@ -1,6 +1,11 @@
 const Appointment = require("../models/Appointment");
 
+exports.deleteManyAppointmentsDB = async () =>
+  Appointment.deleteMany();
 
+
+exports.insertManyAppointmentsDB = async appointments =>
+  Appointment.insertMany(appointments);
 
 exports.insertOneRequestAppointmentDB = async (
   customer,
@@ -19,10 +24,11 @@ exports.insertOneRequestAppointmentDB = async (
     endDate
   });
 
-exports.employeeAppointmentScheduleDB = async (day, hour, employee, business) =>
+exports.employeeAppointmentScheduleDB = async (customer, startDate, endDate, employee, business) =>
   Appointment.find({
-    day,
-    hour,
+    customer,
+    startDate,
+    endDate,
     employee,
     business
   });

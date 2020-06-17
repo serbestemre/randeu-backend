@@ -39,6 +39,17 @@ const userTwo = new User({
 });
 const userTwoToken = signToken(userTwo);
 
+const customerId = new mongoose.Types.ObjectId();
+const customer = new User({
+  method: "local",
+  _id: customerId,
+  fullName: "UserTwo",
+  email: "userTwo@gmail.com",
+  password: "123456",
+  roles: [1]
+});
+const customerToken = signToken(customer);
+
 const employeeOneKuaforId = new mongoose.Types.ObjectId();
 const employeeOneKuafor = new User({
   method: "local",
@@ -99,6 +110,7 @@ const setupUserDB = async () => {
   await UserDataAccessLayer.insertManyUsersDB(
     [userOne,
       userTwo,
+      customer,
       employeeOneKuafor,
       employeeTwoDisHekimi,
       businessOwnerKuafor,
@@ -111,6 +123,8 @@ module.exports = {
   userOne,
   userOneToken,
   userTwo,
+  customer,
+  customerToken,
   userTwoToken,
   employeeOne: employeeOneKuafor,
   employeeOneToken: employeeOneKuaforToken,
