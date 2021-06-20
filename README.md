@@ -43,7 +43,7 @@ $ touch .env.test
 ```
 SERVER_URL=http://localhost:8080
 DB_URL=
-process.env.REDIS_URL=
+REDIS_URL=
 JWT_SECRET_KEY=
 PORT=8080
 clientID= // Google API KEY
