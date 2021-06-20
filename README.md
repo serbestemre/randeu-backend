@@ -2,6 +2,8 @@
 
 This application is a backend side of a project created for Izmir University of Economics Computer Engineering Senior Project.
 
+- [Presentation Video](https://www.youtube.com/watch?v=CqdMD2mRvuw&t=2s)
+
 ##### Used Technologies
 
 ###### Node.JS, MongoDB, Redis
