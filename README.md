@@ -4,7 +4,7 @@ This application is a backend side of a project created for Izmir University of 
 
 ##### Used Technologies
 
-###### Node.JS, MongoDB, Redis, React, Reac Native
+###### Node.JS, MongoDB, Redis
 
 - [Web App Repository](https://github.com/serbestemre/randeu-webApp)
 - [Mobile App Repository](https://github.com/sercankavdir/randeu-mobileApp)
